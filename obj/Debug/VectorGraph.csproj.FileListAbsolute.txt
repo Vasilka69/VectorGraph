@@ -1,0 +1,11 @@
+C:\Users\Vasili4\source\repos\VectorGraph\bin\Debug\VectorGraph.exe.config
+C:\Users\Vasili4\source\repos\VectorGraph\bin\Debug\VectorGraph.exe
+C:\Users\Vasili4\source\repos\VectorGraph\bin\Debug\VectorGraph.pdb
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.csproj.AssemblyReference.cache
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.csproj.SuggestedBindingRedirects.cache
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.Form1.resources
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.Properties.Resources.resources
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.csproj.GenerateResource.cache
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.csproj.CoreCompileInputs.cache
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.exe
+C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.pdb
