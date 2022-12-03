@@ -10,88 +10,61 @@ namespace VectorGraph
 {
     internal class GraphSystem
     {
-        public Figure CurrFigure;
+        public Graphics gr;
 
-        public delegate DialogResult st(String str);
-        public event st Str;
-
-        public Frame frame;
-
-        public FigureType ChoosenFigure;
-        public PropList pl;
-
-        public delegate void Upd(Figure f);
-        public event Upd UpdateEvent;
-
-        public List<Figure> Figures;
-
-        public GraphSystem(PropList pl)
+        public GraphSystem(Graphics gr)
         {
-            Figures = new List<Figure>();
-            frame = new Frame(0, 0, 0, 0);
-            this.pl = pl;
-            /*
-            CurrFigure.pl = pl.Clone();
-            */
-            //init();
-        }
-
-        private void init()
-        {
-            Figures = new List<Figure>();
-            ContourProps cp = new ContourProps(Color.FromArgb(255, 128, 0, 0), 5);
-            FillProps fp = new FillProps(Color.FromArgb(255, 255, 20, 147));
-            PropList pl = new PropList(cp, fp);
-
-            Figures.Add(new Rect(new Frame(20, 20, 200, 200), this.pl));
-            Figures.Add(new Line(new Frame(20, 220, 200, 250), this.pl));
-            DrawFigures();
-        }
-        /*
-        public void Update()
-        {
-            UpdateEvent?.Invoke();
-        }*/
-
-        public void AddFigure()
-        {
-            switch (ChoosenFigure)
-            {
-                case FigureType.Line:
-                    Figures.Add(new Line(frame.Clone(), pl.Clone()));
-                    //Str?.Invoke("LINE");
-                    break;
-                case FigureType.Rect:
-                    Figures.Add(new Rect(frame.Clone(), pl.Clone()));
-                    //Str?.Invoke("RECT");
-                    break;
-            }
-            DrawFigures();
-        }
-
-        public void DrawFigures()
-        {
-            if (Figures.Count != 0)
-                foreach (Figure f in Figures)
-                {
-                    //Str?.Invoke(f.type.ToString() + " " + f.pl[0].Color.ToString());
-                    DrawFigure(f);
-                }
-            DrawFigure(CurrFigure);
+            this.gr = gr;
         }
 
         public void DrawFigure(Figure f)
         {
-            if (f != null)
+            if (f == null)
+                return;
+            ContourProps cp = f.pl[0] as ContourProps;
+            FillProps fp = null;
+            if (f.pl.Count > 1)
+                fp = f.pl[1] as FillProps;
+            Pen pen = new Pen(cp.Color, cp.LineWidth);
+
+            int x1 = f.frame.coords[0];
+            int y1 = f.frame.coords[1];
+
+            int x2 = f.frame.coords[2];
+            int y2 = f.frame.coords[3];
+
+            int width = Math.Abs(x1 - x2);
+            int height = Math.Abs(y1 - y2);
+
+            switch (f.type)
             {
-                //Str?.Invoke(f.type.ToString() + " - " + f.pl[0].Color.ToString());
-                UpdateEvent?.Invoke(f);
+                case (FigureType.Rect): // Прямоугольник
+                    int rectx;
+                    int recty;
+                    if (x1 - x2 < 0)
+                        rectx = x1;
+                    else
+                        rectx = x2;
+                    if (y1 - y2 < 0)
+                        recty = y1;
+                    else
+                        recty = y2;
+                    Rectangle rect = new Rectangle(rectx, recty, Math.Abs(width), Math.Abs(height));
+                    gr.DrawRectangle(pen, rect);
+                    if (fp != null)
+                    {
+                        int contourWidth = cp.LineWidth / 2;
+                        if (contourWidth % 2 != 0)
+                            contourWidth--;
+                        gr.FillRectangle(new SolidBrush(fp.Color),
+                        new Rectangle(rectx + contourWidth + 1, recty + contourWidth + 1,
+                                        width - cp.LineWidth, height - cp.LineWidth));
+                    }
+                    break;
+                case (FigureType.Line): // Линия
+                    gr.DrawLine(pen, x1, y1, x2, y2);
+                    break;
             }
         }
-        /*
-        public void ApplyProps()
-        {
-
-        }*/
     }
 }

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace VectorGraph
 {
-    enum FigureType { Line, Rect }
+    enum FigureType { 
+        Line = 0, 
+        Rect = 1}
 
     internal abstract class Figure : GraphItem
     {
@@ -18,7 +20,7 @@ namespace VectorGraph
             this.pl = pl;
         }
 
-        public override void Draw(GraphSystem gs)
+        public override void Draw(GraphSystem gs) /// пустышка
         {
             ApplyProps(pl);
             DrawGeometry(gs);
@@ -36,15 +38,15 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(PropList pl)
+        public override void ApplyProps(PropList pl) /// пустышка
         {
             this.pl = pl;
             return;
         }
 
-        public override void DrawGeometry(GraphSystem gs)
+        public override void DrawGeometry(GraphSystem gs) /// пустышка
         {
-            gs.DrawFigure(this);
+            //gs.DrawFigure(this);
         }
     }
     
@@ -56,15 +58,16 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(PropList pl)
+        public override void ApplyProps(PropList pl) /// пустышка
         {
             this.pl = pl;
+
             return;
         }
 
-        public override void DrawGeometry(GraphSystem gs)
+        public override void DrawGeometry(GraphSystem gs) /// пустышка
         {
-            gs.DrawFigure(this);
+            //gs.DrawFigure(this);
         }
     }
 }
