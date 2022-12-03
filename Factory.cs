@@ -14,14 +14,15 @@ namespace VectorGraph
         public Frame frame;
         public FigureType ChoosenFigure { get; set; }
 
-        Scene scene;
+        public delegate void Repaint();
+        public event Repaint RepintEvent;
 
-        public Factory(Store st, PropList pl, Scene scene)
+        public Factory(Store st, PropList pl)
         {
             this.st = st;
             this.pl = pl;
             ChoosenFigure = FigureType.Line;
-            this.scene = scene;
+            //this.scene = scene;
             frame = new Frame(0, 0, 0, 0);
         }
 
@@ -36,7 +37,8 @@ namespace VectorGraph
                     st.Add(new Rect(frame.Clone(), pl.Clone()));
                     break;
             }
-            scene.Repaint();
+            RepintEvent?.Invoke();
+            //scene.Repaint();
             //DrawFigures();
         }
     }

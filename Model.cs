@@ -19,7 +19,8 @@ namespace VectorGraph
         {
             st = new Store();
             scene = new Scene(gr, st);
-            factory = new Factory(st, pl, scene);
+            factory = new Factory(st, pl);
+            factory.RepintEvent += scene.Repaint;
         }
     }
 }
