@@ -13,7 +13,8 @@ namespace VectorGraph
 {
     public partial class Form1 : Form
     {
-        Model model;
+        //IModel model;
+        IController controller;
         PictureBox pictureBox;
         Graphics gr;
 
@@ -47,19 +48,22 @@ namespace VectorGraph
             PropList pl = new PropList(cp, fp);
             gr = pictureBox.CreateGraphics();
             // Model
-            model = new Model(gr, pl);
+            //model = new Model(gr, pl);
+            //Controller controller = new Controller(new Model(gr, pl), null);
+            controller = new Controller(new Model(gr, pl));//, null);
 
 
             comboBox1.DataSource = Enum.GetValues(typeof(FigureType));
             comboBox1.SelectedValueChanged += ComboBox1_SelectedValueChanged;
             comboBox1.SelectedIndex = 0; //
-            model.factory.ChoosenFigure = (FigureType)comboBox1.SelectedValue;
+            
+            controller.Model.Factory.ChoosenFigure = (FigureType)comboBox1.SelectedValue;
 
             textBox1.TextChanged += TextBox1_TextChanged;
 
             //graphSystem.UpdateEvent += graphSystem.DrawFigure;
-            if (model.factory.pl != null && model.factory.pl.Count > 1)
-                textBox1.Text = ((ContourProps)model.factory.pl[0]).LineWidth.ToString(); ///////
+            if (controller.Model.Factory.pl.ContourProps != null)
+                textBox1.Text = (controller.Model.Factory.pl.ContourProps).LineWidth.ToString(); ///////
             /*
              * switch (comboBox1.SelectedValue) ////
             {
@@ -94,13 +98,13 @@ namespace VectorGraph
 
         private void ComboBox1_SelectedValueChanged(object sender, EventArgs e) // Выбор типа фигуры
         {
-            model.factory.ChoosenFigure = (FigureType) comboBox1.SelectedValue;
+            controller.Model.Factory.ChoosenFigure = (FigureType) comboBox1.SelectedValue;
         }
 
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            model.factory.frame.coords[0] = e.X;
-            model.factory.frame.coords[1] = e.Y;
+            controller.Model.Factory.frame.coords[0] = e.X;
+            controller.Model.Factory.frame.coords[1] = e.Y;
             //pictureBox.MouseMove += PictureBox_MouseMove;
         }
         /*
@@ -117,10 +121,10 @@ namespace VectorGraph
         {
             //pictureBox.MouseMove -= PictureBox_MouseMove;
 
-            model.factory.frame.coords[2] = e.X;
-            model.factory.frame.coords[3] = e.Y;
+            controller.Model.Factory.frame.coords[2] = e.X;
+            controller.Model.Factory.frame.coords[3] = e.Y;
 
-            model.factory.AddFigure();
+            controller.Model.Factory.AddFigure();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
@@ -128,7 +132,7 @@ namespace VectorGraph
             if (this.colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.pictureBox1.BackColor = this.colorDialog1.Color;
-                ((ContourProps)model.factory.pl[0]).Color = this.colorDialog1.Color;
+                (controller.Model.Factory.pl.ContourProps).Color = this.colorDialog1.Color;
             }
         }
 
@@ -137,36 +141,36 @@ namespace VectorGraph
             if (this.colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.pictureBox2.BackColor = this.colorDialog1.Color;
-                ((FillProps)model.factory.pl[1]).Color = this.colorDialog1.Color;
+                (controller.Model.Factory.pl.FillProps).Color = this.colorDialog1.Color;
             }
         }
 
         private void TextBox1_TextChanged(object sender, EventArgs e) // Толщина линии
         {
-            if ((ContourProps)model.factory.pl[0] != null) 
+            if (controller.Model.Factory.pl.ContourProps != null) 
             {
                 if ((textBox1.Text.Length == 0)
                     || (int.Parse(textBox1.Text) > 100)
                     || (int.Parse(textBox1.Text) < 0))
-                    textBox1.Text = ((ContourProps)model.factory.pl[0]).LineWidth.ToString();
+                    textBox1.Text = (controller.Model.Factory.pl.ContourProps).LineWidth.ToString();
                 else
-                    ((ContourProps)model.factory.pl[0]).LineWidth = int.Parse(textBox1.Text);
+                    (controller.Model.Factory.pl.ContourProps).LineWidth = int.Parse(textBox1.Text);
             }
         }
 
         private void PictureBox_VisibleChanged(object sender, EventArgs e) // Обнова картинки
         {
-            model.scene.Repaint();
+            controller.Model.GrController.Repaint();
         }
 
         private void PictureBox_Invalidated(object sender, InvalidateEventArgs e) // Обнова картинки
         {
-            model.scene.Repaint();
+            controller.Model.GrController.Repaint();
         }
 
         private void PictureBox_Paint(object sender, PaintEventArgs e) // Обнова картинки
         {
-            model.scene.Repaint();
+            controller.Model.GrController.Repaint();
         }
         
         private void button1_Click(object sender, EventArgs e)  // Кнопка "Создать"
@@ -180,7 +184,7 @@ namespace VectorGraph
             }
             if (width > 0 && height > 0)
             {
-                model.st.Clear();
+                controller.Model.StoreClear();
                 this.UpdateStyles();
                 pictureBox.BackColor = Color.White;
                 pictureBox.Size = new Size(width, height);

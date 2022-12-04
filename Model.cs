@@ -7,20 +7,56 @@ using System.Threading.Tasks;
 
 namespace VectorGraph
 {
-    internal class Model
+    interface IModel
     {
-        public Factory factory;
-        public Scene scene;
-        public Store st;
+        IGrProperties GrProperties { get; }
+        IGrController GrController { get; }
+        IFactory Factory { get; }
+        void StoreClear();
+        /*
+        Factory factory { get; }
+        Scene scene { get; }
+        Store st { get; }
+        GrPropChannel gpc { get; }
+        */
+    }
+
+    internal class Model : IModel
+    {
+        public IGrProperties GrProperties { get; }
+        public IGrController GrController { get; }
+        public IFactory Factory { get; }
+        /*
+        public Factory factory { get; }
+        public Scene scene { get; }
+        */
         //GraphSystem graphSystem;
-        // GrPropChannel gpc;
+        public GrPropChannel gpc { get; }
+        Store st;
 
         public Model (Graphics gr, PropList pl)
         {
+            GrProperties = new GrPropChannel(pl);
+            /*
+            GrProperties.Contour.ContourProps = pl.ContourProps;
+            GrProperties.Fill.FillProps = pl.FillProps;
+            */
+            st = new Store();
+            GrController = new Scene(gr, st);
+            Factory = new Factory(st, pl);
+            Factory.RepaintEvent += GrController.Repaint;
+            
+            /*
             st = new Store();
             scene = new Scene(gr, st);
             factory = new Factory(st, pl);
-            factory.RepintEvent += scene.Repaint;
+            factory.RepaintEvent += scene.Repaint;
+            */
+        }
+
+        public void StoreClear()
+        {
+            st.Clear();
         }
     }
 }

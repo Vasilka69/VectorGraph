@@ -25,6 +25,7 @@ namespace VectorGraph
         public ContourProps(Color Color, int lineWidth)
         {
             this.Color = System.Drawing.Color.FromArgb(Color.ToArgb());
+            //this.Color = Color;
             LineWidth = lineWidth;
         }
         /*

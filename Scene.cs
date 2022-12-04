@@ -4,10 +4,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VectorGraph
 {
-    internal class Scene
+    interface IGrController
+    {
+        void Repaint();
+        void SetPort(Graphics gr, int width, int height);
+    }
+
+    internal class Scene : IGrController
     {
         public GraphSystem gs;
 
@@ -21,11 +28,17 @@ namespace VectorGraph
 
         public void Repaint()
         {
-            //gs.gr.Clear(Color.White);
+            gs.gr.Clear(Color.White);
             if (st.Count != 0)
                 foreach (Figure f in st)
                     gs.DrawFigure(f);
             //DrawFigure(CurrFigure);
+        }
+
+        public void SetPort(Graphics gr, int width, int height)
+        {
+            gs.gr = gr;
+            // width height
         }
     }
 }

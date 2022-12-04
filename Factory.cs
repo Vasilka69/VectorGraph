@@ -6,16 +6,30 @@ using System.Threading.Tasks;
 
 namespace VectorGraph
 {
-    internal class Factory
-    {
-        Store st;
-        public PropList pl;
+    delegate void Repaint();
 
-        public Frame frame;
+    interface IFactory
+    {
+        PropList pl { set; get; }
+
+        Frame frame { set; get; }
+
+        event Repaint RepaintEvent;
+        FigureType ChoosenFigure { get; set; }
+        void AddFigure();
+    }
+
+    internal class Factory : IFactory
+    {
+        public PropList pl { set; get; }
+
+        public Frame frame { set; get; }
+
+        public event Repaint RepaintEvent;
         public FigureType ChoosenFigure { get; set; }
 
-        public delegate void Repaint();
-        public event Repaint RepintEvent;
+
+        Store st;
 
         public Factory(Store st, PropList pl)
         {
@@ -37,7 +51,7 @@ namespace VectorGraph
                     st.Add(new Rect(frame.Clone(), pl.Clone()));
                     break;
             }
-            RepintEvent?.Invoke();
+            RepaintEvent?.Invoke();
             //scene.Repaint();
             //DrawFigures();
         }

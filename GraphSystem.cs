@@ -21,10 +21,8 @@ namespace VectorGraph
         {
             if (f == null)
                 return;
-            ContourProps cp = f.pl[0] as ContourProps;
-            FillProps fp = null;
-            if (f.pl.Count > 1)
-                fp = f.pl[1] as FillProps;
+            ContourProps cp = f.pl.ContourProps;
+            FillProps fp = f.pl.FillProps;
             Pen pen = new Pen(cp.Color, cp.LineWidth);
 
             int x1 = f.frame.coords[0];
