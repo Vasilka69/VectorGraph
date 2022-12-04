@@ -10,6 +10,7 @@ namespace VectorGraph
 {
     internal abstract class Property
     {
+
         //private protected int Color;
         //private protected Color Color;
         public Color Color;
