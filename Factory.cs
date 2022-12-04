@@ -28,7 +28,6 @@ namespace VectorGraph
         public event Repaint RepaintEvent;
         public FigureType ChoosenFigure { get; set; }
 
-
         Store st;
 
         public Factory(Store st, PropList pl)

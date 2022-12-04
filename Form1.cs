@@ -193,6 +193,11 @@ namespace VectorGraph
 
         private void button2_Click(object sender, EventArgs e)  // Кнопка "F5"
         {
+            for (int i = 0; i < 1000; i++)
+            {
+                controller.f5();
+                Thread.Sleep(5);
+            }
             /*
             graphSystem.Figures = new List<Figure>();
             this.UpdateStyles();

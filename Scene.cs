@@ -31,7 +31,8 @@ namespace VectorGraph
             gs.gr.Clear(Color.White);
             if (st.Count != 0)
                 foreach (Figure f in st)
-                    gs.DrawFigure(f);
+                    f.Draw(gs);
+                    //gs.DrawFigure(f);
             //DrawFigure(CurrFigure);
         }
 

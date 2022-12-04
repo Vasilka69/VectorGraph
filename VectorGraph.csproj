@@ -57,7 +57,6 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Frame.cs" />
-    <Compile Include="GraphItem.cs" />
     <Compile Include="GraphSystem.cs" />
     <Compile Include="GrPropChannel.cs" />
     <Compile Include="Model.cs" />

@@ -13,6 +13,7 @@ namespace VectorGraph
         IGrController GrController { get; }
         IFactory Factory { get; }
         void StoreClear();
+        Store st { get; }
         /*
         Factory factory { get; }
         Scene scene { get; }
@@ -32,7 +33,7 @@ namespace VectorGraph
         */
         //GraphSystem graphSystem;
         public GrPropChannel gpc { get; }
-        Store st;
+        public Store st { get; }
 
         public Model (Graphics gr, PropList pl)
         {
