@@ -42,7 +42,10 @@ namespace VectorGraph
             EH.currState = EH.DS;
         }
 
-        public override void MouseUp(int x, int y) { }
+        public override void MouseUp(int x, int y)
+        {
+
+        }
     }
 
     internal class DragState : State
@@ -56,9 +59,15 @@ namespace VectorGraph
             this.EH = EH;
         }
 
-        public override void MouseMove(int x, int y) { }
+        public override void MouseMove(int x, int y)
+        {
 
-        public override void MouseDown(int x, int y) { }
+        }
+
+        public override void MouseDown(int x, int y)
+        {
+
+        }
 
         public override void MouseUp(int x, int y)
         {

@@ -18,6 +18,7 @@ namespace VectorGraph
         FigureType ChoosenFigure { get; set; }
         void AddFigure();
         //void AddCurrFigure();
+         SelectionController selController { get; set; } // Потом убрать
     }
 
     internal class Factory : IFactory
@@ -30,6 +31,8 @@ namespace VectorGraph
         public FigureType ChoosenFigure { get; set; }
 
         Store st;
+
+        public SelectionController selController { get; set; } // потом убрать
 
         public Factory(Store st, PropList pl)
         {

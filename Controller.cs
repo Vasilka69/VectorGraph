@@ -27,6 +27,8 @@ namespace VectorGraph
         }
         public string f5()
         {
+            Model.Factory.selController.selStore.Draw(Model.GrController.grs); // Временно
+            /*
             if (Model.st.Count <= 0)
                 return "";
             //MessageBox.Show("sadfasd");
@@ -39,11 +41,14 @@ namespace VectorGraph
             MessageBox.Show(col.ToString());
             fpl.ContourProps.Color = Color.FromArgb(col2 - col);
             */
+            /*
             fpl.ContourProps.Color = Color.FromArgb(-random.Next(16777216));
             fpl.FillProps.Color = Color.FromArgb(-random.Next(16777216));
             //(Model.st[random.Next(Model.st.Count)] as Figure).pl.ContourProps.Color = Color.Black;
             Model.GrController.Repaint();
+            */
             return "AAAAA";
         }
+
     }
 }

@@ -16,6 +16,7 @@ namespace VectorGraph
         }
 
         public abstract void Draw(GraphSystem gs);
+        public abstract Selection CreateSelection();
     }
     enum FigureType 
     { 

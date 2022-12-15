@@ -12,6 +12,8 @@ namespace VectorGraph
     {
         void Repaint();
         void SetPort(Graphics gr);//, int width, int height);
+
+        GraphSystem grs { set; get; } // Временно
     }
 
     internal class Scene : IGrController
@@ -19,11 +21,13 @@ namespace VectorGraph
         public GraphSystem gs;
 
         public Store st;
+        public GraphSystem grs { set; get; } // Временно
 
         public Scene(Graphics gr, Store st)
         {
             this.gs = new GraphSystem(gr);
             this.st = st;
+            grs = gs; // Временно
         }
 
         public void Repaint()

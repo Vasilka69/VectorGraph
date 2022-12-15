@@ -65,6 +65,7 @@
     <Compile Include="Properties.cs" />
     <Compile Include="PropList.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="Selections.cs" />
     <Compile Include="States.cs" />
     <Compile Include="Store.cs" />
     <EmbeddedResource Include="Form1.resx">
