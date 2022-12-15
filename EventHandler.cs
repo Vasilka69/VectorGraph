@@ -29,28 +29,16 @@ namespace VectorGraph
             currState = CS;
         }
 
-        public void MouseMove(object sender, MouseEventArgs e)
-        {
-        }
+        public void MouseMove(object sender, MouseEventArgs e) { }
 
         public void MouseDown(object sender, MouseEventArgs e)
         {
             currState.MouseDown(e.X, e.Y);
-            /*
-            Model.Factory.frame.coords[0] = e.X;
-            Model.Factory.frame.coords[1] = e.Y;
-            */
         }
 
         public void MouseUp(object sender, MouseEventArgs e)
         {
             currState.MouseUp(e.X, e.Y);
-            /*
-            Model.Factory.frame.coords[2] = e.X;
-            Model.Factory.frame.coords[3] = e.Y;
-
-            Model.Factory.AddFigure();
-            */
         }
     }
 }

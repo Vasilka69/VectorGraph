@@ -28,22 +28,21 @@ namespace VectorGraph
             this.EH = EH;
         }
 
-        public override void MouseMove(int x, int y)
-        {
-
-        }
+        public override void MouseMove(int x, int y) { }
 
         public override void MouseDown(int x, int y)
         {
             Model.Factory.frame.coords[0] = x;
             Model.Factory.frame.coords[1] = y;
+            Model.Factory.frame.coords[2] = x;
+            Model.Factory.frame.coords[3] = y;
+
+            Model.Factory.AddFigure();
+
             EH.currState = EH.DS;
         }
 
-        public override void MouseUp(int x, int y)
-        {
-
-        }
+        public override void MouseUp(int x, int y) { }
     }
 
     internal class DragState : State
@@ -57,22 +56,16 @@ namespace VectorGraph
             this.EH = EH;
         }
 
-        public override void MouseMove(int x, int y)
-        {
+        public override void MouseMove(int x, int y) { }
 
-        }
-
-        public override void MouseDown(int x, int y)
-        {
-
-        }
+        public override void MouseDown(int x, int y) { }
 
         public override void MouseUp(int x, int y)
         {
-            Model.Factory.frame.coords[2] = x;
-            Model.Factory.frame.coords[3] = y;
+            Model.st[Model.st.Count - 1].frame.coords[2] = x;
+            Model.st[Model.st.Count - 1].frame.coords[3] = y;
 
-            Model.Factory.AddFigure();
+            Model.GrController.Repaint();
 
             EH.currState = EH.CS;
 
