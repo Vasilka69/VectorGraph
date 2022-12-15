@@ -17,6 +17,7 @@ namespace VectorGraph
         event Repaint RepaintEvent;
         FigureType ChoosenFigure { get; set; }
         void AddFigure();
+        //void AddCurrFigure();
     }
 
     internal class Factory : IFactory
@@ -32,11 +33,14 @@ namespace VectorGraph
 
         public Factory(Store st, PropList pl)
         {
+            frame = new Frame(0, 0, 0, 0);
+            ChoosenFigure = FigureType.Line;
             this.st = st;
             this.pl = pl;
-            ChoosenFigure = FigureType.Line;
+            // 
+            AddFigure();
+            //
             //this.scene = scene;
-            frame = new Frame(0, 0, 0, 0);
         }
 
         public void AddFigure()
@@ -51,8 +55,29 @@ namespace VectorGraph
                     break;
             }
             RepaintEvent?.Invoke();
+        }
+        /*
+        public void AddCurrFigure()
+        {
+            switch (ChoosenFigure)
+            {
+                case FigureType.Line:
+                    if (st.Count == 0)
+                        AddFigure();
+                    else
+                        st[0] = (new Line(frame.Clone(), pl.Clone()));
+                    break;
+                case FigureType.Rect:
+                    if (st.Count == 0)
+                        AddFigure();
+                    else
+                        st[0] = (new Rect(frame.Clone(), pl.Clone()));
+                    break;
+            }
+            RepaintEvent?.Invoke();
             //scene.Repaint();
             //DrawFigures();
         }
+        */
     }
 }

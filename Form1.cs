@@ -84,16 +84,33 @@ namespace VectorGraph
             pictureBox.VisibleChanged += PictureBox_VisibleChanged;
             this.ResizeEnd += PictureBox_VisibleChanged;
             pictureBox.StyleChanged += PictureBox_VisibleChanged;*/
-
+            /*
+            pictureBox.MouseMove += PictureBox_MouseUp;
             pictureBox.MouseDown += PictureBox_MouseDown;
             pictureBox.MouseUp += PictureBox_MouseUp;
+            */
 
+            pictureBox.MouseMove += controller.Model.EventHandler.MouseMove;
+            pictureBox.MouseDown += controller.Model.EventHandler.MouseDown;
+            pictureBox.MouseUp += controller.Model.EventHandler.MouseUp;
 
             // graphSystem.Str += MessageBox.Show; вероятно хлам
 
             //pictureBox.Paint += new PaintEventHandler(this.plusevent);
 
             pictureBox.Focus();
+            /*
+            this.Resize += Form1_Resize; /////////
+            this.LostFocus += Form1_Resize;
+            */
+
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            //MessageBox.Show("");
+            if (this.WindowState == FormWindowState.Minimized || this.Focused == false)
+                this.Dispose();
         }
 
         private void ComboBox1_SelectedValueChanged(object sender, EventArgs e) // Выбор типа фигуры
@@ -105,18 +122,19 @@ namespace VectorGraph
         {
             controller.Model.Factory.frame.coords[0] = e.X;
             controller.Model.Factory.frame.coords[1] = e.Y;
+
             //pictureBox.MouseMove += PictureBox_MouseMove;
         }
         /*
         private void PictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            graphSystem.frame.coords[2] = e.X;
-            graphSystem.frame.coords[3] = e.Y;
-            this.UpdateStyles();
-            graphSystem.DrawFigures();
-            DrawFigure(graphSystem.CurrFigure);
-        }*/
-        
+            
+            controller.Model.Factory.frame.coords[2] = e.X;
+            controller.Model.Factory.frame.coords[3] = e.Y;
+
+            controller.Model.Factory.AddFigure();
+        }
+        */
         private void PictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             //pictureBox.MouseMove -= PictureBox_MouseMove;
@@ -125,6 +143,7 @@ namespace VectorGraph
             controller.Model.Factory.frame.coords[3] = e.Y;
 
             controller.Model.Factory.AddFigure();
+            
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
@@ -188,6 +207,7 @@ namespace VectorGraph
                 this.UpdateStyles();
                 pictureBox.BackColor = Color.White;
                 pictureBox.Size = new Size(width, height);
+                controller.Model.GrController.SetPort(pictureBox.CreateGraphics());//, width, height);
             }
         }
 

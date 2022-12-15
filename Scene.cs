@@ -11,7 +11,7 @@ namespace VectorGraph
     interface IGrController
     {
         void Repaint();
-        void SetPort(Graphics gr, int width, int height);
+        void SetPort(Graphics gr);//, int width, int height);
     }
 
     internal class Scene : IGrController
@@ -36,7 +36,7 @@ namespace VectorGraph
             //DrawFigure(CurrFigure);
         }
 
-        public void SetPort(Graphics gr, int width, int height)
+        public void SetPort(Graphics gr)//, int width, int height)
         {
             gs.gr = gr;
             // width height

@@ -12,6 +12,7 @@ namespace VectorGraph
         IGrProperties GrProperties { get; }
         IGrController GrController { get; }
         IFactory Factory { get; }
+        IEventHandler EventHandler { get; }
         void StoreClear();
         Store st { get; }
         /*
@@ -27,6 +28,7 @@ namespace VectorGraph
         public IGrProperties GrProperties { get; }
         public IGrController GrController { get; }
         public IFactory Factory { get; }
+        public IEventHandler EventHandler { get; }
         /*
         public Factory factory { get; }
         public Scene scene { get; }
@@ -46,7 +48,8 @@ namespace VectorGraph
             GrController = new Scene(gr, st);
             Factory = new Factory(st, pl);
             Factory.RepaintEvent += GrController.Repaint;
-            
+            EventHandler = new EventHandler(this);
+            //// EVENT HANDLER
             /*
             st = new Store();
             scene = new Scene(gr, st);
