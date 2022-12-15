@@ -117,7 +117,7 @@ namespace VectorGraph
         {
             controller.Model.Factory.ChoosenFigure = (FigureType) comboBox1.SelectedValue;
         }
-
+        /*
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             controller.Model.Factory.frame.coords[0] = e.X;
@@ -125,6 +125,7 @@ namespace VectorGraph
 
             //pictureBox.MouseMove += PictureBox_MouseMove;
         }
+        */
         /*
         private void PictureBox_MouseMove(object sender, MouseEventArgs e)
         {
@@ -135,6 +136,7 @@ namespace VectorGraph
             controller.Model.Factory.AddFigure();
         }
         */
+        /*
         private void PictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             //pictureBox.MouseMove -= PictureBox_MouseMove;
@@ -145,7 +147,7 @@ namespace VectorGraph
             controller.Model.Factory.AddFigure();
             
         }
-
+        */
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
         {
             if (this.colorDialog1.ShowDialog() == DialogResult.OK)

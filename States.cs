@@ -32,12 +32,7 @@ namespace VectorGraph
 
         public override void MouseDown(int x, int y)
         {
-            Model.Factory.frame.coords[0] = x;
-            Model.Factory.frame.coords[1] = y;
-            Model.Factory.frame.coords[2] = x;
-            Model.Factory.frame.coords[3] = y;
-
-            Model.Factory.AddFigure();
+            Model.Factory.CreateAndGrabItem(x, y);
 
             EH.currState = EH.DS;
         }
@@ -61,6 +56,10 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y)
         {
+            Model.st[Model.st.Count - 1].frame.coords[2] = x;
+            Model.st[Model.st.Count - 1].frame.coords[3] = y;
+
+            Model.GrController.Repaint();
 
         }
 

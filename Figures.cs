@@ -61,6 +61,10 @@ namespace VectorGraph
         {
             gs.DrawFigure(this);
         }
+        public override Selection CreateSelection() // Пустышка
+        {
+            return new LineSelection();
+        }
     }
     
     internal class Rect : Figure
@@ -79,6 +83,10 @@ namespace VectorGraph
         public override void DrawGeometry(GraphSystem gs)
         {
             gs.DrawFigure(this);
+        }
+        public override Selection CreateSelection() // Пустышка
+        {
+            return new RectSelection();
         }
     }
 }

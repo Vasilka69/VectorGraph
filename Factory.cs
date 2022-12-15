@@ -12,20 +12,21 @@ namespace VectorGraph
     {
         PropList pl { set; get; }
 
-        Frame frame { set; get; }
+        //Frame frame { set; get; } // по идее щас не нужен
 
         event Repaint RepaintEvent;
         FigureType ChoosenFigure { get; set; }
-        void AddFigure();
+        GraphItem AddFigure(int x, int y);
+        void CreateAndGrabItem(int x, int y);
         //void AddCurrFigure();
-         SelectionController selController { get; set; } // Потом убрать
+        SelectionController selController { get; set; } // Потом убрать
     }
 
     internal class Factory : IFactory
     {
         public PropList pl { set; get; }
 
-        public Frame frame { set; get; }
+        //public Frame frame { set; get; } // по идее щас не нужен
 
         public event Repaint RepaintEvent;
         public FigureType ChoosenFigure { get; set; }
@@ -36,28 +37,43 @@ namespace VectorGraph
 
         public Factory(Store st, PropList pl)
         {
-            frame = new Frame(0, 0, 0, 0);
+            // frame = new Frame(0, 0, 0, 0); // по идее щас не нужен
             ChoosenFigure = FigureType.Line;
             this.st = st;
             this.pl = pl;
+            selController = new SelectionController();
             // 
-            AddFigure();
+            //AddFigure();
             //
             //this.scene = scene;
         }
 
-        public void AddFigure()
+        public GraphItem AddFigure(int x, int y)
         {
+            Figure f;
+            Frame frame = new Frame(x, y, x, y);
             switch (ChoosenFigure)
             {
                 case FigureType.Line:
-                    st.Add(new Line(frame.Clone(), pl.Clone()));
+                    f = new Line(frame, pl.Clone());
                     break;
                 case FigureType.Rect:
-                    st.Add(new Rect(frame.Clone(), pl.Clone()));
+                    f = new Rect(frame, pl.Clone());
+                    break;
+                default:
+                    f = null;
                     break;
             }
+            //st.Add(f);
             RepaintEvent?.Invoke();
+            return f;
+        }
+
+        public void CreateAndGrabItem(int x, int y)
+        {
+            GraphItem item = AddFigure(x, y);
+            st.Add(item);
+            selController.SelectAndGrab(item, x, y);
         }
         /*
         public void AddCurrFigure()

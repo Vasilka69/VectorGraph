@@ -31,7 +31,7 @@ namespace VectorGraph
 
         public void MouseMove(object sender, MouseEventArgs e)
         {
-
+            currState.MouseMove(e.X, e.Y);
         }
 
         public void MouseDown(object sender, MouseEventArgs e)
