@@ -113,6 +113,21 @@ namespace VectorGraph
                 sel.Draw(gs);
             }
         }
+
+        public void DragSelectionTo(int x, int y)
+        {
+
+        }
+
+        public void ReleaseSelection()
+        {
+
+        }
+
+        public void DeleteSelection()
+        {
+
+        }
     }
 
     internal class SelectionController
