@@ -14,6 +14,8 @@ namespace VectorGraph
         void SetPort(Graphics gr);//, int width, int height);
 
         GraphSystem grs { set; get; } // Временно
+
+        SelectionStore SelStore { set; get; }
     }
 
     internal class Scene : IGrController
@@ -22,6 +24,7 @@ namespace VectorGraph
 
         public Store st;
         public GraphSystem grs { set; get; } // Временно
+        public SelectionStore SelStore { set; get; }
 
         public Scene(Graphics gr, Store st)
         {
@@ -36,6 +39,11 @@ namespace VectorGraph
             if (st.Count != 0)
                 foreach (Figure f in st)
                     f.Draw(gs);
+            SelStore.Draw(gs);
+            /*
+            if (SelStore.grabbedSelection != null)
+                SelStore.grabbedSelection.Draw(gs);
+            */
                     //gs.DrawFigure(f);
             //DrawFigure(CurrFigure);
         }
