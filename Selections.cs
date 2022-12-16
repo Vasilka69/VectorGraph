@@ -5,11 +5,13 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VectorGraph
 {
     internal abstract class Selection
     {
+        public List<Point> points;
         public abstract bool TryGrab(int x, int y);
         public abstract bool TryDragTo(int x, int y);
         public abstract void ReleaseGrab();
@@ -21,9 +23,22 @@ namespace VectorGraph
         int delta = 5;
         Line line;
 
+        public LineSelection(Line line)
+        {
+            this.line = line;
+            points = new List<Point>();
+            points.Add(new Point(line.frame.coords[0], line.frame.coords[1]));
+            points.Add(new Point(line.frame.coords[2], line.frame.coords[3]));
+        }
+
         public override bool TryGrab(int x, int y) // не работает
         {
-
+            foreach (Point p in points)
+            {
+                if (x > p.X - delta && x < p.X + delta &&
+                    y > p.Y - delta && y < p.Y + delta)
+                    return true;
+            }
             return false;
         }
 
@@ -39,13 +54,15 @@ namespace VectorGraph
 
         public override void Draw(GraphSystem gs)
         {
-            Frame linefr = line.frame;
-            Frame frame = new Frame(0, 0, 0, 0);
             ContourProps cp = new ContourProps(Color.Gray, 1);
             FillProps fp = new FillProps(Color.Gray);
             PropList pl = new PropList(cp, fp);
-
-            Figure marker = new Rect(frame, pl);
+            foreach (Point p in points)
+            {
+                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
+                Figure marker = new Rect(frame, pl);
+                marker.Draw(gs);
+            }
         }
     }
     
@@ -53,6 +70,19 @@ namespace VectorGraph
     {
         int delta = 5;
         Rect rect;
+
+        public RectSelection(Rect rect)
+        {
+            this.rect = rect;
+            /*
+            points = new List<Point>();
+            points.Add(new Point(rect.frame.coords[0], rect.frame.coords[1]));
+            points.Add(new Point(rect.frame.coords[2], rect.frame.coords[1]));
+            points.Add(new Point(rect.frame.coords[0], rect.frame.coords[3]));
+            points.Add(new Point(rect.frame.coords[2], rect.frame.coords[3]));
+            MessageBox.Show("AS");
+            */
+        }
 
         public override bool TryGrab(int x, int y) // не работает
         {
@@ -86,13 +116,16 @@ namespace VectorGraph
 
     internal class SelectionStore : List<Selection>
     {
-        Selection grabbedSelection { set; get; }
+        public Selection grabbedSelection { set; get; }
+
+        public IGrController GrController; // Странно
 
         public Selection TryGrab(int x, int y)
         {
             foreach (Selection sel in this)
             {
                 if (sel.TryGrab(x, y))
+                    grabbedSelection = sel;
                     return sel;
             }
             return null;
@@ -124,9 +157,11 @@ namespace VectorGraph
 
         }
 
-        public void DeleteSelection()
+        public void DeleteSelection(Selection sel)
         {
-
+            foreach (Selection s in this)
+                if (s == sel)
+                    this.Remove(s);
         }
     }
 
@@ -134,7 +169,7 @@ namespace VectorGraph
     {
         public SelectionStore selStore;
 
-        public SelectionController()
+        public SelectionController()//IGrController GrController)
         {
             selStore = new SelectionStore();
         }

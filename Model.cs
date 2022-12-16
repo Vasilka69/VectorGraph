@@ -47,6 +47,7 @@ namespace VectorGraph
             st = new Store();
             GrController = new Scene(gr, st);
             Factory = new Factory(st, pl);
+            Factory.selController.selStore.GrController = GrController; // Странно
             Factory.RepaintEvent += GrController.Repaint;
             EventHandler = new EventHandler(this);
             //// EVENT HANDLER

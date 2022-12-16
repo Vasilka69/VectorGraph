@@ -61,9 +61,9 @@ namespace VectorGraph
         {
             gs.DrawFigure(this);
         }
-        public override Selection CreateSelection() // Пустышка
+        public override Selection CreateSelection() // уже не пустышка
         {
-            return new LineSelection();
+            return new LineSelection(this);
         }
     }
     
@@ -86,7 +86,7 @@ namespace VectorGraph
         }
         public override Selection CreateSelection() // Пустышка
         {
-            return new RectSelection();
+            return new RectSelection(this);
         }
     }
 }
