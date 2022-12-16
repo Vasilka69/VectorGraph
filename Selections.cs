@@ -37,7 +37,10 @@ namespace VectorGraph
             {
                 if (x > p.X - delta && x < p.X + delta &&
                     y > p.Y - delta && y < p.Y + delta)
+                {
+                    //MessageBox.Show("popal");
                     return true;
+                }
             }
             return false;
         }
@@ -125,8 +128,10 @@ namespace VectorGraph
             foreach (Selection sel in this)
             {
                 if (sel.TryGrab(x, y))
+                {
                     grabbedSelection = sel;
                     return sel;
+                }
             }
             return null;
 

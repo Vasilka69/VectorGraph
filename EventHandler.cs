@@ -36,6 +36,7 @@ namespace VectorGraph
 
         public void MouseDown(object sender, MouseEventArgs e)
         {
+            //MessageBox.Show(currState.ToString());
             currState.MouseDown(e.X, e.Y);
             /*
             Model.Factory.frame.coords[0] = e.X;
@@ -45,6 +46,7 @@ namespace VectorGraph
 
         public void MouseUp(object sender, MouseEventArgs e)
         {
+            //MessageBox.Show(currState.ToString());
             currState.MouseUp(e.X, e.Y);
             /*
             Model.Factory.frame.coords[2] = e.X;

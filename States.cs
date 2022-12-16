@@ -32,9 +32,16 @@ namespace VectorGraph
 
         public override void MouseDown(int x, int y)
         {
-            Model.Factory.CreateAndGrabItem(x, y);
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            if (selStore.TryGrab(x, y) == null)
+            {
+                Model.Factory.CreateAndGrabItem(x, y);
 
-            EH.currState = EH.DS;
+                EH.currState = EH.DS;
+                //MessageBox.Show("Sozdau");
+
+            }
+            //MessageBox.Show("Sozdau");
         }
 
         public override void MouseUp(int x, int y)
@@ -84,6 +91,7 @@ namespace VectorGraph
             Model.GrController.Repaint();
 
             EH.currState = EH.CS;
+            //MessageBox.Show("SozdaL");
 
         }
     }
