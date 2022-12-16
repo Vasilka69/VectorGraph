@@ -12,8 +12,8 @@ namespace VectorGraph
         public abstract IModel Model { set; get; }
         public abstract EventHandler EH { set; get; }
 
-        public abstract void MouseDown(int x, int y);
-        public abstract void MouseUp(int x, int y);
+        public abstract void LeftMouseDown(int x, int y);
+        public abstract void LeftMouseUp(int x, int y);
         public abstract void MouseMove(int x, int y);
     }
 
@@ -30,7 +30,7 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y) { }
 
-        public override void MouseDown(int x, int y)
+        public override void LeftMouseDown(int x, int y)
         {
             SelectionStore selStore = Model.Factory.selController.selStore;
             Selection sel = selStore.TryGrab(x, y);
@@ -45,7 +45,7 @@ namespace VectorGraph
             }
         }
 
-        public override void MouseUp(int x, int y)
+        public override void LeftMouseUp(int x, int y)
         {
 
         }
@@ -73,12 +73,12 @@ namespace VectorGraph
 
         }
 
-        public override void MouseDown(int x, int y)
+        public override void LeftMouseDown(int x, int y)
         {
 
         }
 
-        public override void MouseUp(int x, int y)
+        public override void LeftMouseUp(int x, int y)
         {
             GraphItem f = Model.st[Model.st.Count - 1];
             f.frame.coords[2] = x;

@@ -21,7 +21,8 @@ namespace VectorGraph
     enum FigureType 
     { 
         Line = 0, 
-        Rect = 1
+        Rect = 1,
+        Ellipse = 2
     }
 
     internal abstract class Figure : GraphItem
@@ -66,7 +67,7 @@ namespace VectorGraph
             return new LineSelection(this);
         }
     }
-    
+
     internal class Rect : Figure
     {
         public Rect(Frame fr, PropList pl) : base(fr, pl)
@@ -87,6 +88,29 @@ namespace VectorGraph
         public override Selection CreateSelection() // Пустышка
         {
             return new RectSelection(this);
+        }
+    }
+
+    internal class Ellipse : Figure
+    {
+        public Ellipse(Frame fr, PropList pl) : base(fr, pl)
+        {
+            type = FigureType.Ellipse;
+
+        }
+
+        public override void ApplyProps(PropList pl)
+        {
+            this.pl = pl;
+        }
+
+        public override void DrawGeometry(GraphSystem gs)
+        {
+            gs.DrawFigure(this);
+        }
+        public override Selection CreateSelection() // Пустышка
+        {
+            return new EllipseSelection(this);
         }
     }
 }

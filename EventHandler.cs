@@ -11,8 +11,8 @@ namespace VectorGraph
     {
         //State CurrState { get; set; }
         void MouseMove(object sender, MouseEventArgs e);
-        void MouseDown(object sender, MouseEventArgs e);
-        void MouseUp(object sender, MouseEventArgs e);
+        void LeftMouseDown(object sender, MouseEventArgs e);
+        void LeftMouseUp(object sender, MouseEventArgs e);
     }
     internal class EventHandler : IEventHandler
     {
@@ -34,20 +34,22 @@ namespace VectorGraph
             currState.MouseMove(e.X, e.Y);
         }
 
-        public void MouseDown(object sender, MouseEventArgs e)
+        public void LeftMouseDown(object sender, MouseEventArgs e)
         {
             //MessageBox.Show(currState.ToString());
-            currState.MouseDown(e.X, e.Y);
+            if ( e.Button == MouseButtons.Left )
+                currState.LeftMouseDown(e.X, e.Y);
             /*
             Model.Factory.frame.coords[0] = e.X;
             Model.Factory.frame.coords[1] = e.Y;
             */
         }
 
-        public void MouseUp(object sender, MouseEventArgs e)
+        public void LeftMouseUp(object sender, MouseEventArgs e)
         {
             //MessageBox.Show(currState.ToString());
-            currState.MouseUp(e.X, e.Y);
+            if (e.Button == MouseButtons.Left)
+                currState.LeftMouseUp(e.X, e.Y);
             /*
             Model.Factory.frame.coords[2] = e.X;
             Model.Factory.frame.coords[3] = e.Y;

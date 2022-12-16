@@ -34,33 +34,29 @@ namespace VectorGraph
             int width = Math.Abs(x1 - x2);
             int height = Math.Abs(y1 - y2);
 
+            int rectx;
+            int recty;
+            rectx = Math.Min(x1, x2);
+            recty = Math.Min(y1, y2);
+
+            Rectangle rect = new Rectangle(rectx, recty, width, height);
+
             switch (f.type)
             {
                 case (FigureType.Rect): // Прямоугольник
-                    int rectx;
-                    int recty;
-                    if (x1 - x2 < 0)
-                        rectx = x1;
-                    else
-                        rectx = x2;
-                    if (y1 - y2 < 0)
-                        recty = y1;
-                    else
-                        recty = y2;
-                    Rectangle rect = new Rectangle(rectx, recty, Math.Abs(width), Math.Abs(height));
-                    gr.DrawRectangle(pen, rect);
                     if (fp != null)
-                    {
-                        int contourWidth = cp.LineWidth / 2;
-                        if (contourWidth % 2 != 0)
-                            contourWidth--;
-                        gr.FillRectangle(new SolidBrush(fp.Color),
-                        new Rectangle(rectx + contourWidth + 1, recty + contourWidth + 1,
-                                        width - cp.LineWidth, height - cp.LineWidth));
-                    }
+                        gr.FillRectangle(new SolidBrush(fp.Color), rect);
+                    gr.DrawRectangle(pen, rect);
                     break;
+
                 case (FigureType.Line): // Линия
                     gr.DrawLine(pen, x1, y1, x2, y2);
+                    break;
+
+                case (FigureType.Ellipse): // Эллипс
+                    if (fp != null)
+                        gr.FillEllipse(new SolidBrush(fp.Color), rect);
+                    gr.DrawEllipse(pen, rect);
                     break;
             }
         }

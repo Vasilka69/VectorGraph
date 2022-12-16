@@ -60,6 +60,9 @@ namespace VectorGraph
                 case FigureType.Rect:
                     f = new Rect(frame, pl.Clone());
                     break;
+                case FigureType.Ellipse:
+                    f = new Ellipse(frame, pl.Clone());
+                    break;
                 default:
                     f = null;
                     break;

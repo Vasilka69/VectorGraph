@@ -91,8 +91,8 @@ namespace VectorGraph
             */
 
             pictureBox.MouseMove += controller.Model.EventHandler.MouseMove;
-            pictureBox.MouseDown += controller.Model.EventHandler.MouseDown;
-            pictureBox.MouseUp += controller.Model.EventHandler.MouseUp;
+            pictureBox.MouseDown += controller.Model.EventHandler.LeftMouseDown;
+            pictureBox.MouseUp += controller.Model.EventHandler.LeftMouseUp;
 
             // graphSystem.Str += MessageBox.Show; вероятно хлам
 
