@@ -51,6 +51,8 @@ namespace VectorGraph
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -59,6 +61,8 @@ namespace VectorGraph
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -78,7 +82,7 @@ namespace VectorGraph
             this.saToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(804, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(871, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -96,7 +100,7 @@ namespace VectorGraph
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(804, 447);
+            this.panel1.Size = new System.Drawing.Size(871, 483);
             this.panel1.TabIndex = 2;
             // 
             // panel3
@@ -106,7 +110,7 @@ namespace VectorGraph
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(200, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(604, 425);
+            this.panel3.Size = new System.Drawing.Size(671, 461);
             this.panel3.TabIndex = 1;
             // 
             // panel2
@@ -119,7 +123,7 @@ namespace VectorGraph
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(200, 425);
+            this.panel2.Size = new System.Drawing.Size(200, 461);
             this.panel2.TabIndex = 0;
             // 
             // panel7
@@ -132,7 +136,7 @@ namespace VectorGraph
             this.panel7.Controls.Add(this.textBox2);
             this.panel7.Controls.Add(this.label8);
             this.panel7.Controls.Add(this.label9);
-            this.panel7.Location = new System.Drawing.Point(4, 294);
+            this.panel7.Location = new System.Drawing.Point(3, 332);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(189, 122);
             this.panel7.TabIndex = 9;
@@ -210,7 +214,7 @@ namespace VectorGraph
             this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel6.Controls.Add(this.label6);
             this.panel6.Controls.Add(this.comboBox1);
-            this.panel6.Location = new System.Drawing.Point(4, 223);
+            this.panel6.Location = new System.Drawing.Point(3, 261);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(188, 65);
             this.panel6.TabIndex = 8;
@@ -238,12 +242,14 @@ namespace VectorGraph
             // panel5
             // 
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel5.Controls.Add(this.comboBox3);
+            this.panel5.Controls.Add(this.label11);
             this.panel5.Controls.Add(this.pictureBox2);
             this.panel5.Controls.Add(this.label4);
             this.panel5.Controls.Add(this.label3);
-            this.panel5.Location = new System.Drawing.Point(4, 132);
+            this.panel5.Location = new System.Drawing.Point(3, 156);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(189, 85);
+            this.panel5.Size = new System.Drawing.Size(189, 99);
             this.panel5.TabIndex = 6;
             // 
             // pictureBox2
@@ -280,6 +286,8 @@ namespace VectorGraph
             // panel4
             // 
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.comboBox2);
+            this.panel4.Controls.Add(this.label10);
             this.panel4.Controls.Add(this.textBox1);
             this.panel4.Controls.Add(this.label5);
             this.panel4.Controls.Add(this.pictureBox1);
@@ -287,12 +295,33 @@ namespace VectorGraph
             this.panel4.Controls.Add(this.label1);
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(189, 123);
+            this.panel4.Size = new System.Drawing.Size(189, 147);
             this.panel4.TabIndex = 5;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.comboBox2.Location = new System.Drawing.Point(96, 111);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(88, 21);
+            this.comboBox2.TabIndex = 9;
+            this.comboBox2.TabStop = false;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.Location = new System.Drawing.Point(15, 112);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(75, 15);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "Тип линии";
+            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(120, 86);
+            this.textBox1.Location = new System.Drawing.Point(120, 79);
             this.textBox1.MaxLength = 3;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(37, 20);
@@ -303,7 +332,7 @@ namespace VectorGraph
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(17, 87);
+            this.label5.Location = new System.Drawing.Point(15, 80);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 15);
             this.label5.TabIndex = 4;
@@ -324,7 +353,7 @@ namespace VectorGraph
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(17, 45);
+            this.label2.Location = new System.Drawing.Point(15, 45);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 15);
             this.label2.TabIndex = 1;
@@ -344,10 +373,10 @@ namespace VectorGraph
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 425);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 461);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.statusStrip1.Size = new System.Drawing.Size(804, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(871, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -357,11 +386,31 @@ namespace VectorGraph
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(45, 17);
             this.toolStripStatusLabel1.Text = "Coords";
             // 
+            // comboBox3
+            // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.comboBox3.Location = new System.Drawing.Point(96, 69);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(88, 21);
+            this.comboBox3.TabIndex = 11;
+            this.comboBox3.TabStop = false;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.Location = new System.Drawing.Point(5, 70);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(89, 15);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "Тип заливки";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(804, 471);
+            this.ClientSize = new System.Drawing.Size(871, 507);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -421,6 +470,10 @@ namespace VectorGraph
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label11;
     }
 }
 

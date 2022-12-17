@@ -174,5 +174,10 @@ namespace VectorGraph
         {
             this.toolStripStatusLabel1.Text = e.X + "," + e.Y;
         }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
