@@ -37,8 +37,8 @@ namespace VectorGraph
             ChoosenFigure = FigureType.Line;
             this.st = st;
 
-            ContourProps cp = new ContourProps(GrProperties.Contour.Color, GrProperties.Contour.LineWidth);
-            FillProps fp = new FillProps(GrProperties.Fill.Color);
+            ContourProps cp = new ContourProps(GrProperties.Contour.Color, GrProperties.Contour.LineWidth, GrProperties.Contour.Type);
+            FillProps fp = new FillProps(GrProperties.Fill.Color, GrProperties.Fill.Type);
             PropList pl = new PropList(cp, fp);
             this.GrProperties = new GrPropChannel(pl);
 
@@ -51,6 +51,7 @@ namespace VectorGraph
             Figure f;
             Frame frame = new Frame(x, y, x, y);
             PropList pl = new PropList(GrProperties.Contour as ContourProps, GrProperties.Fill as FillProps);
+            //MessageBox.Show(GrProperties.Fill.Type.ToString());
             switch (ChoosenFigure)
             {
                 case FigureType.Line:

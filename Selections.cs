@@ -69,8 +69,8 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            ContourProps cp = new ContourProps(Color.Gray, 1);
-            FillProps fp = new FillProps(Color.Gray);
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
             foreach (Point p in points)
             {
@@ -134,8 +134,8 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            ContourProps cp = new ContourProps(Color.Gray, 1);
-            FillProps fp = new FillProps(Color.Gray);
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
             foreach (Point p in points)
             {
@@ -205,8 +205,8 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            ContourProps cp = new ContourProps(Color.Gray, 1);
-            FillProps fp = new FillProps(Color.Gray);
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
             foreach (Point p in points)
             {

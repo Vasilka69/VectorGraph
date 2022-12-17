@@ -12,13 +12,15 @@ namespace VectorGraph
         
         int LineWidth { set; get; }
         Color Color { set; get; }
-        
+        LineType Type { set; get; }
+
         //ContourProps ContourProps { get; set; }
     }
 
     interface IFillProps
     {
         Color Color { set; get; }
+        FillType Type { set; get; }
 
         //FillProps FillProps { get; set; }
     }
@@ -36,8 +38,8 @@ namespace VectorGraph
 
         public GrPropChannel(PropList pl)
         {
-            Contour = new ContourProps(pl.ContourProps.Color, pl.ContourProps.LineWidth);
-            Fill = new FillProps(pl.FillProps.Color);
+            Contour = new ContourProps(pl.ContourProps.Color, pl.ContourProps.LineWidth, LineType.SolidColor);
+            Fill = new FillProps(pl.FillProps.Color, FillType.SolidColor);
 
         }
     }

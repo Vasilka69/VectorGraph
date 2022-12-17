@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,34 @@ namespace VectorGraph
             if (f == null)
                 return;
 
+            Brush brush = new SolidBrush(GrProperties.Fill.Color);
+            switch (GrProperties.Fill.Type)
+            {
+                case (FillType.SolidColor):
+                    brush = new SolidBrush(GrProperties.Fill.Color);
+                    break;
+                case (FillType.HatchBrushHor):
+                    brush = new HatchBrush(HatchStyle.Horizontal, GrProperties.Fill.Color, Color.White);
+                    break;
+                case (FillType.HatchBrushDiagCross):
+                    brush = new HatchBrush(HatchStyle.DiagonalCross, GrProperties.Fill.Color, Color.White);
+                    break;
+                case (FillType.HatchBrushBackDiag):
+                    brush = new HatchBrush(HatchStyle.BackwardDiagonal, GrProperties.Fill.Color, Color.White);
+                    break;
+            }
+
             Pen pen = new Pen(GrProperties.Contour.Color, GrProperties.Contour.LineWidth);
+            switch (GrProperties.Contour.Type)
+            {
+                case (LineType.SolidColor):
+                    //penBrush = new SolidBrush(GrProperties.Contour.Color);
+                    break;
+                case (LineType.HatchFill):
+                    float[] dashValues = { 2, 1 };
+                    pen.DashPattern = dashValues;
+                    break;
+            }
 
             int x1 = f.frame.coords[0];
             int y1 = f.frame.coords[1];
@@ -47,7 +75,7 @@ namespace VectorGraph
             {
                 case (FigureType.Rect): // Прямоугольник
                     if (GrProperties.Fill != null)
-                        gr.FillRectangle(new SolidBrush(GrProperties.Fill.Color), rect);
+                        gr.FillRectangle(brush, rect);
                     gr.DrawRectangle(pen, rect);
                     break;
 
@@ -57,7 +85,7 @@ namespace VectorGraph
 
                 case (FigureType.Ellipse): // Эллипс
                     if (GrProperties.Fill != null)
-                        gr.FillEllipse(new SolidBrush(GrProperties.Fill.Color), rect);
+                        gr.FillEllipse(brush, rect);
                     gr.DrawEllipse(pen, rect);
                     break;
             }

@@ -33,9 +33,9 @@ namespace VectorGraph
             pictureBox.BackColor = Color.White;
             pictureBox.Location = new System.Drawing.Point(0, 0);
             pictureBox.Name = "pictureBox1";
-            pictureBox.Size = new System.Drawing.Size(604, 425);
+            pictureBox.Size = new System.Drawing.Size(671, 461);
             pictureBox.TabIndex = 0;
-            pictureBox.TabStop = false;
+            pictureBox.TabStop = true;
 
             pictureBox.MouseMove += this.UpdateCoordinates;
 
@@ -44,8 +44,8 @@ namespace VectorGraph
             // PictureBox }
 
 
-            ContourProps cp = new ContourProps(this.pictureBox1.BackColor, 5);
-            FillProps fp = new FillProps(this.pictureBox2.BackColor);
+            ContourProps cp = new ContourProps(this.pictureBox1.BackColor, 5, LineType.SolidColor);
+            FillProps fp = new FillProps(this.pictureBox2.BackColor, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
 
             IGrProperties GrProperties = new GrPropChannel(pl);
@@ -57,7 +57,15 @@ namespace VectorGraph
             comboBox1.DataSource = Enum.GetValues(typeof(FigureType));
             comboBox1.SelectedValueChanged += ComboBox1_SelectedValueChanged;
             comboBox1.SelectedIndex = 0; //
-            
+
+            comboBox2.DataSource = Enum.GetValues(typeof(LineType));
+            comboBox2.SelectedValueChanged += ComboBox2_SelectedValueChanged;
+            comboBox2.SelectedIndex = 0; //
+
+            comboBox3.DataSource = Enum.GetValues(typeof(FillType));
+            comboBox3.SelectedValueChanged += ComboBox3_SelectedValueChanged;
+            comboBox3.SelectedIndex = 0; //
+
             controller.Model.Factory.ChoosenFigure = (FigureType)comboBox1.SelectedValue;
 
             textBox1.TextChanged += TextBox1_TextChanged;
@@ -83,6 +91,7 @@ namespace VectorGraph
 
         }
 
+
         private void Form1_Resize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized || this.Focused == false)
@@ -92,6 +101,15 @@ namespace VectorGraph
         private void ComboBox1_SelectedValueChanged(object sender, EventArgs e) // Выбор типа фигуры
         {
             controller.Model.Factory.ChoosenFigure = (FigureType) comboBox1.SelectedValue;
+        }
+        private void ComboBox2_SelectedValueChanged(object sender, EventArgs e) // Выбор типа линии
+        {
+            controller.Model.Factory.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
+        }
+
+        private void ComboBox3_SelectedValueChanged(object sender, EventArgs e) // Выбор типа заливки
+        {
+            controller.Model.Factory.GrProperties.Fill.Type = (FillType)comboBox3.SelectedValue;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
