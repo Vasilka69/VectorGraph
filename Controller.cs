@@ -11,43 +11,45 @@ namespace VectorGraph
     interface IController
     {
         IModel Model { set;  get; }
-        //IEventHandler EventHandler { get; }
+
         string f5();
     }
     internal class Controller : IController
     {
         public IModel Model { set; get; }
 
-        //public IEventHandler EventHandler { get; }
-
-        public Controller(IModel model)//, IEventHandler eventHandler)
+        public Controller(IModel model)
         {
             this.Model = model;
-            //this.EventHandler = eventHandler;
         }
+
         public string f5()
         {
-            Model.Factory.selController.selStore.Draw(Model.GrController.grs); // Временно
             /*
-            if (Model.st.Count <= 0)
-                return "";
-            //MessageBox.Show("sadfasd");
-            Random random = new Random();
-            PropList fpl = (Model.st[random.Next(Model.st.Count)] as Figure).pl;
-            /*
-            int col2 = Color.Black.ToArgb();
-            MessageBox.Show(col2.ToString());
-            int col = fpl.ContourProps.Color.ToArgb();
-            MessageBox.Show(col.ToString());
-            fpl.ContourProps.Color = Color.FromArgb(col2 - col);
+            int delta = 5;
+            ///////
+            List<Point> points = new List<Point>();
+            List<Frame> frames = new List<Frame>();
+            foreach (Figure f in Model.st)
+                frames.Add(f.frame);
+            Frame sumFr = Frame.FrameSum(frames);
+
+            points.Add(new Point(sumFr.coords[0], sumFr.coords[1]));
+            points.Add(new Point(sumFr.coords[2], sumFr.coords[3]));
+
+
+            ContourProps cp = new ContourProps(Color.Gray, 1);
+            FillProps fp = new FillProps(Color.Gray);
+            PropList pl = new PropList(cp, fp);
+            foreach (Point p in points)
+            {
+                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
+                Figure marker = new Rect(frame, pl);
+                marker.Draw(Model.GrController.gs);
+            }
+            //////
             */
-            /*
-            fpl.ContourProps.Color = Color.FromArgb(-random.Next(16777216));
-            fpl.FillProps.Color = Color.FromArgb(-random.Next(16777216));
-            //(Model.st[random.Next(Model.st.Count)] as Figure).pl.ContourProps.Color = Color.Black;
-            Model.GrController.Repaint();
-            */
-            return "AAAAA";
+            return "123";
         }
 
     }

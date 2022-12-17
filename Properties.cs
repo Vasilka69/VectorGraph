@@ -10,18 +10,14 @@ namespace VectorGraph
 {
     internal abstract class Property
     {
-
-        //private protected int Color;
-        //private protected Color Color;
-        public Color Color;
-
-        //public abstract void Apply(GraphSystem gs);
+        public abstract void Apply(GraphSystem gs);
     }
 
-    internal class ContourProps : Property
+    internal class ContourProps : Property, IContourProps
     {
-        // Условно
-        public int LineWidth;
+        public Color Color { set; get; }
+
+        public int LineWidth { set; get; }
 
         public ContourProps(Color Color, int lineWidth)
         {
@@ -29,25 +25,27 @@ namespace VectorGraph
             this.Color = Color;
             LineWidth = lineWidth;
         }
-        /*
+        
         public override void Apply(GraphSystem gs)
         {
-            gs.ApplyProps();
-        }*/
+            gs.GrProperties.Contour.Color = Color;
+            gs.GrProperties.Contour.LineWidth = LineWidth;
+        }
     }
 
-    internal class FillProps : Property
+    internal class FillProps : Property, IFillProps
     {
+        public Color Color { set; get; }
 
         public FillProps(Color Color)
         {
             this.Color = Color;
         }
-        /*
+        
         public override void Apply(GraphSystem gs)
         {
-            gs.Update();
-        }*/
+            gs.GrProperties.Fill.Color = Color;
+        }
     }
     
 }

@@ -64,12 +64,6 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y)
         {
-            /*
-            Model.st[Model.st.Count - 1].frame.coords[2] = x;
-            Model.st[Model.st.Count - 1].frame.coords[3] = y;
-
-            Model.GrController.Repaint();
-            */
 
         }
 
@@ -85,15 +79,9 @@ namespace VectorGraph
             f.frame.coords[3] = y;
 
             SelectionStore selStore = Model.Factory.selController.selStore;
-            //selStore[selStore.Count - 1].points[1] = new System.Drawing.Point(x, y);
-            /*
-            if (selStore.grabbedSelection != null)
-                selStore.grabbedSelection.points[1] = new System.Drawing.Point(x, y);
-            */
             Model.GrController.Repaint();
 
             EH.currState = EH.CS;
-            //MessageBox.Show("SozdaL");
 
         }
     }

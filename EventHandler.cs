@@ -36,26 +36,14 @@ namespace VectorGraph
 
         public void LeftMouseDown(object sender, MouseEventArgs e)
         {
-            //MessageBox.Show(currState.ToString());
             if ( e.Button == MouseButtons.Left )
                 currState.LeftMouseDown(e.X, e.Y);
-            /*
-            Model.Factory.frame.coords[0] = e.X;
-            Model.Factory.frame.coords[1] = e.Y;
-            */
         }
 
         public void LeftMouseUp(object sender, MouseEventArgs e)
         {
-            //MessageBox.Show(currState.ToString());
             if (e.Button == MouseButtons.Left)
                 currState.LeftMouseUp(e.X, e.Y);
-            /*
-            Model.Factory.frame.coords[2] = e.X;
-            Model.Factory.frame.coords[3] = e.Y;
-
-            Model.Factory.AddFigure();
-            */
         }
     }
 }

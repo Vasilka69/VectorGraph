@@ -277,7 +277,7 @@ namespace VectorGraph
 
     internal class SelectionController : ISelections
     {
-        public SelectionStore selStore;
+        public SelectionStore selStore { get; }
 
         public SelectionController()//SelectionStore selStore)//IGrController GrController)
         {
@@ -295,6 +295,7 @@ namespace VectorGraph
 
     internal interface ISelections
     {
+        SelectionStore selStore { get; }
         void SelectAndGrab(GraphItem item, int x, int y);
     }
 }

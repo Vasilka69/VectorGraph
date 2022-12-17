@@ -12,18 +12,20 @@ namespace VectorGraph
     {
         public Graphics gr;
 
-        public GraphSystem(Graphics gr)
+        public IGrProperties GrProperties;
+
+        public GraphSystem(Graphics gr, IGrProperties GrProperties)
         {
             this.gr = gr;
+            this.GrProperties = GrProperties;
         }
 
         public void DrawFigure(Figure f)
         {
             if (f == null)
                 return;
-            ContourProps cp = f.pl.ContourProps;
-            FillProps fp = f.pl.FillProps;
-            Pen pen = new Pen(cp.Color, cp.LineWidth);
+
+            Pen pen = new Pen(GrProperties.Contour.Color, GrProperties.Contour.LineWidth);
 
             int x1 = f.frame.coords[0];
             int y1 = f.frame.coords[1];
@@ -44,8 +46,8 @@ namespace VectorGraph
             switch (f.type)
             {
                 case (FigureType.Rect): // Прямоугольник
-                    if (fp != null)
-                        gr.FillRectangle(new SolidBrush(fp.Color), rect);
+                    if (GrProperties.Fill != null)
+                        gr.FillRectangle(new SolidBrush(GrProperties.Fill.Color), rect);
                     gr.DrawRectangle(pen, rect);
                     break;
 
@@ -54,8 +56,8 @@ namespace VectorGraph
                     break;
 
                 case (FigureType.Ellipse): // Эллипс
-                    if (fp != null)
-                        gr.FillEllipse(new SolidBrush(fp.Color), rect);
+                    if (GrProperties.Fill != null)
+                        gr.FillEllipse(new SolidBrush(GrProperties.Fill.Color), rect);
                     gr.DrawEllipse(pen, rect);
                     break;
             }

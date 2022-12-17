@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,13 +36,13 @@ namespace VectorGraph
             this.pl = pl;
         }
 
-        public override void Draw(GraphSystem gs) /// уже не пустышка
+        public override void Draw(GraphSystem gs)
         {
-            ApplyProps(pl);
+            ApplyProps(gs);
             DrawGeometry(gs);
         }
 
-        public abstract void ApplyProps(PropList pl);
+        public abstract void ApplyProps(GraphSystem gs);
         public abstract void DrawGeometry(GraphSystem gs);
     }
 
@@ -53,16 +54,18 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(PropList pl)
+        public override void ApplyProps(GraphSystem gs)
         {
-            this.pl = pl;
+            //this.pl = pl;
+            pl.ContourProps.Apply(gs);
+            pl.FillProps.Apply(gs);
         }
 
         public override void DrawGeometry(GraphSystem gs)
         {
             gs.DrawFigure(this);
         }
-        public override Selection CreateSelection() // уже не пустышка
+        public override Selection CreateSelection()
         {
             return new LineSelection(this);
         }
@@ -76,16 +79,18 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(PropList pl)
+        public override void ApplyProps(GraphSystem gs)
         {
-            this.pl = pl;
+            //this.pl = pl;
+            pl.ContourProps.Apply(gs);
+            pl.FillProps.Apply(gs);
         }
 
         public override void DrawGeometry(GraphSystem gs)
         {
             gs.DrawFigure(this);
         }
-        public override Selection CreateSelection() // Пустышка
+        public override Selection CreateSelection()
         {
             return new RectSelection(this);
         }
@@ -99,16 +104,18 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(PropList pl)
+        public override void ApplyProps(GraphSystem gs)
         {
-            this.pl = pl;
+            //this.pl = pl;
+            pl.ContourProps.Apply(gs);
+            pl.FillProps.Apply(gs);
         }
 
         public override void DrawGeometry(GraphSystem gs)
         {
             gs.DrawFigure(this);
         }
-        public override Selection CreateSelection() // Пустышка
+        public override Selection CreateSelection()
         {
             return new EllipseSelection(this);
         }

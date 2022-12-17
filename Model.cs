@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VectorGraph
 {
@@ -25,18 +26,20 @@ namespace VectorGraph
         public IFactory Factory { get; }
         public IEventHandler EventHandler { get; }
 
-        public GrPropChannel gpc { get; }
         public Store st { get; }
 
-        public Model (Graphics gr, PropList pl)
+        public Model (Graphics gr, IGrProperties GrProperties)
         {
-            GrProperties = new GrPropChannel(pl);
             st = new Store();
-            GrController = new Scene(gr, st);
-            Factory = new Factory(st, pl);
+
+            this.GrProperties = GrProperties;
+            GrController = new Scene(gr, st, GrProperties);
+
+            Factory = new Factory(st, GrProperties);//pl);
             GrController.SelStore = Factory.selController.selStore;
-            //Factory.selController.selStore.GrController = GrController; // Странно
+
             Factory.RepaintEvent += GrController.Repaint;
+
             EventHandler = new EventHandler(this);
         }
 
