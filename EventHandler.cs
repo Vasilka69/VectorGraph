@@ -22,6 +22,9 @@ namespace VectorGraph
 
         public CreateState CS;
         public DragState DS;
+        public SingleSelectState SSS;
+        public MultiSelectState MSS;
+        public EmptyState ES;
         //private StateStore states;
 
         public bool isCtrl;
@@ -31,6 +34,9 @@ namespace VectorGraph
             isCtrl = false;
             CS = new CreateState(Model, this);
             DS = new DragState(Model, this);
+            SSS = new SingleSelectState(Model, this);
+            MSS = new MultiSelectState(Model, this);
+            ES = new EmptyState(Model, this);
             currState = CS;
         }
 
@@ -55,31 +61,36 @@ namespace VectorGraph
             if (e.Control)
                 isCtrl = true;
 
-            //MessageBox.Show(isCtrl.ToString());
-            /*
+            
             switch (e.KeyCode)
             {
                 case Keys.Control:
                     isCtrl = true;
                     MessageBox.Show(isCtrl.ToString());
                     break;
+                case Keys.Delete:
+                    currState.Delete();
+                    //MessageBox.Show("Delete");
+                    break;
+                case Keys.Escape:
+                    currState.Esc();
+                    //MessageBox.Show("Escape");
+                    break;
             }
-            */
-            //MessageBox.Show(isCtrl.ToString());
+            
         }
         public void KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.Control)
                 isCtrl = false;
-            /*
+            
             switch (e.KeyCode)
             {
                 case Keys.Control:
                     isCtrl = false;
-                    //MessageBox.Show(isCtrl.ToString());
                     break;
             }
-            */
+            
         }
     }
 }
