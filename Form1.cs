@@ -75,10 +75,11 @@ namespace VectorGraph
             pictureBox.MouseDown += controller.EventHandler.LeftMouseDown;
             pictureBox.MouseUp += controller.EventHandler.LeftMouseUp;
             this.KeyDown += controller.EventHandler.KeyDown;
-            this.KeyUp += controller.EventHandler.KeyDown;
+            this.KeyUp += controller.EventHandler.KeyUp;
 
 
-            pictureBox.Focus();
+
+            //this.Focus();
 
         }
 
@@ -115,6 +116,15 @@ namespace VectorGraph
         {
             if (controller.Model.GrProperties.Contour != null) 
             {
+                try
+                {
+                    int.Parse(textBox1.Text);
+                }
+                catch (Exception)
+                {
+                    textBox1.Text = controller.Model.Factory.GrProperties.Contour.LineWidth.ToString();
+                    return;
+                }
                 if ((textBox1.Text.Length == 0)
                     || (int.Parse(textBox1.Text) > 100)
                     || (int.Parse(textBox1.Text) < 0))

@@ -15,7 +15,6 @@ namespace VectorGraph
         IFactory Factory { get; }
         void StoreClear();
         GraphItem GetLastItem();
-
     }
 
     internal class Model : IModel
@@ -33,11 +32,10 @@ namespace VectorGraph
             this.GrProperties = GrProperties;
             GrController = new Scene(gr, st, GrProperties);
 
-            Factory = new Factory(st, GrProperties);//pl);
+            Factory = new Factory(st, GrProperties);
             GrController.SelStore = Factory.selController.selStore;
 
             Factory.RepaintEvent += GrController.Repaint;
-
         }
 
         public void StoreClear()
@@ -51,3 +49,4 @@ namespace VectorGraph
         }
     }
 }
+// разные стили линий и разные стили заливки

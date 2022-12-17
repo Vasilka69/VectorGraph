@@ -143,6 +143,7 @@ namespace VectorGraph
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(39, 23);
             this.button2.TabIndex = 9;
+            this.button2.TabStop = false;
             this.button2.Text = "F5";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -153,6 +154,7 @@ namespace VectorGraph
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 8;
+            this.button1.TabStop = false;
             this.button1.Text = "Создать";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -163,6 +165,7 @@ namespace VectorGraph
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(60, 20);
             this.textBox3.TabIndex = 7;
+            this.textBox3.TabStop = false;
             // 
             // label7
             // 
@@ -180,6 +183,7 @@ namespace VectorGraph
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(60, 20);
             this.textBox2.TabIndex = 5;
+            this.textBox2.TabStop = false;
             // 
             // label8
             // 
@@ -229,6 +233,7 @@ namespace VectorGraph
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(137, 21);
             this.comboBox1.TabIndex = 7;
+            this.comboBox1.TabStop = false;
             // 
             // panel5
             // 
@@ -292,6 +297,7 @@ namespace VectorGraph
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(37, 20);
             this.textBox1.TabIndex = 5;
+            this.textBox1.TabStop = false;
             // 
             // label5
             // 

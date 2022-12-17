@@ -31,21 +31,26 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y) { }
 
-        public override void LeftMouseDown(int x, int y) // Временно ctrl
+        public override void LeftMouseDown(int x, int y)
         {
             SelectionStore selStore = Model.Factory.selController.selStore;
+            if (!EH.isCtrl)
+                Model.GrController.SelStore.Release();
             Selection sel = selStore.TryGrab(x, y);
-            if (sel == null)
-            {
-                if (!EH.isCtrl)
-                    Model.GrController.SelStore.Release();
-                Model.Factory.CreateAndGrabItem(x, y);
-                EH.currState = EH.DS;
-            }
-            else
+            if (sel != null) // Попал
             {
                 Model.GrController.Repaint();
+
             }
+            else // Не попал
+            {
+                if (!EH.isCtrl)
+                {
+                    Model.Factory.CreateAndGrabItem(x, y);
+                    EH.currState = EH.DS;
+                }
+            }
+            //MessageBox.Show(EH.isCtrl.ToString());
         }
 
         public override void LeftMouseUp(int x, int y)

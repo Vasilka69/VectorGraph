@@ -41,7 +41,7 @@ namespace VectorGraph
 
         public void LeftMouseDown(object sender, MouseEventArgs e)
         {
-            if ( e.Button == MouseButtons.Left )
+            if (e.Button == MouseButtons.Left )
                 currState.LeftMouseDown(e.X, e.Y);
         }
 
@@ -52,21 +52,34 @@ namespace VectorGraph
         }
         public void KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Control)
+                isCtrl = true;
+
+            //MessageBox.Show(isCtrl.ToString());
+            /*
             switch (e.KeyCode)
             {
                 case Keys.Control:
                     isCtrl = true;
+                    MessageBox.Show(isCtrl.ToString());
                     break;
             }
+            */
+            //MessageBox.Show(isCtrl.ToString());
         }
         public void KeyUp(object sender, KeyEventArgs e)
         {
+            if (!e.Control)
+                isCtrl = false;
+            /*
             switch (e.KeyCode)
             {
                 case Keys.Control:
                     isCtrl = false;
+                    //MessageBox.Show(isCtrl.ToString());
                     break;
             }
+            */
         }
     }
 }
