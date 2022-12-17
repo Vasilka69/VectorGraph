@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,15 +83,20 @@ namespace VectorGraph
             pictureBox.MouseMove += controller.EventHandler.MouseMove;
             pictureBox.MouseDown += controller.EventHandler.LeftMouseDown;
             pictureBox.MouseUp += controller.EventHandler.LeftMouseUp;
+
             this.KeyDown += controller.EventHandler.KeyDown;
             this.KeyUp += controller.EventHandler.KeyUp;
+            panel3.KeyDown += controller.EventHandler.KeyDown;
+            panel3.KeyUp += controller.EventHandler.KeyUp;
 
-
-
-            //this.Focus();
 
         }
-
+        
+        private void PictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            this.ActiveControl = panel3;
+        }
+        
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -101,15 +107,18 @@ namespace VectorGraph
         private void ComboBox1_SelectedValueChanged(object sender, EventArgs e) // Выбор типа фигуры
         {
             controller.Model.Factory.ChoosenFigure = (FigureType) comboBox1.SelectedValue;
+            this.ActiveControl = panel3;
         }
         private void ComboBox2_SelectedValueChanged(object sender, EventArgs e) // Выбор типа линии
         {
             controller.Model.Factory.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
+            this.ActiveControl = panel3;
         }
 
         private void ComboBox3_SelectedValueChanged(object sender, EventArgs e) // Выбор типа заливки
         {
             controller.Model.Factory.GrProperties.Fill.Type = (FillType)comboBox3.SelectedValue;
+            this.ActiveControl = panel3;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
@@ -119,6 +128,7 @@ namespace VectorGraph
                 this.pictureBox1.BackColor = this.colorDialog1.Color;
                 controller.Model.Factory.GrProperties.Contour.Color = this.colorDialog1.Color;
             }
+            this.ActiveControl = panel3;
         }
 
         private void pictureBox2_Click(object sender, EventArgs e) // Цвет заливки
@@ -128,6 +138,7 @@ namespace VectorGraph
                 this.pictureBox2.BackColor = this.colorDialog1.Color;
                 controller.Model.Factory.GrProperties.Fill.Color = this.colorDialog1.Color;
             }
+            this.ActiveControl = panel3;
         }
 
         private void TextBox1_TextChanged(object sender, EventArgs e) // Толщина линии
@@ -181,21 +192,25 @@ namespace VectorGraph
                 pictureBox.Size = new Size(width, height);
                 controller.Model.GrController.SetPort(pictureBox.CreateGraphics());//, width, height);
             }
+            this.ActiveControl = panel3;
         }
 
         private void button2_Click(object sender, EventArgs e)  // Кнопка "F5"
         {
-            controller.f5();
+
+            foreach (Control contrl in this.Controls)
+            {
+                this.ProcessTabKey(true);
+                this.Activate();
+                this.ActiveControl = this;
+            }
+            this.ActiveControl = panel3;
+            //controller.f5();
         }
 
         private void UpdateCoordinates(object sender, MouseEventArgs e)
         {
             this.toolStripStatusLabel1.Text = e.X + "," + e.Y;
-        }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

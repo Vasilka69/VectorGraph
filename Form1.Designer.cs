@@ -317,7 +317,6 @@ namespace VectorGraph
             this.label10.Size = new System.Drawing.Size(75, 15);
             this.label10.TabIndex = 6;
             this.label10.Text = "Тип линии";
-            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // textBox1
             // 
