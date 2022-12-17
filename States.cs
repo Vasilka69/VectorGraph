@@ -43,7 +43,7 @@ namespace VectorGraph
         {
             Model.Factory.CreateAndGrabItem(x, y);
             Model.GrController.Repaint();
-            EH.currState = EH.DS;
+            EH.SetState(EH.DS);
 
             /*
             SelectionStore selStore = Model.Factory.selController.selStore;
@@ -103,7 +103,7 @@ namespace VectorGraph
 
             Model.GrController.Repaint();
 
-            EH.currState = EH.SSS;
+            EH.SetState(EH.SSS);
 
         }
 
@@ -131,23 +131,75 @@ namespace VectorGraph
 
         public override void LeftMouseUp(int x, int y)
         {
+            bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
+            if (EH.isCtrl)
+            { 
+                if (isHit)
+                    EH.SetState(EH.MSS);
+            }
+            else
+                if (!isHit)
+                {
+                    Model.Factory.selController.Release();
+                    EH.SetState(EH.ES);
+                }
+            Model.GrController.Repaint();
+            /*
             SelectionStore selStore = Model.Factory.selController.selStore;
-            Selection sel = selStore.TryGrab(x, y);
+            Selection sel = selStore.TryGrab(x, y, EH.isCtrl);
             if (sel == null) // Не попал
-                EH.currState = EH.ES;
+            {
+                if (!EH.isCtrl)
+                {
+                    selStore.Release();
+                    EH.SetState(EH.ES);
+                }
+            }
             else if (EH.isCtrl)
-                EH.currState = EH.MSS;
+            {
+                EH.SetState(EH.MSS);
 
+            }
+            Model.GrController.Repaint();
+            */
+            /*
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            if (!EH.isCtrl)
+                selStore.Release();
+            Selection sel = selStore.TryGrab(x, y, EH.isCtrl);
+            if (sel == null) // Не попал
+            {
+                if (!EH.isCtrl)
+                {
+                    selStore.Release();
+                    EH.SetState(EH.ES);
+                }
+            }
+            else if (EH.isCtrl)
+            {
+                EH.SetState(EH.MSS);
+
+            }
+            Model.GrController.Repaint();
+            */
         }
 
         public override void Delete()
         {
-            EH.currState = EH.ES;
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            selStore.Release();
+            Model.GrController.Repaint();
+
+            EH.SetState(EH.ES);
         }
 
         public override void Esc()
         {
-            EH.currState = EH.ES;
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            selStore.Release();
+            Model.GrController.Repaint();
+
+            EH.SetState(EH.ES);
         }
     }
 
@@ -171,17 +223,32 @@ namespace VectorGraph
 
         public override void LeftMouseUp(int x, int y)
         {
+            bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
+            if (isHit && EH.isCtrl)
+            {
+                EH.SetState(EH.MSS);
+
+            }
+            Model.GrController.Repaint();
 
         }
 
         public override void Delete()
         {
-            EH.currState = EH.ES;
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            selStore.Release();
+            Model.GrController.Repaint();
+
+            EH.SetState(EH.ES);
         }
 
         public override void Esc()
         {
-            EH.currState = EH.ES;
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            selStore.Release();
+            Model.GrController.Repaint();
+
+            EH.SetState(EH.ES);
         }
     }
 
@@ -202,11 +269,12 @@ namespace VectorGraph
 
         public override void LeftMouseUp(int x, int y)
         {
-            SelectionStore selStore = Model.Factory.selController.selStore;
-            Selection sel = selStore.TryGrab(x, y);
-            if (sel != null) // Попал
+            Model.Factory.selController.Release();
+            bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
+            if (isHit) // Попал
             {
                 Model.GrController.Repaint();
+                EH.SetState(EH.SSS);
             }
         }
 

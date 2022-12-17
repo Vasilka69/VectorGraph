@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace VectorGraph
 {
@@ -54,11 +55,11 @@ namespace VectorGraph
             Graphics gr = pictureBox.CreateGraphics();
 
             controller = new Controller(new Model(gr, GrProperties));
-
+            /*
             comboBox1.DataSource = Enum.GetValues(typeof(FigureType));
             comboBox1.SelectedValueChanged += ComboBox1_SelectedValueChanged;
             comboBox1.SelectedIndex = 0; //
-
+            */
             comboBox2.DataSource = Enum.GetValues(typeof(LineType));
             comboBox2.SelectedValueChanged += ComboBox2_SelectedValueChanged;
             comboBox2.SelectedIndex = 0; //
@@ -67,7 +68,7 @@ namespace VectorGraph
             comboBox3.SelectedValueChanged += ComboBox3_SelectedValueChanged;
             comboBox3.SelectedIndex = 0; //
 
-            controller.Model.Factory.ChoosenFigure = (FigureType)comboBox1.SelectedValue;
+            //controller.Model.Factory.ChoosenFigure = (FigureType)comboBox1.SelectedValue;
 
             textBox1.TextChanged += TextBox1_TextChanged;
             /*
@@ -84,19 +85,33 @@ namespace VectorGraph
             pictureBox.MouseDown += controller.EventHandler.LeftMouseDown;
             pictureBox.MouseUp += controller.EventHandler.LeftMouseUp;
 
-            this.KeyDown += controller.EventHandler.KeyDown;
-            this.KeyUp += controller.EventHandler.KeyUp;
             panel3.KeyDown += controller.EventHandler.KeyDown;
             panel3.KeyUp += controller.EventHandler.KeyUp;
 
+            button3.Click += controller.EventHandler.ToCreateState;
+            button4.Click += controller.EventHandler.ToCreateState;
+            button5.Click += controller.EventHandler.ToCreateState;
 
+            controller.EventHandler.CurrStateUpdated += EventHandler_CurrStateUpdated;
+            controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
         }
-        
+
+        private void EventHandler_CurrStateUpdated(string state)
+        {
+            this.toolStripStatusLabel2.Text = state;
+        }
+
+        private void EventHandler_CtrlUpdated(string info)
+        {
+            this.toolStripStatusLabel3.Text = info;
+        }
+
+        /*
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             this.ActiveControl = panel3;
         }
-        
+        */
 
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -104,21 +119,20 @@ namespace VectorGraph
                 this.Dispose();
         }
 
+        /*
         private void ComboBox1_SelectedValueChanged(object sender, EventArgs e) // Выбор типа фигуры
         {
             controller.Model.Factory.ChoosenFigure = (FigureType) comboBox1.SelectedValue;
             this.ActiveControl = panel3;
-        }
+        }*/
         private void ComboBox2_SelectedValueChanged(object sender, EventArgs e) // Выбор типа линии
         {
             controller.Model.Factory.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
-            this.ActiveControl = panel3;
         }
 
         private void ComboBox3_SelectedValueChanged(object sender, EventArgs e) // Выбор типа заливки
         {
             controller.Model.Factory.GrProperties.Fill.Type = (FillType)comboBox3.SelectedValue;
-            this.ActiveControl = panel3;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
@@ -128,7 +142,6 @@ namespace VectorGraph
                 this.pictureBox1.BackColor = this.colorDialog1.Color;
                 controller.Model.Factory.GrProperties.Contour.Color = this.colorDialog1.Color;
             }
-            this.ActiveControl = panel3;
         }
 
         private void pictureBox2_Click(object sender, EventArgs e) // Цвет заливки
@@ -138,7 +151,6 @@ namespace VectorGraph
                 this.pictureBox2.BackColor = this.colorDialog1.Color;
                 controller.Model.Factory.GrProperties.Fill.Color = this.colorDialog1.Color;
             }
-            this.ActiveControl = panel3;
         }
 
         private void TextBox1_TextChanged(object sender, EventArgs e) // Толщина линии
@@ -192,12 +204,11 @@ namespace VectorGraph
                 pictureBox.Size = new Size(width, height);
                 controller.Model.GrController.SetPort(pictureBox.CreateGraphics());//, width, height);
             }
-            this.ActiveControl = panel3;
         }
 
         private void button2_Click(object sender, EventArgs e)  // Кнопка "F5"
         {
-
+            /*
             foreach (Control contrl in this.Controls)
             {
                 this.ProcessTabKey(true);
@@ -205,12 +216,29 @@ namespace VectorGraph
                 this.ActiveControl = this;
             }
             this.ActiveControl = panel3;
+            */
             //controller.f5();
         }
 
         private void UpdateCoordinates(object sender, MouseEventArgs e)
         {
             this.toolStripStatusLabel1.Text = e.X + "," + e.Y;
+            this.ActiveControl = panel3;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            controller.Model.Factory.ChoosenFigure = FigureType.Line;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            controller.Model.Factory.ChoosenFigure = FigureType.Rect;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            controller.Model.Factory.ChoosenFigure = FigureType.Ellipse;
         }
     }
 }

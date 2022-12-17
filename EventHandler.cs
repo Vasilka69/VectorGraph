@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace VectorGraph
 {
+    public delegate void curstate(string state);
     interface IEventHandler
     {
         //State CurrState { get; set; }
@@ -15,10 +17,19 @@ namespace VectorGraph
         void LeftMouseUp(object sender, MouseEventArgs e);
         void KeyDown(object sender, KeyEventArgs e);
         void KeyUp(object sender, KeyEventArgs e);
+        void ToCreateState(object sender, EventArgs e);
+
+        event curstate CurrStateUpdated;
+        event curstate CtrlUpdated;
     }
     internal class EventHandler : IEventHandler
     {
+        public event curstate CurrStateUpdated;
+        public event curstate CtrlUpdated;
+
         public State currState;
+
+        IModel Model;
 
         public CreateState CS;
         public DragState DS;
@@ -32,12 +43,13 @@ namespace VectorGraph
         public EventHandler(IModel Model)
         {
             isCtrl = false;
+            this.Model = Model;
             CS = new CreateState(Model, this);
             DS = new DragState(Model, this);
             SSS = new SingleSelectState(Model, this);
             MSS = new MultiSelectState(Model, this);
             ES = new EmptyState(Model, this);
-            currState = CS;
+            currState = ES;
         }
 
         public void MouseMove(object sender, MouseEventArgs e)
@@ -66,7 +78,7 @@ namespace VectorGraph
             {
                 case Keys.Control:
                     isCtrl = true;
-                    MessageBox.Show(isCtrl.ToString());
+                    //MessageBox.Show(isCtrl.ToString());
                     break;
                 case Keys.Delete:
                     currState.Delete();
@@ -77,20 +89,35 @@ namespace VectorGraph
                     //MessageBox.Show("Escape");
                     break;
             }
-            
+            CtrlUpdated.Invoke(isCtrl.ToString());
+
         }
         public void KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.Control)
                 isCtrl = false;
-            
+
             switch (e.KeyCode)
             {
                 case Keys.Control:
                     isCtrl = false;
                     break;
             }
-            
+            CtrlUpdated.Invoke(isCtrl.ToString());
+        }
+        public void ToCreateState(object sender, EventArgs e)
+        {
+            SelectionStore selStore = Model.Factory.selController.selStore;
+            selStore.Release();
+            Model.GrController.Repaint();
+
+            SetState(CS);
+        }
+
+        public void SetState(State state)
+        {
+            currState = state;
+            CurrStateUpdated.Invoke(state.ToString().Split('.')[1]);
         }
     }
 }

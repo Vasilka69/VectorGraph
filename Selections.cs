@@ -82,7 +82,7 @@ namespace VectorGraph
         }
     }
 
-    internal class RectSelection : Selection // заполнить бы
+    internal class RectSelection : Selection
     {
         int delta = 5;
         Rect rect;
@@ -94,7 +94,7 @@ namespace VectorGraph
             ActualPoints();
         }
 
-        public override bool TryGrab(int x, int y) // не работает
+        public override bool TryGrab(int x, int y)
         {
             ActualPoints();
 
@@ -228,18 +228,21 @@ namespace VectorGraph
             grabbedSelection = new List<Selection>();
         }
 
-        public Selection TryGrab(int x, int y)
+        public Selection TryGrab(int x, int y)//, bool isCtrl)
         {
             foreach (Selection sel in this)
             {
                 if (sel.TryGrab(x, y))
                 {
+                    /*
+                    if (!isCtrl && grabbedSelection.Count != 0)
+                        Release();
                     grabbedSelection.Add(sel);
+                    */
                     return sel;
                 }
             }
             return null;
-
         }
 
         public void Release()
@@ -265,14 +268,9 @@ namespace VectorGraph
 
         }
 
-        public void ReleaseSelection()
+        public void DeleteSelection(Selection sel) // Удалить селекшены элементов группы
         {
-            grabbedSelection.Clear();
-        }
-
-        public void DeleteSelection(Selection sel)
-        {
-            this.Remove(sel);
+            //this.Remove(sel);
         }
     }
 
@@ -280,17 +278,49 @@ namespace VectorGraph
     {
         public SelectionStore selStore { get; }
 
-        public SelectionController()//SelectionStore selStore)//IGrController GrController)
+        public SelectionController()
         {
-            selStore = new SelectionStore();// IGrController GrController);
-            //this.selStore = selStore;
+            selStore = new SelectionStore();
         }
 
         public void SelectAndGrab(GraphItem item, int x, int y)
         {
             Selection sel = item.CreateSelection();
             selStore.Add(sel);
-            selStore.TryGrab(x, y);
+            TryGrab(x, y, false);
+        }
+
+        public bool TryGrab(int x, int y, bool isCtrl)
+        {
+            Selection sel = selStore.TryGrab(x, y);
+            if (sel != null)
+            {
+                if (!isCtrl)
+                    selStore.Release();
+                selStore.grabbedSelection.Add(sel);
+                return true;
+            }
+            return false;
+        }
+
+        public void Release()
+        {
+            selStore.Release();
+        }
+
+        public int Count()
+        {
+            return selStore.Count;
+        }
+
+        public bool Grouping() // Пока не работает
+        {
+            return true;
+        }
+
+        public bool Ungrouping() // Пока не работает
+        {
+            return true;
         }
     }
 
@@ -298,5 +328,10 @@ namespace VectorGraph
     {
         SelectionStore selStore { get; }
         void SelectAndGrab(GraphItem item, int x, int y);
+        bool TryGrab(int x, int y, bool isCtrl);
+        void Release();
+        int Count();
+        bool Grouping();
+        bool Ungrouping();
     }
 }
