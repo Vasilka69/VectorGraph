@@ -71,9 +71,9 @@ namespace VectorGraph
             pictureBox.Paint += PictureBox_Paint;
             pictureBox.Resize += PictureBox_VisibleChanged;
 
-            pictureBox.MouseMove += controller.Model.EventHandler.MouseMove;
-            pictureBox.MouseDown += controller.Model.EventHandler.LeftMouseDown;
-            pictureBox.MouseUp += controller.Model.EventHandler.LeftMouseUp;
+            pictureBox.MouseMove += controller.EventHandler.MouseMove;
+            pictureBox.MouseDown += controller.EventHandler.LeftMouseDown;
+            pictureBox.MouseUp += controller.EventHandler.LeftMouseUp;
 
 
 

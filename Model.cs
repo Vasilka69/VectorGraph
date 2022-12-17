@@ -13,7 +13,7 @@ namespace VectorGraph
         IGrProperties GrProperties { get; }
         IGrController GrController { get; }
         IFactory Factory { get; }
-        IEventHandler EventHandler { get; }
+        //IEventHandler EventHandler { get; }
         void StoreClear();
         Store st { get; }
 
@@ -24,7 +24,7 @@ namespace VectorGraph
         public IGrProperties GrProperties { get; }
         public IGrController GrController { get; }
         public IFactory Factory { get; }
-        public IEventHandler EventHandler { get; }
+        //public IEventHandler EventHandler { get; }
 
         public Store st { get; }
 
@@ -40,7 +40,7 @@ namespace VectorGraph
 
             Factory.RepaintEvent += GrController.Repaint;
 
-            EventHandler = new EventHandler(this);
+            //EventHandler = new EventHandler(this);
         }
 
         public void StoreClear()

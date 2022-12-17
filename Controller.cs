@@ -12,15 +12,19 @@ namespace VectorGraph
     {
         IModel Model { set;  get; }
 
+        IEventHandler EventHandler { set; get; }
+
         string f5();
     }
     internal class Controller : IController
     {
         public IModel Model { set; get; }
+        public IEventHandler EventHandler { set; get; }
 
         public Controller(IModel model)
         {
-            this.Model = model;
+            Model = model;
+            EventHandler = new EventHandler(Model); ;
         }
 
         public string f5()
