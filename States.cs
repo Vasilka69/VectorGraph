@@ -15,6 +15,7 @@ namespace VectorGraph
         public abstract void LeftMouseDown(int x, int y);
         public abstract void LeftMouseUp(int x, int y);
         public abstract void MouseMove(int x, int y);
+        public abstract void Esc();
     }
 
     internal class CreateState : State
@@ -30,12 +31,14 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y) { }
 
-        public override void LeftMouseDown(int x, int y)
+        public override void LeftMouseDown(int x, int y) // Временно ctrl
         {
             SelectionStore selStore = Model.Factory.selController.selStore;
             Selection sel = selStore.TryGrab(x, y);
             if (sel == null)
             {
+                if (!EH.isCtrl)
+                    Model.GrController.SelStore.Release();
                 Model.Factory.CreateAndGrabItem(x, y);
                 EH.currState = EH.DS;
             }
@@ -46,6 +49,11 @@ namespace VectorGraph
         }
 
         public override void LeftMouseUp(int x, int y)
+        {
+
+        }
+
+        public override void Esc()
         {
 
         }
@@ -74,14 +82,18 @@ namespace VectorGraph
 
         public override void LeftMouseUp(int x, int y)
         {
-            GraphItem f = Model.st[Model.st.Count - 1];
+            GraphItem f = Model.GetLastItem();
             f.frame.coords[2] = x;
             f.frame.coords[3] = y;
 
-            SelectionStore selStore = Model.Factory.selController.selStore;
             Model.GrController.Repaint();
 
             EH.currState = EH.CS;
+
+        }
+
+        public override void Esc()
+        {
 
         }
     }

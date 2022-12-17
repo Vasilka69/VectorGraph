@@ -13,6 +13,8 @@ namespace VectorGraph
         void MouseMove(object sender, MouseEventArgs e);
         void LeftMouseDown(object sender, MouseEventArgs e);
         void LeftMouseUp(object sender, MouseEventArgs e);
+        void KeyDown(object sender, KeyEventArgs e);
+        void KeyUp(object sender, KeyEventArgs e);
     }
     internal class EventHandler : IEventHandler
     {
@@ -22,8 +24,11 @@ namespace VectorGraph
         public DragState DS;
         //private StateStore states;
 
+        public bool isCtrl;
+
         public EventHandler(IModel Model)
         {
+            isCtrl = false;
             CS = new CreateState(Model, this);
             DS = new DragState(Model, this);
             currState = CS;
@@ -44,6 +49,24 @@ namespace VectorGraph
         {
             if (e.Button == MouseButtons.Left)
                 currState.LeftMouseUp(e.X, e.Y);
+        }
+        public void KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Control:
+                    isCtrl = true;
+                    break;
+            }
+        }
+        public void KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Control:
+                    isCtrl = false;
+                    break;
+            }
         }
     }
 }

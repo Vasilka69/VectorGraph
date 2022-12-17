@@ -221,11 +221,11 @@ namespace VectorGraph
 
     internal class SelectionStore : List<Selection>
     {
-        public Selection grabbedSelection { set; get; }
+        public List<Selection> grabbedSelection { set; get; }
 
         public SelectionStore()
         {
-
+            grabbedSelection = new List<Selection>();
         }
 
         public Selection TryGrab(int x, int y)
@@ -234,7 +234,7 @@ namespace VectorGraph
             {
                 if (sel.TryGrab(x, y))
                 {
-                    grabbedSelection = sel;
+                    grabbedSelection.Add(sel);
                     return sel;
                 }
             }
@@ -244,13 +244,14 @@ namespace VectorGraph
 
         public void Release()
         {
-            grabbedSelection = null;
+            grabbedSelection.Clear();
         }
 
         public void Draw(GraphSystem gs) // как оно должно быть
         {
             if (grabbedSelection != null)
-                grabbedSelection.Draw(gs);
+                foreach (Selection sel in grabbedSelection)
+                    sel.Draw(gs);
             /*
             foreach (Selection sel in this)
             {
@@ -266,7 +267,7 @@ namespace VectorGraph
 
         public void ReleaseSelection()
         {
-
+            grabbedSelection.Clear();
         }
 
         public void DeleteSelection(Selection sel)

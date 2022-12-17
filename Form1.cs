@@ -74,7 +74,8 @@ namespace VectorGraph
             pictureBox.MouseMove += controller.EventHandler.MouseMove;
             pictureBox.MouseDown += controller.EventHandler.LeftMouseDown;
             pictureBox.MouseUp += controller.EventHandler.LeftMouseUp;
-
+            this.KeyDown += controller.EventHandler.KeyDown;
+            this.KeyUp += controller.EventHandler.KeyDown;
 
 
             pictureBox.Focus();
