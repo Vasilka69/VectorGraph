@@ -100,6 +100,9 @@ namespace VectorGraph
             Model.GrController.Repaint();
             */
 
+            Model.Factory.selController.ReleaseGrab(x, y);
+            Model.GrController.Repaint();
+
         }
 
         public override void LeftMouseDown(int x, int y) { }
@@ -143,7 +146,6 @@ namespace VectorGraph
 
         public override void LeftMouseDown(int x, int y)
         {
-            //bool isHit = Model.Factory.selController.TryGrab(x, y, false);
             bool hitSel = Model.Factory.selController.DragSelTo(x, y);
             if (hitSel)
             {

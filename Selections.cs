@@ -87,9 +87,11 @@ namespace VectorGraph
                 {
                     line.frame.coords[coord] = x;
                     line.frame.coords[coord + 1] = y;
+                    GrabbedPoint = new Point(x, y);
                     break;
                 }
             }
+
         }
 
         private void ActualPoints()
