@@ -35,7 +35,7 @@ namespace VectorGraph
             pictureBox.BackColor = Color.White;
             pictureBox.Location = new System.Drawing.Point(0, 0);
             pictureBox.Name = "pictureBox1";
-            pictureBox.Size = new System.Drawing.Size(671, 461);
+            pictureBox.Size = new System.Drawing.Size(827, 530);
             pictureBox.TabIndex = 0;
             pictureBox.TabStop = true;
 
@@ -91,6 +91,9 @@ namespace VectorGraph
             button3.Click += controller.EventHandler.ToCreateState;
             button4.Click += controller.EventHandler.ToCreateState;
             button5.Click += controller.EventHandler.ToCreateState;
+
+            button6.Click += controller.EventHandler.Group;
+            button7.Click += controller.EventHandler.Ungroup;
 
             controller.EventHandler.CurrStateUpdated += EventHandler_CurrStateUpdated;
             controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
@@ -226,19 +229,29 @@ namespace VectorGraph
             this.ActiveControl = panel3;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)  // Линия
         {
             controller.Model.Factory.ChoosenFigure = FigureType.Line;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)  // Прямоугольник
         {
             controller.Model.Factory.ChoosenFigure = FigureType.Rect;
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void button5_Click(object sender, EventArgs e)  // Эллипс
         {
             controller.Model.Factory.ChoosenFigure = FigureType.Ellipse;
+        }
+
+        private void button6_Click(object sender, EventArgs e) // Group
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e) // Ungroup
+        {
+
         }
     }
 }

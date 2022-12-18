@@ -70,6 +70,11 @@ namespace VectorGraph
             recty = Math.Min(y1, y2);
 
             Rectangle rect = new Rectangle(rectx, recty, width, height);
+            /*
+            int border = 5;
+            Rectangle rect2 = new Rectangle(rectx + border, recty + border, width - border * 2, height - border * 2);
+            ControlPaint.DrawSelectionFrame(gr, true, rect, rect2, Color.Black);
+            */
 
             switch (f.type)
             {
@@ -78,7 +83,6 @@ namespace VectorGraph
                         gr.FillRectangle(brush, rect);
                     gr.DrawRectangle(pen, rect);
                     break;
-
                 case (FigureType.Line): // Линия
                     gr.DrawLine(pen, x1, y1, x2, y2);
                     break;

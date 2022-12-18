@@ -17,6 +17,9 @@ namespace VectorGraph
         public abstract void MouseMove(int x, int y);
         public abstract void Delete();
         public abstract void Esc();
+        public abstract void Group();
+        public abstract void Ungroup();
+
     }
 
     /*
@@ -71,6 +74,8 @@ namespace VectorGraph
         public override void Delete() {}
 
         public override void Esc() { }
+        public override void Group() { }
+        public override void Ungroup() { }
     }
 
     internal class DragState : State
@@ -110,6 +115,8 @@ namespace VectorGraph
         public override void Delete() { }
 
         public override void Esc() { }
+        public override void Group() { }
+        public override void Ungroup() { }
     }
 
     internal class SingleSelectState : State // Чек блокнот (Добавить Ungrouping)
@@ -201,6 +208,8 @@ namespace VectorGraph
 
             EH.SetState(EH.ES);
         }
+        public override void Group() { }
+        public override void Ungroup() { }
     }
 
     internal class MultiSelectState : State // Grouping
@@ -250,6 +259,12 @@ namespace VectorGraph
 
             EH.SetState(EH.ES);
         }
+        public override void Group() // Допилить
+        {
+
+            EH.SetState(EH.SSS);
+        }
+        public override void Ungroup() { }
     }
 
     internal class EmptyState : State // Готов
@@ -281,5 +296,7 @@ namespace VectorGraph
         public override void Delete() { }
 
         public override void Esc() { }
+        public override void Group() { }
+        public override void Ungroup() { }
     }
 }

@@ -18,6 +18,8 @@ namespace VectorGraph
         void KeyDown(object sender, KeyEventArgs e);
         void KeyUp(object sender, KeyEventArgs e);
         void ToCreateState(object sender, EventArgs e);
+        void Group(object sender, EventArgs e);
+        void Ungroup(object sender, EventArgs e);
 
         event curstate CurrStateUpdated;
         event curstate CtrlUpdated;
@@ -105,6 +107,15 @@ namespace VectorGraph
             }
             CtrlUpdated.Invoke(isCtrl.ToString());
         }
+        public void Group(object sender, EventArgs e)
+        {
+            currState.Group();
+        }
+        public void Ungroup(object sender, EventArgs e)
+        {
+            currState.Ungroup();
+        }
+
         public void ToCreateState(object sender, EventArgs e)
         {
             SelectionStore selStore = Model.Factory.selController.selStore;
