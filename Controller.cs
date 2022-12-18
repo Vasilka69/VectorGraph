@@ -27,23 +27,23 @@ namespace VectorGraph
             EventHandler = new EventHandler(Model); ;
         }
 
-        public string f5()
+        public string f5() // Проверка FrameSum (уже работает)
         {
-            /*
+            
             int delta = 5;
             ///////
             List<Point> points = new List<Point>();
             List<Frame> frames = new List<Frame>();
-            foreach (Figure f in Model.st)
-                frames.Add(f.frame);
+            foreach (Selection sel in Model.Factory.selController.selStore.grabbedSelection)
+                frames.Add(sel.GetItem().frame);
             Frame sumFr = Frame.FrameSum(frames);
 
             points.Add(new Point(sumFr.coords[0], sumFr.coords[1]));
             points.Add(new Point(sumFr.coords[2], sumFr.coords[3]));
 
 
-            ContourProps cp = new ContourProps(Color.Gray, 1);
-            FillProps fp = new FillProps(Color.Gray);
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
             foreach (Point p in points)
             {
@@ -52,7 +52,13 @@ namespace VectorGraph
                 marker.Draw(Model.GrController.gs);
             }
             //////
+            
+            /*
+            List<Selection> sels = Model.Factory.selController.selStore;
+            foreach (Selection s in sels)
+                s.Draw(Model.GrController.gs);
             */
+
             return "123";
         }
 

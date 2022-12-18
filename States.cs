@@ -261,8 +261,9 @@ namespace VectorGraph
         }
         public override void Group() // Допилить
         {
-
-            EH.SetState(EH.SSS);
+            if (Model.Factory.selController.Grouping())
+                EH.SetState(EH.SSS);
+            Model.GrController.Repaint();
         }
         public override void Ungroup() { }
     }

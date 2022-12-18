@@ -16,16 +16,26 @@ namespace VectorGraph
             coords = new List<int>() { x1, y1, x2, y2 };
         }
 
-        public Frame FrameSum(List<Frame> frames) // работает не оч правильно
+        public static Frame FrameSum(List<Frame> frames) // работает
         {
-            Frame fr = frames[0];
+            int minX = frames[0].coords[0];
+            int maxX = frames[0].coords[2];
+            int minY = frames[0].coords[1];
+            int maxY = frames[0].coords[3];
             foreach (Frame frame in frames)
-                for (int coord = 0; coord < fr.coords.Count; coord++) {
-                    if (frame.coords[coord] > fr.coords[coord] && coord > 1)
-                        fr.coords[coord] = frame.coords[coord];
-                    else if (frame.coords[coord] < fr.coords[coord] && coord < 2)
-                        fr.coords[coord] = frame.coords[coord];
+                for (int coord = 0; coord < frame.coords.Count; coord++) {
+                    if (coord % 2 == 0) // X
+                    {
+                        minX = Math.Min(minX, frame.coords[coord]);
+                        maxX = Math.Max(maxX, frame.coords[coord]);
+                    }
+                    if (coord % 2 == 1) // Y
+                    {
+                        minY = Math.Min(minY, frame.coords[coord]);
+                        maxY = Math.Max(maxY, frame.coords[coord]);
+                    }
                 }
+            Frame fr = new Frame(minX, minY, maxX, maxY);
             return fr;
         }
 

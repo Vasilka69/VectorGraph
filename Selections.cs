@@ -16,6 +16,7 @@ namespace VectorGraph
         public abstract bool TryDragTo(int x, int y);
         public abstract void ReleaseGrab();
         public abstract void Draw(GraphSystem gs);
+        public abstract GraphItem GetItem();
     }
 
     internal class LineSelection : Selection
@@ -80,6 +81,11 @@ namespace VectorGraph
             }
 
         }
+
+        public override GraphItem GetItem()
+        {
+            return line;
+        }
     }
 
     internal class RectSelection : Selection
@@ -143,6 +149,85 @@ namespace VectorGraph
                 Figure marker = new Rect(frame, pl);
                 marker.Draw(gs);
             }
+        }
+
+        public override GraphItem GetItem()
+        {
+            return rect;
+        }
+
+    }
+
+    internal class GroupSelection : Selection
+    {
+        int delta = 5;
+        Group group;
+        List<Point> points;
+
+        public GroupSelection(Group group)
+        {
+            this.group = group;
+            ActualPoints();
+        }
+
+        public override bool TryGrab(int x, int y)
+        {
+            ActualPoints();
+
+            foreach (Point p in points)
+            {
+                if (x > p.X - delta && x < p.X + delta &&
+                    y > p.Y - delta && y < p.Y + delta)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override bool TryDragTo(int x, int y) // пока не работает
+        {
+            return true;
+        }
+
+        public override void ReleaseGrab()  // не работает
+        {
+
+        }
+
+        private void ActualPoints()
+        {
+            List<Point> points = new List<Point>();
+            List<Frame> frames = new List<Frame>();
+            foreach (GraphItem item in group.items)
+                frames.Add(item.frame);
+            Frame frame = Frame.FrameSum(frames);
+            points.Add(new Point(frame.coords[0], frame.coords[1]));
+            points.Add(new Point(frame.coords[0], frame.coords[3]));
+            points.Add(new Point(frame.coords[2], frame.coords[1]));
+            points.Add(new Point(frame.coords[2], frame.coords[3]));
+
+            this.points = points;
+        }
+
+        public override void Draw(GraphSystem gs)
+        {
+            ActualPoints();
+
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
+            PropList pl = new PropList(cp, fp);
+            foreach (Point p in points)
+            {
+                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
+                Figure marker = new Rect(frame, pl);
+                marker.Draw(gs);
+            }
+        }
+
+        public override GraphItem GetItem()
+        {
+            return group;
         }
 
     }
@@ -216,6 +301,11 @@ namespace VectorGraph
             }
         }
 
+        public override GraphItem GetItem()
+        {
+            return ellipse;
+        }
+
     }
 
 
@@ -272,15 +362,27 @@ namespace VectorGraph
         {
             //this.Remove(sel);
         }
+
+        public List<GraphItem> SelItems()
+        {
+            List<GraphItem> items = new List<GraphItem>();
+            foreach (Selection sel in grabbedSelection)
+                items.Add(sel.GetItem());
+            return items;
+        }
     }
 
     internal class SelectionController : ISelections
     {
+        public Factory factory;
         public SelectionStore selStore { get; }
+        public Store Store { get; }
 
-        public SelectionController()
+        public SelectionController(Store store, Factory factory)
         {
             selStore = new SelectionStore();
+            Store = store;
+            this.factory = factory;
         }
 
         public void SelectAndGrab(GraphItem item, int x, int y)
@@ -315,7 +417,10 @@ namespace VectorGraph
 
         public bool Grouping() // Пока не работает
         {
-            return true;
+            Group group = factory.CreateNewGroup(selStore.SelItems());
+            if (group != null)
+                return true;
+            return false;
         }
 
         public bool Ungrouping() // Пока не работает

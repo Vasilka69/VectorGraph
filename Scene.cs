@@ -36,8 +36,8 @@ namespace VectorGraph
         {
             gs.gr.Clear(Color.White);
             if (st.Count != 0)
-                foreach (Figure f in st)
-                    f.Draw(gs);
+                foreach (GraphItem item in st)
+                    item.Draw(gs);
             SelStore.Draw(gs);
         }
 

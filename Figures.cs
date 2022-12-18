@@ -20,6 +20,26 @@ namespace VectorGraph
         public abstract void Draw(GraphSystem gs);
         public abstract Selection CreateSelection();
     }
+
+    internal class Group : GraphItem
+    {
+        public List<GraphItem> items { get; }
+        public Group(List<GraphItem> Items, Frame fr) : base(fr)
+        {
+            items = Items;
+        }
+        public override void Draw(GraphSystem gs)
+        {
+            foreach (GraphItem item in items)
+                item.Draw(gs);
+        }
+
+        public override Selection CreateSelection()
+        {
+            return new GroupSelection(this);
+        }
+    }
+
     enum FigureType 
     { 
         Line = 0, 

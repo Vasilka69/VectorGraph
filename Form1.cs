@@ -220,7 +220,7 @@ namespace VectorGraph
             }
             this.ActiveControl = panel3;
             */
-            //controller.f5();
+            controller.f5();
         }
 
         private void UpdateCoordinates(object sender, MouseEventArgs e)

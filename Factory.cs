@@ -43,7 +43,7 @@ namespace VectorGraph
             this.GrProperties = new GrPropChannel(pl);
 
             //this.pl = pl;
-            selController = new SelectionController();
+            selController = new SelectionController(st, this);
         }
 
         public GraphItem AddFigure(int x, int y)
@@ -76,6 +76,17 @@ namespace VectorGraph
             GraphItem item = AddFigure(x, y);
             st.Add(item);
             selController.SelectAndGrab(item, x, y);
+        }
+
+        public Group CreateNewGroup(List<GraphItem> Items)
+        {
+            List<Frame> frames = new List<Frame>();
+            foreach (GraphItem item in Items)
+                frames.Add(item.frame);
+            Group group = new Group(Items, Frame.FrameSum(frames));
+            st.Add(group);
+            st.Delete(Items);
+            return group;
         }
     }
 }

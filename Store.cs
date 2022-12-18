@@ -8,5 +8,11 @@ namespace VectorGraph
 {
     internal class Store : List<GraphItem>
     {
+
+        public void Delete(List<GraphItem> Items)
+        {
+            foreach (GraphItem item in Items)
+                this.Remove(item);
+        }
     }
 }
