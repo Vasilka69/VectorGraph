@@ -78,7 +78,7 @@ namespace VectorGraph
             selController.SelectAndGrab(item, x, y);
         }
 
-        public Group CreateNewGroup(List<GraphItem> Items)
+        public Group CreateGroup(List<GraphItem> Items)
         {
             List<Frame> frames = new List<Frame>();
             foreach (GraphItem item in Items)

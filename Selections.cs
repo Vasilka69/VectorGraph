@@ -12,9 +12,10 @@ namespace VectorGraph
 {
     internal abstract class Selection
     {
+        public Point GrabbedPoint { get; set; }
         public abstract bool TryGrab(int x, int y);
         public abstract bool TryDragTo(int x, int y);
-        public abstract void ReleaseGrab();
+        public abstract void ReleaseGrab(int x, int y);
         public abstract void Draw(GraphSystem gs);
         public abstract GraphItem GetItem();
     }
@@ -30,7 +31,7 @@ namespace VectorGraph
             this.line = line;
             ActualPoints();
         }
-        public override bool TryGrab(int x, int y) // не работает
+        public override bool TryGrab(int x, int y)
         {
             ActualPoints();
 
@@ -52,25 +53,43 @@ namespace VectorGraph
             return false;
             /*
             foreach (Point p in points)
-            {
                 if (x > p.X - delta && x < p.X + delta &&
                     y > p.Y - delta && y < p.Y + delta)
-                {
                     return true;
-                }
-            }
             */
 
         }
 
-        public override bool TryDragTo(int x, int y) // пока не работает
+        public override bool TryDragTo(int x, int y)
         {
-            return true;
+            int delta = 5;
+            foreach (Point p in points)
+            {
+                if (x >= p.X - delta && x <= p.X + delta &&
+                    y >= p.Y - delta && y <= p.Y + delta)
+                {
+                    GrabbedPoint = p;
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public override void ReleaseGrab()  // не работает
+        public override void ReleaseGrab(int x, int y)  // не работает
         {
 
+            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
+                return;
+            for (int coord = 0; coord < line.frame.coords.Count; coord += 2)
+            {
+                if (line.frame.coords[coord] == GrabbedPoint.X &&
+                    line.frame.coords[coord + 1] == GrabbedPoint.Y)
+                {
+                    line.frame.coords[coord] = x;
+                    line.frame.coords[coord + 1] = y;
+                    break;
+                }
+            }
         }
 
         private void ActualPoints()
@@ -138,7 +157,7 @@ namespace VectorGraph
             return true;
         }
 
-        public override void ReleaseGrab()  // не работает
+        public override void ReleaseGrab(int x, int y) // не работает
         {
 
         }
@@ -205,7 +224,7 @@ namespace VectorGraph
             return true;
         }
 
-        public override void ReleaseGrab()  // не работает
+        public override void ReleaseGrab(int x, int y) // не работает
         {
 
         }
@@ -278,7 +297,7 @@ namespace VectorGraph
             return true;
         }
 
-        public override void ReleaseGrab()  // не работает
+        public override void ReleaseGrab(int x, int y)  // не работает
         {
 
         }
@@ -327,24 +346,20 @@ namespace VectorGraph
 
     internal class SelectionStore : List<Selection>
     {
-        public List<Selection> grabbedSelection { set; get; }
+        public List<Selection> Selected { set; get; }
+        public Selection GrabbedSelection { set; get; }
 
         public SelectionStore()
         {
-            grabbedSelection = new List<Selection>();
+            Selected = new List<Selection>();
         }
 
-        public Selection TryGrab(int x, int y)//, bool isCtrl)
+        public Selection TryGrab(int x, int y)
         {
             foreach (Selection sel in this)
             {
                 if (sel.TryGrab(x, y))
                 {
-                    /*
-                    if (!isCtrl && grabbedSelection.Count != 0)
-                        Release();
-                    grabbedSelection.Add(sel);
-                    */
                     return sel;
                 }
             }
@@ -353,13 +368,13 @@ namespace VectorGraph
 
         public void Release()
         {
-            grabbedSelection.Clear();
+            Selected.Clear();
         }
 
         public void Draw(GraphSystem gs) // как оно должно быть
         {
-            if (grabbedSelection != null)
-                foreach (Selection sel in grabbedSelection)
+            if (Selected != null)
+                foreach (Selection sel in Selected)
                     sel.Draw(gs);
             /*
             foreach (Selection sel in this)
@@ -378,19 +393,19 @@ namespace VectorGraph
         {
             foreach (GraphItem item in group.items)
                 DeleteSelection(item.selection);
-            grabbedSelection.Add(group.selection);
+            Selected.Add(group.selection);
         }
 
         public void DeleteSelection(Selection sel) // Удалить селекшены элементов группы
         {
             this.Remove(sel);
-            grabbedSelection.Remove(sel);
+            Selected.Remove(sel);
         }
 
         public List<GraphItem> SelItems()
         {
             List<GraphItem> items = new List<GraphItem>();
-            foreach (Selection sel in grabbedSelection)
+            foreach (Selection sel in Selected)
                 items.Add(sel.GetItem());
             return items;
         }
@@ -413,7 +428,8 @@ namespace VectorGraph
         {
             Selection sel = item.CreateSelection();
             selStore.Add(sel);
-            TryGrab(x, y, false);
+            if (TryGrab(x, y, false))
+                DragSelTo(x, y);
         }
 
         public bool TryGrab(int x, int y, bool isCtrl)
@@ -423,10 +439,45 @@ namespace VectorGraph
             {
                 if (!isCtrl)
                     selStore.Release();
+                selStore.Selected.Add(sel);
+                return true;
+            }
+            return false;
+        }
+
+        public bool DragSelTo(int x, int y) // Было bool
+        {
+            Selection selection = null;
+            foreach (Selection sel in selStore.Selected)
+                if (sel.TryDragTo(x, y))
+                {
+                    selection = sel;
+                    selStore.GrabbedSelection = sel;
+                    break;
+                }
+            if (selection == null)
+                return false;
+            return true;
+            /*
+            Selection sel = selStore.TryGrab(x, y);
+            if (sel != null)
+            {
+                selStore.Release();
                 selStore.grabbedSelection.Add(sel);
                 return true;
             }
             return false;
+            */
+            //return false;
+        }
+
+        public bool ReleaseGrab(int x, int y)
+        {
+            Selection selection = selStore.GrabbedSelection;
+            if (selection == null)
+                return false;
+            selStore.GrabbedSelection.ReleaseGrab(x, y);
+            return true;
         }
 
         public void Release()
@@ -441,7 +492,7 @@ namespace VectorGraph
 
         public bool Grouping() // Вроде работает
         {
-            Group group = factory.CreateNewGroup(selStore.SelItems());
+            Group group = factory.CreateGroup(selStore.SelItems());
             Selection sel = group.CreateSelection();
             selStore.Add(sel);
             selStore.DeleteSelections(group);
@@ -452,8 +503,8 @@ namespace VectorGraph
 
         public bool Ungrouping() // Вроде работает
         {
-            if (selStore.grabbedSelection.Count == 1 && selStore.grabbedSelection[0] is GroupSelection) {
-                GroupSelection groupSel = selStore.grabbedSelection[0] as GroupSelection;
+            if (selStore.Selected.Count == 1 && selStore.Selected[0] is GroupSelection) {
+                GroupSelection groupSel = selStore.Selected[0] as GroupSelection;
                 List<GraphItem> items = factory.Ungroup(groupSel.GetItem() as Group);
                 foreach (GraphItem item in items)
                 selStore.Add(item.CreateSelection());
@@ -469,6 +520,8 @@ namespace VectorGraph
         SelectionStore selStore { get; }
         void SelectAndGrab(GraphItem item, int x, int y);
         bool TryGrab(int x, int y, bool isCtrl);
+        bool DragSelTo(int x, int y); // bool
+        bool ReleaseGrab(int x, int y);
         void Release();
         int Count();
         bool Grouping();

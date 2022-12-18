@@ -34,7 +34,7 @@ namespace VectorGraph
             ///////
             List<Point> points = new List<Point>();
             List<Frame> frames = new List<Frame>();
-            foreach (Selection sel in Model.Factory.selController.selStore.grabbedSelection)
+            foreach (Selection sel in Model.Factory.selController.selStore.Selected)
                 frames.Add(sel.GetItem().frame);
             Frame sumFr = Frame.FrameSum(frames);
 

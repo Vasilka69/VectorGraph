@@ -45,6 +45,8 @@ namespace VectorGraph
         public override void LeftMouseDown(int x, int y)
         {
             Model.Factory.CreateAndGrabItem(x, y);
+            List<Selection> sels = Model.Factory.selController.selStore.Selected;
+            EH.sel = sels[sels.Count - 1];
             Model.GrController.Repaint();
             EH.SetState(EH.DS);
 
@@ -91,10 +93,12 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y)
         {
-            GraphItem f = Model.GetLastItem();
-            f.frame.coords[2] = x;
-            f.frame.coords[3] = y;
+            /*
+            //Model.Factory.selController.DragSelTo(x, y);
+            EH.sel.ReleaseGrab(x, y);
+
             Model.GrController.Repaint();
+            */
 
         }
 
@@ -102,10 +106,15 @@ namespace VectorGraph
 
         public override void LeftMouseUp(int x, int y)
         {
+            /*
             GraphItem f = Model.GetLastItem();
             f.frame.coords[2] = x;
             f.frame.coords[3] = y;
+            
+            Model.GrController.Repaint();
+            */
 
+            Model.Factory.selController.ReleaseGrab(x, y);
             Model.GrController.Repaint();
 
             EH.SetState(EH.SSS);
@@ -119,7 +128,7 @@ namespace VectorGraph
         public override void Ungroup() { }
     }
 
-    internal class SingleSelectState : State // Чек блокнот (Добавить Ungrouping)
+    internal class SingleSelectState : State
     {
         public override IModel Model { set; get; }
         public override EventHandler EH { set; get; }
@@ -134,6 +143,14 @@ namespace VectorGraph
 
         public override void LeftMouseDown(int x, int y)
         {
+            //bool isHit = Model.Factory.selController.TryGrab(x, y, false);
+            bool hitSel = Model.Factory.selController.DragSelTo(x, y);
+            if (hitSel)
+            {
+                //EH.sel = hitSel;
+                EH.SetState(EH.DS);
+            }
+            Model.GrController.Repaint();
         }
 
         public override void LeftMouseUp(int x, int y)

@@ -41,6 +41,7 @@ namespace VectorGraph
         //private StateStore states;
 
         public bool isCtrl;
+        public Selection sel; // не было
 
         public EventHandler(IModel Model)
         {
