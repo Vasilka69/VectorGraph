@@ -209,7 +209,12 @@ namespace VectorGraph
             EH.SetState(EH.ES);
         }
         public override void Group() { }
-        public override void Ungroup() { }
+        public override void Ungroup()
+        {
+            if (Model.Factory.selController.Ungrouping())
+                EH.SetState(EH.MSS);
+            Model.GrController.Repaint();
+        }
     }
 
     internal class MultiSelectState : State // Grouping

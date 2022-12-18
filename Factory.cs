@@ -88,5 +88,16 @@ namespace VectorGraph
             st.Delete(Items);
             return group;
         }
+
+        public List<GraphItem> Ungroup(Group group)
+        {
+            List<GraphItem> items = new List<GraphItem>();
+            foreach (GraphItem item in group.items)
+            {
+                st.Add(item);
+                items.Add(item);
+            }
+            return items;
+        }
     }
 }

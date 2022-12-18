@@ -10,6 +10,7 @@ namespace VectorGraph
 {
     internal abstract class GraphItem
     {
+        public Selection selection;
         public Frame frame { get; }
 
         public GraphItem(Frame fr)
@@ -36,7 +37,8 @@ namespace VectorGraph
 
         public override Selection CreateSelection()
         {
-            return new GroupSelection(this);
+            selection =  new GroupSelection(this);
+            return selection;
         }
     }
 
@@ -88,7 +90,8 @@ namespace VectorGraph
         }
         public override Selection CreateSelection()
         {
-            return new LineSelection(this);
+            selection = new LineSelection(this);
+            return selection;
         }
     }
 
@@ -113,7 +116,8 @@ namespace VectorGraph
         }
         public override Selection CreateSelection()
         {
-            return new RectSelection(this);
+            selection = new RectSelection(this);
+            return selection;
         }
     }
 
@@ -138,7 +142,8 @@ namespace VectorGraph
         }
         public override Selection CreateSelection()
         {
-            return new EllipseSelection(this);
+            selection = new EllipseSelection(this);
+            return selection;
         }
     }
 }

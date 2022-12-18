@@ -358,9 +358,17 @@ namespace VectorGraph
 
         }
 
+        public void DeleteSelections(Group group) // Удалить селекшены элементов группы
+        {
+            foreach (GraphItem item in group.items)
+                DeleteSelection(item.selection);
+            grabbedSelection.Add(group.selection);
+        }
+
         public void DeleteSelection(Selection sel) // Удалить селекшены элементов группы
         {
-            //this.Remove(sel);
+            this.Remove(sel);
+            grabbedSelection.Remove(sel);
         }
 
         public List<GraphItem> SelItems()
@@ -415,16 +423,27 @@ namespace VectorGraph
             return selStore.Count;
         }
 
-        public bool Grouping() // Пока не работает
+        public bool Grouping() // Вроде работает
         {
             Group group = factory.CreateNewGroup(selStore.SelItems());
+            Selection sel = group.CreateSelection();
+            selStore.Add(sel);
+            selStore.DeleteSelections(group);
             if (group != null)
                 return true;
             return false;
         }
 
-        public bool Ungrouping() // Пока не работает
+        public bool Ungrouping() // Вроде работает
         {
+            if (selStore.grabbedSelection.Count == 1 && selStore.grabbedSelection[0] is GroupSelection) {
+                GroupSelection groupSel = selStore.grabbedSelection[0] as GroupSelection;
+                List<GraphItem> items = factory.Ungroup(groupSel.GetItem() as Group);
+                foreach (GraphItem item in items)
+                selStore.Add(item.CreateSelection());
+                selStore.DeleteSelection(groupSel);
+                return false;
+            }
             return true;
         }
     }
