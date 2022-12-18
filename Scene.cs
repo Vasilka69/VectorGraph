@@ -18,6 +18,7 @@ namespace VectorGraph
         GraphSystem gs { set; get; }
     }
 
+
     internal class Scene : IGrController
     {
 

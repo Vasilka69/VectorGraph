@@ -30,11 +30,27 @@ namespace VectorGraph
             this.line = line;
             ActualPoints();
         }
-
         public override bool TryGrab(int x, int y) // не работает
         {
             ActualPoints();
 
+            int x0 = x;
+            int y0 = y;
+            int x1 = points[0].X;
+            int x2 = points[1].X;
+            int y1 = points[0].Y;
+            int y2 = points[1].Y;
+            int distance = (int)( (Math.Abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1))
+                / (Math.Sqrt(Math.Pow((y2 - y1), 2) + Math.Pow((x2 - x1), 2))) );
+            int delta = line.pl.ContourProps.LineWidth / 2;
+            if (distance < delta &&
+                x >= Math.Min(points[0].X, points[1].X) &&
+                x <= Math.Max(points[0].X, points[1].X) &&
+                y >= Math.Min(points[0].Y, points[1].Y) &&
+                y <= Math.Max(points[0].Y, points[1].Y))
+                return true;
+            return false;
+            /*
             foreach (Point p in points)
             {
                 if (x > p.X - delta && x < p.X + delta &&
@@ -43,8 +59,8 @@ namespace VectorGraph
                     return true;
                 }
             }
-            return false;
-            
+            */
+
         }
 
         public override bool TryDragTo(int x, int y) // пока не работает
@@ -70,6 +86,7 @@ namespace VectorGraph
         {
             ActualPoints();
 
+
             ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
             FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
@@ -79,7 +96,6 @@ namespace VectorGraph
                 Figure marker = new Rect(frame, pl);
                 marker.Draw(gs);
             }
-
         }
 
         public override GraphItem GetItem()
@@ -104,14 +120,16 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            foreach (Point p in points)
-            {
-                if (x > p.X - delta && x < p.X + delta &&
-                    y > p.Y - delta && y < p.Y + delta)
-                {
-                    return true;
-                }
-            }
+            int delta = rect.pl.ContourProps.LineWidth / 2;
+            int minX = Math.Min(rect.frame.coords[0], rect.frame.coords[2]);
+            int maxX = Math.Max(rect.frame.coords[0], rect.frame.coords[2]);
+            int minY = Math.Min(rect.frame.coords[1], rect.frame.coords[3]);
+            int maxY = Math.Max(rect.frame.coords[1], rect.frame.coords[3]);
+            if (x >= minX - delta &&
+                x <= maxX + delta &&
+                y >= minY - delta &&
+                y <= maxY + delta)
+                return true;
             return false;
         }
 
@@ -174,13 +192,10 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            foreach (Point p in points)
+            foreach (GraphItem item in group.items)
             {
-                if (x > p.X - delta && x < p.X + delta &&
-                    y > p.Y - delta && y < p.Y + delta)
-                {
+                if (item.selection.TryGrab(x, y))
                     return true;
-                }
             }
             return false;
         }
@@ -244,16 +259,17 @@ namespace VectorGraph
             ActualPoints();
         }
 
-        public override bool TryGrab(int x, int y) // не работает
+        public override bool TryGrab(int x, int y)
         {
-            foreach (Point p in points)
-            {
-                if (x > p.X - delta && x < p.X + delta &&
-                    y > p.Y - delta && y < p.Y + delta)
-                {
-                    return true;
-                }
-            }
+            int delta = ellipse.pl.ContourProps.LineWidth / 2;
+            Frame frame = ellipse.frame;
+            double a = Math.Abs(frame.coords[0] - frame.coords[2]) / 2 + delta;
+            double b = Math.Abs(frame.coords[1] - frame.coords[3]) / 2 + delta;
+            int x0 = (frame.coords[0] + frame.coords[2]) / 2;
+            int y0 = (frame.coords[1] + frame.coords[3]) / 2;
+            double ellipseEq = (Math.Pow((x - x0), 2)) / (Math.Pow(a, 2)) + (Math.Pow((y - y0), 2)) / (Math.Pow(b, 2));
+            if (ellipseEq <= 1)
+                return true;
             return false;
         }
 

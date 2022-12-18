@@ -24,7 +24,7 @@ namespace VectorGraph
         public Controller(IModel model)
         {
             Model = model;
-            EventHandler = new EventHandler(Model); ;
+            EventHandler = new EventHandler(Model);
         }
 
         public string f5() // Проверка FrameSum (уже работает)
