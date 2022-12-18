@@ -212,10 +212,13 @@ namespace VectorGraph
 
         public override void Delete()
         {
+            /*
             SelectionStore selStore = Model.Factory.selController.selStore;
             selStore.Release();
             Model.GrController.Repaint();
-
+            */
+            Model.Factory.selController.DelSelectedItems();
+            Model.GrController.Repaint();
             EH.SetState(EH.ES);
         }
 
@@ -268,8 +271,12 @@ namespace VectorGraph
 
         public override void Delete()
         {
+            /*
             SelectionStore selStore = Model.Factory.selController.selStore;
             selStore.Release();
+            Model.GrController.Repaint();
+            */
+            Model.Factory.selController.DelSelectedItems();
             Model.GrController.Repaint();
 
             EH.SetState(EH.ES);

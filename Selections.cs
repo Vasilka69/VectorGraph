@@ -75,7 +75,7 @@ namespace VectorGraph
             return false;
         }
 
-        public override void ReleaseGrab(int x, int y)  // не работает
+        public override void ReleaseGrab(int x, int y)
         {
 
             if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
@@ -154,14 +154,40 @@ namespace VectorGraph
             return false;
         }
 
-        public override bool TryDragTo(int x, int y) // пока не работает
+        public override bool TryDragTo(int x, int y)
         {
-            return true;
+            int delta = 5;
+            foreach (Point p in points)
+            {
+                if (x >= p.X - delta && x <= p.X + delta &&
+                    y >= p.Y - delta && y <= p.Y + delta)
+                {
+                    GrabbedPoint = p;
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public override void ReleaseGrab(int x, int y) // не работает
+        public override void ReleaseGrab(int x, int y)
         {
-
+            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
+                return;
+            int coordX = 0;
+            int coordY = 1;
+            for (int coord = 0; coord < rect.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == rect.frame.coords[coord])
+                {
+                    coordX = coord;
+                }
+            for (int coord = 1; coord < rect.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == rect.frame.coords[coord])
+                {
+                    coordY = coord;
+                }
+            rect.frame.coords[coordX] = x;
+            rect.frame.coords[coordY] = y;
+            GrabbedPoint = new Point(x, y);
         }
 
         private void ActualPoints()
@@ -182,6 +208,7 @@ namespace VectorGraph
             ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
             FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
+            
             foreach (Point p in points)
             {
                 Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
@@ -221,14 +248,43 @@ namespace VectorGraph
             return false;
         }
 
-        public override bool TryDragTo(int x, int y) // пока не работает
+        public override bool TryDragTo(int x, int y)
         {
-            return true;
+            int delta = 5;
+            foreach (Point p in points)
+            {
+                if (x >= p.X - delta && x <= p.X + delta &&
+                    y >= p.Y - delta && y <= p.Y + delta)
+                {
+                    GrabbedPoint = p;
+
+
+                    
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public override void ReleaseGrab(int x, int y) // не работает
+        public override void ReleaseGrab(int x, int y)
         {
-
+            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
+                return;
+            int coordX = 0;
+            int coordY = 1;
+            for (int coord = 0; coord < group.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == group.frame.coords[coord])
+                {
+                    coordX = coord;
+                }
+            for (int coord = 1; coord < group.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == group.frame.coords[coord])
+                {
+                    coordY = coord;
+                }
+            group.frame.coords[coordX] = x;
+            group.frame.coords[coordY] = y;
+            GrabbedPoint = new Point(x, y);
         }
 
         private void ActualPoints()
@@ -294,14 +350,40 @@ namespace VectorGraph
             return false;
         }
 
-        public override bool TryDragTo(int x, int y) // пока не работает
+        public override bool TryDragTo(int x, int y)
         {
-            return true;
+            int delta = 5;
+            foreach (Point p in points)
+            {
+                if (x >= p.X - delta && x <= p.X + delta &&
+                    y >= p.Y - delta && y <= p.Y + delta)
+                {
+                    GrabbedPoint = p;
+                    return true;
+                }
+            }
+            return false;
         }
 
-        public override void ReleaseGrab(int x, int y)  // не работает
+        public override void ReleaseGrab(int x, int y)
         {
-
+            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
+                return;
+            int coordX = 0;
+            int coordY = 1;
+            for (int coord = 0; coord < ellipse.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == ellipse.frame.coords[coord])
+                {
+                    coordX = coord;
+                }
+            for (int coord = 1; coord < ellipse.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == ellipse.frame.coords[coord])
+                {
+                    coordY = coord;
+                }
+            ellipse.frame.coords[coordX] = x;
+            ellipse.frame.coords[coordY] = y;
+            GrabbedPoint = new Point(x, y);
         }
 
         private void ActualPoints()
@@ -311,7 +393,7 @@ namespace VectorGraph
             points.Add(new Point(ellipse.frame.coords[0], ellipse.frame.coords[3]));
             points.Add(new Point(ellipse.frame.coords[2], ellipse.frame.coords[1]));
             points.Add(new Point(ellipse.frame.coords[2], ellipse.frame.coords[3]));
-
+            /*
             points.Add(new Point((ellipse.frame.coords[0] + ellipse.frame.coords[2]) / 2,
                 ellipse.frame.coords[1]));
             points.Add(new Point(ellipse.frame.coords[0],
@@ -320,6 +402,7 @@ namespace VectorGraph
                 ellipse.frame.coords[3]));
             points.Add(new Point(ellipse.frame.coords[2],
                 (ellipse.frame.coords[1] + ellipse.frame.coords[3]) / 2));
+            */
             this.points = points;
         }
 
@@ -492,6 +575,18 @@ namespace VectorGraph
             return selStore.Count;
         }
 
+        public void DelSelectedItems()
+        {
+            List<GraphItem> Items = new List<GraphItem>();
+            foreach (Selection sel in selStore.Selected)
+            {
+                Items.Add(sel.GetItem());
+            }
+            while (selStore.Selected.Count != 0)
+                selStore.DeleteSelection(selStore.Selected[0]);
+            Store.Delete(Items);
+        }
+
         public bool Grouping() // Вроде работает
         {
             Group group = factory.CreateGroup(selStore.SelItems());
@@ -526,6 +621,7 @@ namespace VectorGraph
         bool ReleaseGrab(int x, int y);
         void Release();
         int Count();
+        void DelSelectedItems();
         bool Grouping();
         bool Ungrouping();
     }
