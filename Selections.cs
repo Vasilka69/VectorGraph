@@ -17,8 +17,42 @@ namespace VectorGraph
         private protected List<Point> points;
         public Point GrabbedPoint { get; set; }
         public abstract bool TryGrab(int x, int y);
-        public abstract bool TryDragTo(int x, int y);
-        public abstract void ReleaseGrab(int x, int y);
+
+        public virtual bool TryDragTo(int x, int y)
+        {
+            int delta = this.delta;
+            foreach (Point p in points)
+            {
+                if (x >= p.X - delta && x <= p.X + delta &&
+                    y >= p.Y - delta && y <= p.Y + delta)
+                {
+                    GrabbedPoint = p;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public virtual void ReleaseGrab(int x, int y)
+        {
+            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
+                return;
+            int coordX = 0;
+            int coordY = 1;
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == item.frame.coords[coord])
+                {
+                    coordX = coord;
+                }
+            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == item.frame.coords[coord])
+                {
+                    coordY = coord;
+                }
+            item.frame.coords[coordX] = x;
+            item.frame.coords[coordY] = y;
+            GrabbedPoint = new Point(x, y);
+        }
 
         public virtual void Draw(GraphSystem gs)
         {
@@ -86,21 +120,6 @@ namespace VectorGraph
 
         }
 
-        public override bool TryDragTo(int x, int y)
-        {
-            int delta = 5;
-            foreach (Point p in points)
-            {
-                if (x >= p.X - delta && x <= p.X + delta &&
-                    y >= p.Y - delta && y <= p.Y + delta)
-                {
-                    GrabbedPoint = p;
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public override void ReleaseGrab(int x, int y)
         {
 
@@ -155,44 +174,8 @@ namespace VectorGraph
             return false;
         }
 
-        public override bool TryDragTo(int x, int y)
-        {
-            int delta = 5;
-            foreach (Point p in points)
-            {
-                if (x >= p.X - delta && x <= p.X + delta &&
-                    y >= p.Y - delta && y <= p.Y + delta)
-                {
-                    GrabbedPoint = p;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public override void ReleaseGrab(int x, int y)
-        {
-            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
-                return;
-            int coordX = 0;
-            int coordY = 1;
-            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.X == item.frame.coords[coord])
-                {
-                    coordX = coord;
-                }
-            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.Y == item.frame.coords[coord])
-                {
-                    coordY = coord;
-                }
-            item.frame.coords[coordX] = x;
-            item.frame.coords[coordY] = y;
-            GrabbedPoint = new Point(x, y);
-        }
-
     }
-    internal class EllipseSelection : Selection // заполнить бы
+    internal class EllipseSelection : Selection
     {
 
         public EllipseSelection(Ellipse ellipse)
@@ -213,42 +196,6 @@ namespace VectorGraph
             if (ellipseEq <= 1)
                 return true;
             return false;
-        }
-
-        public override bool TryDragTo(int x, int y)
-        {
-            int delta = 5;
-            foreach (Point p in points)
-            {
-                if (x >= p.X - delta && x <= p.X + delta &&
-                    y >= p.Y - delta && y <= p.Y + delta)
-                {
-                    GrabbedPoint = p;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public override void ReleaseGrab(int x, int y)
-        {
-            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
-                return;
-            int coordX = 0;
-            int coordY = 1;
-            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.X == item.frame.coords[coord])
-                {
-                    coordX = coord;
-                }
-            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.Y == item.frame.coords[coord])
-                {
-                    coordY = coord;
-                }
-            item.frame.coords[coordX] = x;
-            item.frame.coords[coordY] = y;
-            GrabbedPoint = new Point(x, y);
         }
 
     }
