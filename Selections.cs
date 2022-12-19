@@ -19,8 +19,34 @@ namespace VectorGraph
         public abstract bool TryGrab(int x, int y);
         public abstract bool TryDragTo(int x, int y);
         public abstract void ReleaseGrab(int x, int y);
-        public abstract void Draw(GraphSystem gs);
-        public abstract GraphItem GetItem();
+
+        public virtual void Draw(GraphSystem gs)
+        {
+            ActualPoints();
+
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
+            PropList pl = new PropList(cp, fp);
+            foreach (Point p in points)
+            {
+                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
+                Figure marker = new Rect(frame, pl);
+                marker.Draw(gs);
+            }
+        }
+
+        protected virtual void ActualPoints()
+        {
+            List<Point> points = new List<Point>();
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[3]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
+
+            this.points = points;
+        }
+
+        public virtual GraphItem GetItem() { return item; }
     }
 
     internal class LineSelection : Selection
@@ -94,34 +120,13 @@ namespace VectorGraph
 
         }
 
-        private void ActualPoints()
+        protected override void ActualPoints()
         {
             List<Point> points = new List<Point>();
             points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
             points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
 
             this.points = points;
-        }
-
-        public override void Draw(GraphSystem gs)
-        {
-            ActualPoints();
-
-
-            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
-            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
-            PropList pl = new PropList(cp, fp);
-            foreach (Point p in points)
-            {
-                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
-                Figure marker = new Rect(frame, pl);
-                marker.Draw(gs);
-            }
-        }
-
-        public override GraphItem GetItem()
-        {
-            return item;
         }
     }
 
@@ -186,177 +191,7 @@ namespace VectorGraph
             GrabbedPoint = new Point(x, y);
         }
 
-        private void ActualPoints()
-        {
-            List<Point> points = new List<Point>();
-            points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
-            points.Add(new Point(item.frame.coords[0], item.frame.coords[3]));
-            points.Add(new Point(item.frame.coords[2], item.frame.coords[1]));
-            points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
-
-            this.points = points;
-        }
-
-        public override void Draw(GraphSystem gs)
-        {
-            ActualPoints();
-
-            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
-            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
-            PropList pl = new PropList(cp, fp);
-            
-            foreach (Point p in points)
-            {
-                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
-                Figure marker = new Rect(frame, pl);
-                marker.Draw(gs);
-            }
-        }
-
-        public override GraphItem GetItem()
-        {
-            return item;
-        }
-
     }
-
-    internal class GroupSelection : Selection
-    {
-
-        public GroupSelection(Group group)
-        {
-            this.item = group;
-            ActualPoints();
-        }
-
-        public override bool TryGrab(int x, int y)
-        {
-            ActualPoints();
-
-            foreach (GraphItem item in (item as Group).items)
-            {
-                if (item.selection.TryGrab(x, y))
-                    return true;
-            }
-            return false;
-        }
-
-        public override bool TryDragTo(int x, int y)
-        {
-            int delta = 5;
-            foreach (Point p in points)
-            {
-                if (x >= p.X - delta && x <= p.X + delta &&
-                    y >= p.Y - delta && y <= p.Y + delta)
-                {
-                    GrabbedPoint = p;
-                    int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
-                    int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
-                    foreach (GraphItem item in (item as Group).items)
-                        for (int coord = 0; coord < item.frame.coords.Count; coord++)
-                        {
-                            //item.Multipliers[coord] = item.frame.coords[coord] / group.frame.coords[coord];
-                            if (coord % 2 == 0) // X
-                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)width);
-                            if (coord % 2 == 1) // Y
-                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)height);
-                        }
-                    string res = "";
-                    foreach (double mult in (item as Group).items[0].Multipliers)
-                        res += mult + " ";
-                    //MessageBox.Show(res);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public override void ReleaseGrab(int x, int y)
-        {
-            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
-                return;
-            int coordX = 0;
-            int coordY = 1;
-            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.X == item.frame.coords[coord])
-                {
-                    coordX = coord;
-                }
-            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.Y == item.frame.coords[coord])
-                {
-                    coordY = coord;
-                }
-            GrabbedPoint = new Point(x, y);
-
-            item.frame.coords[coordX] = x;
-            item.frame.coords[coordY] = y;
-            int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
-            int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
-            /*
-            foreach (GraphItem item in group.items)
-                for (int coord = 0; coord < item.frame.coords.Count; coord++)
-                {
-                    //item.frame.coords[coord] = group.frame.coords[coord] + (int)(item.Multipliers[coord] * group.frame.coords[coord]);
-                    if (coord % 2 == 0) // X
-                        item.frame.coords[coord] = group.frame.coords[coord] + (int)(item.Multipliers[coord] * width);
-                    if (coord % 2 == 1) // Y
-                        item.frame.coords[coord] = group.frame.coords[coord] + (int)(item.Multipliers[coord] * height);
-                }
-            */
-            
-            foreach (GraphItem item in (item as Group).items)
-            {
-                item.frame.coords[0] = Math.Min(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[0] * width);
-                item.frame.coords[1] = Math.Min(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[1] * height);
-                item.frame.coords[2] = Math.Max(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[2] * width);
-                item.frame.coords[3] = Math.Max(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[3] * height);
-            }
-            
-
-        }
-
-        private void ActualPoints()
-        {
-            List<Point> points = new List<Point>();
-            /*
-            List<Frame> frames = new List<Frame>();
-            foreach (GraphItem item in group.items)
-                frames.Add(item.frame);
-            Frame frame = Frame.FrameSum(frames);
-            */
-            Frame frame = item.frame;
-
-            points.Add(new Point(frame.coords[0], frame.coords[1]));
-            points.Add(new Point(frame.coords[0], frame.coords[3]));
-            points.Add(new Point(frame.coords[2], frame.coords[1]));
-            points.Add(new Point(frame.coords[2], frame.coords[3]));
-
-            this.points = points;
-        }
-
-        public override void Draw(GraphSystem gs)
-        {
-            ActualPoints();
-
-            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
-            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
-            PropList pl = new PropList(cp, fp);
-            foreach (Point p in points)
-            {
-                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
-                Figure marker = new Rect(frame, pl);
-                marker.Draw(gs);
-            }
-        }
-
-        public override GraphItem GetItem()
-        {
-            return item;
-        }
-
-    }
-
     internal class EllipseSelection : Selection // заполнить бы
     {
 
@@ -416,38 +251,106 @@ namespace VectorGraph
             GrabbedPoint = new Point(x, y);
         }
 
-        private void ActualPoints()
-        {
-            List<Point> points = new List<Point>();
-            points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
-            points.Add(new Point(item.frame.coords[0], item.frame.coords[3]));
-            points.Add(new Point(item.frame.coords[2], item.frame.coords[1]));
-            points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
+    }
 
-            this.points = points;
+    internal class GroupSelection : Selection
+    {
+
+        public GroupSelection(Group group)
+        {
+            this.item = group;
+            ActualPoints();
         }
 
-        public override void Draw(GraphSystem gs)
+        public override bool TryGrab(int x, int y)
         {
             ActualPoints();
 
-            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
-            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
-            PropList pl = new PropList(cp, fp);
-            foreach (Point p in points)
+            foreach (GraphItem item in (item as Group).items)
             {
-                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
-                Figure marker = new Rect(frame, pl);
-                marker.Draw(gs);
+                if (item.selection.TryGrab(x, y))
+                    return true;
             }
+            return false;
         }
 
-        public override GraphItem GetItem()
+        public override bool TryDragTo(int x, int y) // Пофиксить
         {
-            return item;
+            int delta = 5;
+            foreach (Point p in points)
+            {
+                if (x >= p.X - delta && x <= p.X + delta &&
+                    y >= p.Y - delta && y <= p.Y + delta)
+                {
+                    GrabbedPoint = p;
+                    int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
+                    int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
+                    foreach (GraphItem item in (item as Group).items)
+                        for (int coord = 0; coord < item.frame.coords.Count; coord++)
+                        {
+                            //item.Multipliers[coord] = item.frame.coords[coord] / group.frame.coords[coord];
+                            if (coord % 2 == 0) // X
+                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)width);
+                            if (coord % 2 == 1) // Y
+                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)height);
+                        }
+                    string res = "";
+                    foreach (double mult in (item as Group).items[0].Multipliers)
+                        res += mult + " ";
+                    //MessageBox.Show(res);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override void ReleaseGrab(int x, int y) // Пофиксить
+        {
+            if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
+                return;
+            int coordX = 0;
+            int coordY = 1;
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == item.frame.coords[coord])
+                {
+                    coordX = coord;
+                }
+            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == item.frame.coords[coord])
+                {
+                    coordY = coord;
+                }
+            GrabbedPoint = new Point(x, y);
+
+            item.frame.coords[coordX] = x;
+            item.frame.coords[coordY] = y;
+            int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
+            int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
+            /*
+            foreach (GraphItem item in (item as Group).items)
+                for (int coord = 0; coord < item.frame.coords.Count; coord++)
+                {
+                    //item.frame.coords[coord] = group.frame.coords[coord] + (int)(item.Multipliers[coord] * group.frame.coords[coord]);
+                    if (coord % 2 == 0) // X
+                        item.frame.coords[coord] = item.frame.coords[coord] + (int)(item.Multipliers[coord] * width);
+                    if (coord % 2 == 1) // Y
+                        item.frame.coords[coord] = item.frame.coords[coord] + (int)(item.Multipliers[coord] * height);
+                }
+            */
+
+            foreach (GraphItem item in (item as Group).items)
+            {
+                item.frame.coords[0] = Math.Min(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[0] * width);
+                item.frame.coords[1] = Math.Min(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[1] * height);
+                item.frame.coords[2] = Math.Max(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[2] * width);
+                item.frame.coords[3] = Math.Max(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[3] * height);
+            }
+
+            //ActualPoints();
         }
 
     }
+
 
 
     internal class SelectionStore : List<Selection>
