@@ -12,6 +12,9 @@ namespace VectorGraph
 {
     internal abstract class Selection
     {
+        private protected int delta = 5;
+        private protected GraphItem item;
+        private protected List<Point> points;
         public Point GrabbedPoint { get; set; }
         public abstract bool TryGrab(int x, int y);
         public abstract bool TryDragTo(int x, int y);
@@ -22,13 +25,10 @@ namespace VectorGraph
 
     internal class LineSelection : Selection
     {
-        int delta = 5;
-        public Line line;
-        List<Point> points;
 
         public LineSelection(Line line)
         {
-            this.line = line;
+            item = line;
             ActualPoints();
         }
         public override bool TryGrab(int x, int y)
@@ -43,7 +43,7 @@ namespace VectorGraph
             int y2 = points[1].Y;
             int distance = (int)( (Math.Abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1))
                 / (Math.Sqrt(Math.Pow((y2 - y1), 2) + Math.Pow((x2 - x1), 2))) );
-            int delta = line.pl.ContourProps.LineWidth / 2 + 2;
+            int delta = (item as Figure).pl.ContourProps.LineWidth / 2 + 2;
             if (distance < delta &&
                 x >= Math.Min(points[0].X, points[1].X) &&
                 x <= Math.Max(points[0].X, points[1].X) &&
@@ -80,13 +80,13 @@ namespace VectorGraph
 
             if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
                 return;
-            for (int coord = 0; coord < line.frame.coords.Count; coord += 2)
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
             {
-                if (line.frame.coords[coord] == GrabbedPoint.X &&
-                    line.frame.coords[coord + 1] == GrabbedPoint.Y)
+                if (item.frame.coords[coord] == GrabbedPoint.X &&
+                    item.frame.coords[coord + 1] == GrabbedPoint.Y)
                 {
-                    line.frame.coords[coord] = x;
-                    line.frame.coords[coord + 1] = y;
+                    item.frame.coords[coord] = x;
+                    item.frame.coords[coord + 1] = y;
                     GrabbedPoint = new Point(x, y);
                     break;
                 }
@@ -97,8 +97,8 @@ namespace VectorGraph
         private void ActualPoints()
         {
             List<Point> points = new List<Point>();
-            points.Add(new Point(line.frame.coords[0], line.frame.coords[1]));
-            points.Add(new Point(line.frame.coords[2], line.frame.coords[3]));
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
 
             this.points = points;
         }
@@ -121,19 +121,15 @@ namespace VectorGraph
 
         public override GraphItem GetItem()
         {
-            return line;
+            return item;
         }
     }
 
     internal class RectSelection : Selection
     {
-        int delta = 5;
-        Rect rect;
-        List<Point> points;
-
         public RectSelection(Rect rect)
         {
-            this.rect = rect;
+            item = rect;
             ActualPoints();
         }
 
@@ -141,11 +137,11 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            int delta = rect.pl.ContourProps.LineWidth / 2;
-            int minX = Math.Min(rect.frame.coords[0], rect.frame.coords[2]);
-            int maxX = Math.Max(rect.frame.coords[0], rect.frame.coords[2]);
-            int minY = Math.Min(rect.frame.coords[1], rect.frame.coords[3]);
-            int maxY = Math.Max(rect.frame.coords[1], rect.frame.coords[3]);
+            int delta = (item as Figure).pl.ContourProps.LineWidth / 2;
+            int minX = Math.Min(item.frame.coords[0], item.frame.coords[2]);
+            int maxX = Math.Max(item.frame.coords[0], item.frame.coords[2]);
+            int minY = Math.Min(item.frame.coords[1], item.frame.coords[3]);
+            int maxY = Math.Max(item.frame.coords[1], item.frame.coords[3]);
             if (x >= minX - delta &&
                 x <= maxX + delta &&
                 y >= minY - delta &&
@@ -175,28 +171,28 @@ namespace VectorGraph
                 return;
             int coordX = 0;
             int coordY = 1;
-            for (int coord = 0; coord < rect.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.X == rect.frame.coords[coord])
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == item.frame.coords[coord])
                 {
                     coordX = coord;
                 }
-            for (int coord = 1; coord < rect.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.Y == rect.frame.coords[coord])
+            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == item.frame.coords[coord])
                 {
                     coordY = coord;
                 }
-            rect.frame.coords[coordX] = x;
-            rect.frame.coords[coordY] = y;
+            item.frame.coords[coordX] = x;
+            item.frame.coords[coordY] = y;
             GrabbedPoint = new Point(x, y);
         }
 
         private void ActualPoints()
         {
             List<Point> points = new List<Point>();
-            points.Add(new Point(rect.frame.coords[0], rect.frame.coords[1]));
-            points.Add(new Point(rect.frame.coords[0], rect.frame.coords[3]));
-            points.Add(new Point(rect.frame.coords[2], rect.frame.coords[1]));
-            points.Add(new Point(rect.frame.coords[2], rect.frame.coords[3]));
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[3]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
 
             this.points = points;
         }
@@ -219,20 +215,17 @@ namespace VectorGraph
 
         public override GraphItem GetItem()
         {
-            return rect;
+            return item;
         }
 
     }
 
     internal class GroupSelection : Selection
     {
-        int delta = 5;
-        Group group;
-        List<Point> points;
 
         public GroupSelection(Group group)
         {
-            this.group = group;
+            this.item = group;
             ActualPoints();
         }
 
@@ -240,7 +233,7 @@ namespace VectorGraph
         {
             ActualPoints();
 
-            foreach (GraphItem item in group.items)
+            foreach (GraphItem item in (item as Group).items)
             {
                 if (item.selection.TryGrab(x, y))
                     return true;
@@ -257,19 +250,19 @@ namespace VectorGraph
                     y >= p.Y - delta && y <= p.Y + delta)
                 {
                     GrabbedPoint = p;
-                    int width = Math.Abs(group.frame.coords[0] - group.frame.coords[2]);
-                    int height = Math.Abs(group.frame.coords[1] - group.frame.coords[3]);
-                    foreach (GraphItem item in group.items)
+                    int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
+                    int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
+                    foreach (GraphItem item in (item as Group).items)
                         for (int coord = 0; coord < item.frame.coords.Count; coord++)
                         {
                             //item.Multipliers[coord] = item.frame.coords[coord] / group.frame.coords[coord];
                             if (coord % 2 == 0) // X
-                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - group.frame.coords[coord])) / (double)width);
+                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)width);
                             if (coord % 2 == 1) // Y
-                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - group.frame.coords[coord])) / (double)height);
+                                item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)height);
                         }
                     string res = "";
-                    foreach (double mult in group.items[0].Multipliers)
+                    foreach (double mult in (item as Group).items[0].Multipliers)
                         res += mult + " ";
                     //MessageBox.Show(res);
                     return true;
@@ -284,22 +277,22 @@ namespace VectorGraph
                 return;
             int coordX = 0;
             int coordY = 1;
-            for (int coord = 0; coord < group.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.X == group.frame.coords[coord])
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == item.frame.coords[coord])
                 {
                     coordX = coord;
                 }
-            for (int coord = 1; coord < group.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.Y == group.frame.coords[coord])
+            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == item.frame.coords[coord])
                 {
                     coordY = coord;
                 }
             GrabbedPoint = new Point(x, y);
 
-            group.frame.coords[coordX] = x;
-            group.frame.coords[coordY] = y;
-            int width = Math.Abs(group.frame.coords[0] - group.frame.coords[2]);
-            int height = Math.Abs(group.frame.coords[1] - group.frame.coords[3]);
+            item.frame.coords[coordX] = x;
+            item.frame.coords[coordY] = y;
+            int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
+            int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
             /*
             foreach (GraphItem item in group.items)
                 for (int coord = 0; coord < item.frame.coords.Count; coord++)
@@ -312,12 +305,12 @@ namespace VectorGraph
                 }
             */
             
-            foreach (GraphItem item in group.items)
+            foreach (GraphItem item in (item as Group).items)
             {
-                item.frame.coords[0] = Math.Min(group.frame.coords[0], group.frame.coords[2]) + (int)(item.Multipliers[0] * width);
-                item.frame.coords[1] = Math.Min(group.frame.coords[1], group.frame.coords[3]) + (int)(item.Multipliers[1] * height);
-                item.frame.coords[2] = Math.Max(group.frame.coords[0], group.frame.coords[2]) + (int)(item.Multipliers[2] * width);
-                item.frame.coords[3] = Math.Max(group.frame.coords[1], group.frame.coords[3]) + (int)(item.Multipliers[3] * height);
+                item.frame.coords[0] = Math.Min(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[0] * width);
+                item.frame.coords[1] = Math.Min(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[1] * height);
+                item.frame.coords[2] = Math.Max(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[2] * width);
+                item.frame.coords[3] = Math.Max(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[3] * height);
             }
             
 
@@ -332,7 +325,7 @@ namespace VectorGraph
                 frames.Add(item.frame);
             Frame frame = Frame.FrameSum(frames);
             */
-            Frame frame = group.frame;
+            Frame frame = item.frame;
 
             points.Add(new Point(frame.coords[0], frame.coords[1]));
             points.Add(new Point(frame.coords[0], frame.coords[3]));
@@ -359,27 +352,24 @@ namespace VectorGraph
 
         public override GraphItem GetItem()
         {
-            return group;
+            return item;
         }
 
     }
 
     internal class EllipseSelection : Selection // заполнить бы
     {
-        int delta = 5;
-        Ellipse ellipse;
-        List<Point> points;
 
         public EllipseSelection(Ellipse ellipse)
         {
-            this.ellipse = ellipse;
+            this.item = ellipse;
             ActualPoints();
         }
 
         public override bool TryGrab(int x, int y)
         {
-            int delta = ellipse.pl.ContourProps.LineWidth / 2;
-            Frame frame = ellipse.frame;
+            int delta = (item as Figure).pl.ContourProps.LineWidth / 2;
+            Frame frame = item.frame;
             double a = Math.Abs(frame.coords[0] - frame.coords[2]) / 2 + delta;
             double b = Math.Abs(frame.coords[1] - frame.coords[3]) / 2 + delta;
             int x0 = (frame.coords[0] + frame.coords[2]) / 2;
@@ -411,28 +401,28 @@ namespace VectorGraph
                 return;
             int coordX = 0;
             int coordY = 1;
-            for (int coord = 0; coord < ellipse.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.X == ellipse.frame.coords[coord])
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.X == item.frame.coords[coord])
                 {
                     coordX = coord;
                 }
-            for (int coord = 1; coord < ellipse.frame.coords.Count; coord += 2)
-                if (GrabbedPoint.Y == ellipse.frame.coords[coord])
+            for (int coord = 1; coord < item.frame.coords.Count; coord += 2)
+                if (GrabbedPoint.Y == item.frame.coords[coord])
                 {
                     coordY = coord;
                 }
-            ellipse.frame.coords[coordX] = x;
-            ellipse.frame.coords[coordY] = y;
+            item.frame.coords[coordX] = x;
+            item.frame.coords[coordY] = y;
             GrabbedPoint = new Point(x, y);
         }
 
         private void ActualPoints()
         {
             List<Point> points = new List<Point>();
-            points.Add(new Point(ellipse.frame.coords[0], ellipse.frame.coords[1]));
-            points.Add(new Point(ellipse.frame.coords[0], ellipse.frame.coords[3]));
-            points.Add(new Point(ellipse.frame.coords[2], ellipse.frame.coords[1]));
-            points.Add(new Point(ellipse.frame.coords[2], ellipse.frame.coords[3]));
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[0], item.frame.coords[3]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[1]));
+            points.Add(new Point(item.frame.coords[2], item.frame.coords[3]));
 
             this.points = points;
         }
@@ -454,7 +444,7 @@ namespace VectorGraph
 
         public override GraphItem GetItem()
         {
-            return ellipse;
+            return item;
         }
 
     }
