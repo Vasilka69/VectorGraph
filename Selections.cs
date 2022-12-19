@@ -43,7 +43,7 @@ namespace VectorGraph
             int y2 = points[1].Y;
             int distance = (int)( (Math.Abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1))
                 / (Math.Sqrt(Math.Pow((y2 - y1), 2) + Math.Pow((x2 - x1), 2))) );
-            int delta = line.pl.ContourProps.LineWidth / 2;
+            int delta = line.pl.ContourProps.LineWidth / 2 + 2;
             if (distance < delta &&
                 x >= Math.Min(points[0].X, points[1].X) &&
                 x <= Math.Max(points[0].X, points[1].X) &&
@@ -300,7 +300,7 @@ namespace VectorGraph
             group.frame.coords[coordY] = y;
             int width = Math.Abs(group.frame.coords[0] - group.frame.coords[2]);
             int height = Math.Abs(group.frame.coords[1] - group.frame.coords[3]);
-
+            /*
             foreach (GraphItem item in group.items)
                 for (int coord = 0; coord < item.frame.coords.Count; coord++)
                 {
@@ -310,8 +310,8 @@ namespace VectorGraph
                     if (coord % 2 == 1) // Y
                         item.frame.coords[coord] = group.frame.coords[coord] + (int)(item.Multipliers[coord] * height);
                 }
-
-            /*
+            */
+            
             foreach (GraphItem item in group.items)
             {
                 item.frame.coords[0] = Math.Min(group.frame.coords[0], group.frame.coords[2]) + (int)(item.Multipliers[0] * width);
@@ -319,7 +319,7 @@ namespace VectorGraph
                 item.frame.coords[2] = Math.Max(group.frame.coords[0], group.frame.coords[2]) + (int)(item.Multipliers[2] * width);
                 item.frame.coords[3] = Math.Max(group.frame.coords[1], group.frame.coords[3]) + (int)(item.Multipliers[3] * height);
             }
-             */
+            
 
         }
 

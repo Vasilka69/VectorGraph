@@ -44,9 +44,12 @@ namespace VectorGraph
         
         public override void Apply(GraphSystem gs)
         {
+            gs.pl.ContourProps = this;
+            /*
             gs.GrProperties.Contour.Color = Color;
             gs.GrProperties.Contour.LineWidth = LineWidth;
             gs.GrProperties.Contour.Type = Type;
+            */
         }
     }
 
@@ -63,8 +66,11 @@ namespace VectorGraph
         
         public override void Apply(GraphSystem gs)
         {
+            gs.pl.FillProps = this;
+            /*
             gs.GrProperties.Fill.Color = Color;
             gs.GrProperties.Fill.Type = Type;
+            */
         }
     }
     

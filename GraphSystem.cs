@@ -14,12 +14,17 @@ namespace VectorGraph
     {
         public Graphics gr;
 
-        public IGrProperties GrProperties;
+        //public IGrProperties GrProperties;
+        public PropList pl { set; get; }
 
-        public GraphSystem(Graphics gr, IGrProperties GrProperties)
+        public GraphSystem(Graphics gr)//, IGrProperties GrProperties)
         {
             this.gr = gr;
-            this.GrProperties = GrProperties;
+
+            ContourProps cp = new ContourProps(Color.White, 1, LineType.HatchFill);
+            FillProps fp = new FillProps(Color.Black, FillType.SolidColor);
+            pl = new PropList(cp, fp);
+            //this.GrProperties = GrProperties;
         }
 
         public void DrawFigure(Figure f)
@@ -27,25 +32,25 @@ namespace VectorGraph
             if (f == null)
                 return;
 
-            Brush brush = new SolidBrush(GrProperties.Fill.Color);
-            switch (GrProperties.Fill.Type)
+            Brush brush = new SolidBrush(pl.FillProps.Color);
+            switch (pl.FillProps.Type)
             {
                 case (FillType.SolidColor):
-                    brush = new SolidBrush(GrProperties.Fill.Color);
+                    brush = new SolidBrush(pl.FillProps.Color);
                     break;
                 case (FillType.HatchBrushHor):
-                    brush = new HatchBrush(HatchStyle.Horizontal, GrProperties.Fill.Color, Color.White);
+                    brush = new HatchBrush(HatchStyle.Horizontal, pl.ContourProps.Color, pl.FillProps.Color);
                     break;
                 case (FillType.HatchBrushDiagCross):
-                    brush = new HatchBrush(HatchStyle.DiagonalCross, GrProperties.Fill.Color, Color.White);
+                    brush = new HatchBrush(HatchStyle.DiagonalCross, pl.ContourProps.Color, pl.FillProps.Color);
                     break;
                 case (FillType.HatchBrushBackDiag):
-                    brush = new HatchBrush(HatchStyle.BackwardDiagonal, GrProperties.Fill.Color, Color.White);
+                    brush = new HatchBrush(HatchStyle.BackwardDiagonal, pl.ContourProps.Color, pl.FillProps.Color);
                     break;
             }
 
-            Pen pen = new Pen(GrProperties.Contour.Color, GrProperties.Contour.LineWidth);
-            switch (GrProperties.Contour.Type)
+            Pen pen = new Pen(pl.ContourProps.Color, pl.ContourProps.LineWidth);
+            switch (pl.ContourProps.Type)
             {
                 case (LineType.SolidColor):
                     //penBrush = new SolidBrush(GrProperties.Contour.Color);
@@ -80,7 +85,7 @@ namespace VectorGraph
             switch (f.type)
             {
                 case (FigureType.Rect): // Прямоугольник
-                    if (GrProperties.Fill != null)
+                    if (pl.FillProps != null)
                         gr.FillRectangle(brush, rect);
                     gr.DrawRectangle(pen, rect);
                     break;
@@ -89,7 +94,7 @@ namespace VectorGraph
                     break;
 
                 case (FigureType.Ellipse): // Эллипс
-                    if (GrProperties.Fill != null)
+                    if (pl.FillProps != null)
                         gr.FillEllipse(brush, rect);
                     gr.DrawEllipse(pen, rect);
                     break;

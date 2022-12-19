@@ -28,9 +28,9 @@ namespace VectorGraph
         public Store st;
         public SelectionStore SelStore { set; get; }
 
-        public Scene(Graphics gr, Store st, IGrProperties GrProperties)
+        public Scene(Graphics gr, Store st)//, IGrProperties GrProperties)
         {
-            this.gs = new GraphSystem(gr, GrProperties);
+            this.gs = new GraphSystem(gr);//, GrProperties);
             this.st = st;
         }
 

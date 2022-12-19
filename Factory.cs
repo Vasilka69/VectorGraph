@@ -13,8 +13,7 @@ namespace VectorGraph
     interface IFactory
     {
         event Repaint RepaintEvent;
-        //PropList pl { set; get; }
-        IGrProperties GrProperties { set; get; }
+        PropList pl { set; get; }
         FigureType ChoosenFigure { get; set; }
         GraphItem AddFigure(int x, int y);
         void CreateAndGrabItem(int x, int y);
@@ -23,24 +22,22 @@ namespace VectorGraph
 
     internal class Factory : IFactory
     {
-        //public PropList pl { set; get; }
+        public PropList pl { set; get; }
 
         public event Repaint RepaintEvent;
-        public IGrProperties GrProperties { set; get; }
         public FigureType ChoosenFigure { get; set; }
         public ISelections selController { get; set; } // потом убрать?
 
         Store st;
 
-        public Factory(Store st, IGrProperties GrProperties)//PropList pl)
+        public Factory(Store st)//PropList pl)
         {
             ChoosenFigure = FigureType.Line;
             this.st = st;
 
-            ContourProps cp = new ContourProps(GrProperties.Contour.Color, GrProperties.Contour.LineWidth, GrProperties.Contour.Type);
-            FillProps fp = new FillProps(GrProperties.Fill.Color, GrProperties.Fill.Type);
-            PropList pl = new PropList(cp, fp);
-            this.GrProperties = new GrPropChannel(pl);
+            ContourProps cp = new ContourProps(Color.White, 1, LineType.HatchFill);
+            FillProps fp = new FillProps(Color.Black, FillType.SolidColor);
+            pl = new PropList(cp, fp);
 
             //this.pl = pl;
             selController = new SelectionController(st, this);
@@ -50,8 +47,7 @@ namespace VectorGraph
         {
             Figure f;
             Frame frame = new Frame(x, y, x, y);
-            PropList pl = new PropList(GrProperties.Contour as ContourProps, GrProperties.Fill as FillProps);
-            //MessageBox.Show(GrProperties.Fill.Type.ToString());
+            //PropList pl = new PropList(pl.ContourProps, pl.FillProps);
             switch (ChoosenFigure)
             {
                 case FigureType.Line:

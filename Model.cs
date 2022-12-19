@@ -14,7 +14,6 @@ namespace VectorGraph
         IGrController GrController { get; }
         IFactory Factory { get; }
         void StoreClear();
-        GraphItem GetLastItem();
     }
 
     internal class Model : IModel
@@ -25,14 +24,15 @@ namespace VectorGraph
 
         public Store st { get; }
 
-        public Model (Graphics gr, IGrProperties GrProperties)
+        public Model(Graphics gr)//, PropList pl)
         {
             st = new Store();
 
-            this.GrProperties = GrProperties;
-            GrController = new Scene(gr, st, GrProperties);
+            Factory = new Factory(st);//, pl);
 
-            Factory = new Factory(st, GrProperties);
+            GrProperties = new GrPropChannel(Factory);//, pl);
+
+            GrController = new Scene(gr, st);//, GrProperties);
             GrController.SelStore = Factory.selController.selStore;
 
             Factory.RepaintEvent += GrController.Repaint;
@@ -42,11 +42,5 @@ namespace VectorGraph
         {
             st.Clear();
         }
-
-        public GraphItem GetLastItem()
-        {
-            return st[st.Count - 1];
-        }
     }
 }
-// разные стили линий и разные стили заливки

@@ -9,3 +9,12 @@ C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.csproj.GenerateR
 C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.csproj.CoreCompileInputs.cache
 C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.exe
 C:\Users\Vasili4\source\repos\VectorGraph\obj\Debug\VectorGraph.pdb
+C:\Users\User\Downloads\VectorGraph--\bin\Debug\VectorGraph.exe.config
+C:\Users\User\Downloads\VectorGraph--\obj\Debug\VectorGraph.exe
+C:\Users\User\Downloads\VectorGraph--\obj\Debug\VectorGraph.pdb
+C:\Users\User\Downloads\VectorGraph--\bin\Debug\VectorGraph.exe
+C:\Users\User\Downloads\VectorGraph--\bin\Debug\VectorGraph.pdb
+C:\Users\User\Downloads\VectorGraph--\obj\Debug\VectorGraph.csprojResolveAssemblyReference.cache
+C:\Users\User\Downloads\VectorGraph--\obj\Debug\VectorGraph.Form1.resources
+C:\Users\User\Downloads\VectorGraph--\obj\Debug\VectorGraph.Properties.Resources.resources
+C:\Users\User\Downloads\VectorGraph--\obj\Debug\VectorGraph.csproj.GenerateResource.Cache

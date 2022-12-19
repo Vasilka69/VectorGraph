@@ -29,18 +29,25 @@ namespace VectorGraph
     {
         IContourProps Contour { get; }
         IFillProps Fill { get; }
+        //IFactory Factory { get; set; }
     }
 
     internal class GrPropChannel : IGrProperties
     {
-        public IContourProps Contour { get; }
-        public IFillProps Fill { get; }
+        public IContourProps Contour { get; set; }
+        public IFillProps Fill { get; set; }
 
-        public GrPropChannel(PropList pl)
+        public IFactory Factory { get; set; }
+
+        public GrPropChannel(IFactory Factory)//, PropList pl)
         {
+            Contour = Factory.pl.ContourProps;
+            Fill = Factory.pl.FillProps;
+            /*
+            this.Factory = Factory;
             Contour = new ContourProps(pl.ContourProps.Color, pl.ContourProps.LineWidth, LineType.SolidColor);
             Fill = new FillProps(pl.FillProps.Color, FillType.SolidColor);
-
+            */
         }
     }
 }

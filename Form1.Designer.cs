@@ -36,6 +36,10 @@ namespace VectorGraph
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -68,13 +72,10 @@ namespace VectorGraph
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -82,7 +83,6 @@ namespace VectorGraph
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            this.panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -136,6 +136,49 @@ namespace VectorGraph
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(200, 530);
             this.panel2.TabIndex = 0;
+            // 
+            // panel8
+            // 
+            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel8.Controls.Add(this.button7);
+            this.panel8.Controls.Add(this.button6);
+            this.panel8.Controls.Add(this.label12);
+            this.panel8.Location = new System.Drawing.Point(3, 332);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(188, 65);
+            this.panel8.TabIndex = 12;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(96, 32);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 11;
+            this.button7.TabStop = false;
+            this.button7.Text = "Ungroup";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(15, 32);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 10;
+            this.button6.TabStop = false;
+            this.button6.Text = "Group";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label12.Location = new System.Drawing.Point(42, 8);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(104, 16);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "Группировка";
             // 
             // panel7
             // 
@@ -385,6 +428,7 @@ namespace VectorGraph
             this.textBox1.Size = new System.Drawing.Size(37, 20);
             this.textBox1.TabIndex = 5;
             this.textBox1.TabStop = false;
+            this.textBox1.Text = "5";
             // 
             // label5
             // 
@@ -458,49 +502,6 @@ namespace VectorGraph
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(12, 17);
             this.toolStripStatusLabel3.Text = "-";
             // 
-            // panel8
-            // 
-            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel8.Controls.Add(this.button7);
-            this.panel8.Controls.Add(this.button6);
-            this.panel8.Controls.Add(this.label12);
-            this.panel8.Location = new System.Drawing.Point(3, 332);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(188, 65);
-            this.panel8.TabIndex = 12;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label12.Location = new System.Drawing.Point(42, 8);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(104, 16);
-            this.label12.TabIndex = 8;
-            this.label12.Text = "Группировка";
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(15, 32);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 10;
-            this.button6.TabStop = false;
-            this.button6.Text = "Group";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(96, 32);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 23);
-            this.button7.TabIndex = 11;
-            this.button7.TabStop = false;
-            this.button7.Text = "Ungroup";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -517,6 +518,8 @@ namespace VectorGraph
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel6.ResumeLayout(false);
@@ -529,8 +532,6 @@ namespace VectorGraph
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

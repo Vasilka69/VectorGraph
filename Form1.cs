@@ -46,20 +46,15 @@ namespace VectorGraph
             // PictureBox }
 
 
+            Graphics gr = pictureBox.CreateGraphics();
+
             ContourProps cp = new ContourProps(this.pictureBox1.BackColor, 5, LineType.SolidColor);
             FillProps fp = new FillProps(this.pictureBox2.BackColor, FillType.SolidColor);
             PropList pl = new PropList(cp, fp);
 
-            IGrProperties GrProperties = new GrPropChannel(pl);
 
-            Graphics gr = pictureBox.CreateGraphics();
+            controller = new Controller(new Model(gr));//, pl));
 
-            controller = new Controller(new Model(gr, GrProperties));
-            /*
-            comboBox1.DataSource = Enum.GetValues(typeof(FigureType));
-            comboBox1.SelectedValueChanged += ComboBox1_SelectedValueChanged;
-            comboBox1.SelectedIndex = 0; //
-            */
             comboBox2.DataSource = Enum.GetValues(typeof(LineType));
             comboBox2.SelectedValueChanged += ComboBox2_SelectedValueChanged;
             comboBox2.SelectedIndex = 0; //
@@ -68,15 +63,8 @@ namespace VectorGraph
             comboBox3.SelectedValueChanged += ComboBox3_SelectedValueChanged;
             comboBox3.SelectedIndex = 0; //
 
-            //controller.Model.Factory.ChoosenFigure = (FigureType)comboBox1.SelectedValue;
 
             textBox1.TextChanged += TextBox1_TextChanged;
-            /*
-            if (controller.Model.Factory.pl.ContourProps != null)
-                textBox1.Text = (controller.Model.Factory.pl.ContourProps).LineWidth.ToString(); ///////
-            */
-            if (controller.Model.Factory.GrProperties.Contour != null)
-                textBox1.Text = controller.Model.Factory.GrProperties.Contour.LineWidth.ToString(); ///////
 
             pictureBox.Paint += PictureBox_Paint;
             pictureBox.Resize += PictureBox_VisibleChanged;
@@ -97,8 +85,25 @@ namespace VectorGraph
 
             controller.EventHandler.CurrStateUpdated += EventHandler_CurrStateUpdated;
             controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
+            PropInit();
         }
-
+        
+        private void PropInit()
+        {
+            controller.Model.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
+            controller.Model.GrProperties.Fill.Type = (FillType)comboBox3.SelectedValue;
+            controller.Model.GrProperties.Contour.Color = this.pictureBox1.BackColor;
+            controller.Model.GrProperties.Fill.Color = this.pictureBox2.BackColor;
+            controller.Model.GrProperties.Contour.LineWidth = int.Parse(textBox1.Text);
+            /*
+            controller.Model.GrProperties.Factory.pl.ContourProps.Type = (LineType)comboBox2.SelectedValue;
+            controller.Model.GrProperties.Factory.pl.FillProps.Type = (FillType)comboBox3.SelectedValue;
+            controller.Model.GrProperties.Factory.pl.ContourProps.Color = this.pictureBox1.BackColor;
+            controller.Model.GrProperties.Factory.pl.FillProps.Color = this.pictureBox2.BackColor;
+            controller.Model.GrProperties.Factory.pl.ContourProps.LineWidth = int.Parse(textBox1.Text);
+            */
+        }
+        
         private void EventHandler_CurrStateUpdated(string state)
         {
             this.toolStripStatusLabel2.Text = state;
@@ -130,12 +135,12 @@ namespace VectorGraph
         }*/
         private void ComboBox2_SelectedValueChanged(object sender, EventArgs e) // Выбор типа линии
         {
-            controller.Model.Factory.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
+            controller.Model.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
         }
 
         private void ComboBox3_SelectedValueChanged(object sender, EventArgs e) // Выбор типа заливки
         {
-            controller.Model.Factory.GrProperties.Fill.Type = (FillType)comboBox3.SelectedValue;
+            controller.Model.GrProperties.Fill.Type = (FillType)comboBox3.SelectedValue;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e) // Цвет контура
@@ -143,7 +148,7 @@ namespace VectorGraph
             if (this.colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.pictureBox1.BackColor = this.colorDialog1.Color;
-                controller.Model.Factory.GrProperties.Contour.Color = this.colorDialog1.Color;
+                controller.Model.GrProperties.Contour.Color = this.colorDialog1.Color;
             }
         }
 
@@ -152,7 +157,7 @@ namespace VectorGraph
             if (this.colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 this.pictureBox2.BackColor = this.colorDialog1.Color;
-                controller.Model.Factory.GrProperties.Fill.Color = this.colorDialog1.Color;
+                controller.Model.GrProperties.Fill.Color = this.colorDialog1.Color;
             }
         }
 
@@ -166,15 +171,15 @@ namespace VectorGraph
                 }
                 catch (Exception)
                 {
-                    textBox1.Text = controller.Model.Factory.GrProperties.Contour.LineWidth.ToString();
+                    textBox1.Text = controller.Model.GrProperties.Contour.LineWidth.ToString();
                     return;
                 }
                 if ((textBox1.Text.Length == 0)
                     || (int.Parse(textBox1.Text) > 100)
                     || (int.Parse(textBox1.Text) < 0))
-                    textBox1.Text = controller.Model.Factory.GrProperties.Contour.LineWidth.ToString();
+                    textBox1.Text = controller.Model.GrProperties.Contour.LineWidth.ToString();
                 else
-                    controller.Model.Factory.GrProperties.Contour.LineWidth = int.Parse(textBox1.Text);
+                    controller.Model.GrProperties.Contour.LineWidth = int.Parse(textBox1.Text);
             }
         }
 
