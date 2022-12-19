@@ -464,7 +464,6 @@ namespace VectorGraph
     {
         public List<Selection> Selected { set; get; }
         public Selection GrabbedSelection { set; get; }
-        public Rect SelectionRect { get; set; }
 
 
         public SelectionStore()
@@ -527,14 +526,6 @@ namespace VectorGraph
             foreach (Selection sel in Selected)
                 items.Add(sel.GetItem());
             return items;
-        }
-
-        public void SelectionRectInit(int x1, int y1, int x2, int y2)
-        {
-            Frame frame = new Frame(x1, y1, x2, y2);
-            PropList pl = new PropList(new ContourProps(Color.Black, 1, LineType.SolidColor),
-                new FillProps(Color.White, FillType.SolidColor));
-            SelectionRect = new Rect(frame, pl);
         }
     }
 

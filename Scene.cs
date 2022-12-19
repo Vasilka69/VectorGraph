@@ -41,8 +41,6 @@ namespace VectorGraph
                 foreach (GraphItem item in st)
                     item.Draw(gs);
             SelStore.Draw(gs);
-            if (SelStore.SelectionRect != null)
-                SelStore.SelectionRect.Draw(gs);
         }
 
         public void SetPort(Graphics gr)//, int width, int height)
