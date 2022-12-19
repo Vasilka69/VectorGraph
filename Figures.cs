@@ -10,12 +10,14 @@ namespace VectorGraph
 {
     internal abstract class GraphItem
     {
+        public List<double> Multipliers { set; get; }
         public Selection selection;
         public Frame frame { get; }
 
         public GraphItem(Frame fr)
         {
             frame = fr;
+            Multipliers = new List<double> { -1, -1, -1, -1};
         }
 
         public abstract void Draw(GraphSystem gs);

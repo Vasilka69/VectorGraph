@@ -99,7 +99,6 @@ namespace VectorGraph
 
             Model.GrController.Repaint();
             */
-
             Model.Factory.selController.ReleaseGrab(x, y);
             Model.GrController.Repaint();
 
@@ -121,7 +120,6 @@ namespace VectorGraph
             Model.GrController.Repaint();
 
             EH.SetState(EH.SSS);
-
         }
 
         public override void Delete() { }
@@ -254,7 +252,10 @@ namespace VectorGraph
 
         public override void LeftMouseDown(int x, int y)
         {
-
+            /*
+            Model.Factory.selController.selStore.SelectionRect.frame.coords = new List<int> { x, y, x, y };
+            EH.SetState(EH.DS);
+            */
         }
 
         public override void LeftMouseUp(int x, int y)
@@ -312,7 +313,10 @@ namespace VectorGraph
 
         public override void MouseMove(int x, int y) { }
 
-        public override void LeftMouseDown(int x, int y) { }
+        public override void LeftMouseDown(int x, int y)
+        {
+            //EH.SetState(EH.DS);
+        }
 
         public override void LeftMouseUp(int x, int y)
         {
