@@ -35,6 +35,11 @@ namespace VectorGraph
 
         public virtual void ReleaseGrab(int x, int y)
         {
+            /*
+            if ( (x < item.frame.coords[0] || y < item.frame.coords[1]) &&
+                (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[1]) )
+                return;
+            */
             if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
                 return;
             int coordX = 0;
@@ -122,7 +127,11 @@ namespace VectorGraph
 
         public override void ReleaseGrab(int x, int y)
         {
-
+            /*
+            if ((x < item.frame.coords[0] || y < item.frame.coords[1]) &&
+                (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[1]))
+                return;
+            */
             if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
                 return;
             for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
@@ -241,6 +250,7 @@ namespace VectorGraph
                             if (coord % 2 == 1) // Y
                                 item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)height);
                         }
+                    //
                     string res = "";
                     foreach (double mult in (item as Group).items[0].Multipliers)
                         res += mult + " ";
@@ -251,8 +261,22 @@ namespace VectorGraph
             return false;
         }
 
-        public override void ReleaseGrab(int x, int y) // Пофиксить
+        public override void ReleaseGrab(int x, int y) // Пофиксить // Довести до ума, мб оно ваще не надо
         {
+            int delta = 15;
+            if ((x < item.frame.coords[0] + delta || y < item.frame.coords[1] + delta) &&
+                (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[1]))
+                return;
+            if ((x > item.frame.coords[2] - delta || y > item.frame.coords[3] - delta) &&
+                (GrabbedPoint.X != item.frame.coords[2] && GrabbedPoint.Y != item.frame.coords[3]))
+                return;
+            if ((x < item.frame.coords[0] + delta || y > item.frame.coords[3] - delta) &&
+                (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[3]))
+                return;
+            if ((x > item.frame.coords[2] - delta || y < item.frame.coords[1] + delta) &&
+                (GrabbedPoint.X != item.frame.coords[2] && GrabbedPoint.Y != item.frame.coords[1]))
+                return;
+
             if (GrabbedPoint.X == -1 || GrabbedPoint.Y == -1)
                 return;
             int coordX = 0;
