@@ -71,7 +71,7 @@ namespace VectorGraph
         {
             GraphItem item = AddFigure(x, y);
             st.Add(item);
-            selController.SelectAndGrab(item, x, y);
+            selController.SelectAndDrag(item, x, y);
         }
 
         public Group CreateGroup(List<GraphItem> Items)

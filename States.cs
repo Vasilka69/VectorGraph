@@ -99,7 +99,10 @@ namespace VectorGraph
 
             Model.GrController.Repaint();
             */
-            Model.Factory.selController.ReleaseGrab(x, y);
+            ISelections selController = Model.Factory.selController;
+            //if ()
+
+            Model.Factory.selController.ReleaseDrag(x, y);
             Model.GrController.Repaint();
 
         }
@@ -116,7 +119,7 @@ namespace VectorGraph
             Model.GrController.Repaint();
             */
 
-            Model.Factory.selController.ReleaseGrab(x, y);
+            Model.Factory.selController.ReleaseDrag(x, y);
             Model.GrController.Repaint();
 
             EH.SetState(EH.SSS);
