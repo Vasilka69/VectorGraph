@@ -99,10 +99,10 @@ namespace VectorGraph
 
             Model.GrController.Repaint();
             */
-            ISelections selController = Model.Factory.selController;
+            //ISelections selController = Model.Factory.selController;
             //if ()
 
-            Model.Factory.selController.ReleaseDrag(x, y);
+            Model.Factory.selController.Release(x, y);
             Model.GrController.Repaint();
 
         }
@@ -122,17 +122,18 @@ namespace VectorGraph
             //Model.Factory.selController.ReleaseDrag(x, y);
 
             ISelections selController = Model.Factory.selController;
-
+            selController.CancellDragAndGrab();
+            /*
             bool dragHit = selController.TryDragGrabbed(x, y);
             bool grabHit = selController.TryGrab(x, y, EH.isCtrl);
-
+            */
             Model.GrController.Repaint();
+
 
             if (selController.selStore.Selected.Count == 1)
                 EH.SetState(EH.SSS);
-            /*
             else
-                EH.SetState(EH.MSS);*/
+                EH.SetState(EH.MSS);
         }
 
         public override void Delete() { }
@@ -183,7 +184,7 @@ namespace VectorGraph
                 else
                 {
                     EH.SetState(EH.ES);
-                    Model.Factory.selController.Release();
+                    Model.Factory.selController.SelClear();
                     //MessageBox.Show("mimo");
                 }
             }
@@ -272,7 +273,7 @@ namespace VectorGraph
                 else
                 {
                     EH.SetState(EH.ES);
-                    Model.Factory.selController.Release();
+                    Model.Factory.selController.SelClear();
                     //MessageBox.Show("mimo");
                 }
             }
@@ -283,10 +284,7 @@ namespace VectorGraph
         {
             bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
             if (isHit && EH.isCtrl)
-            {
                 EH.SetState(EH.MSS);
-
-            }
             Model.GrController.Repaint();
 
         }
@@ -341,7 +339,7 @@ namespace VectorGraph
 
         public override void LeftMouseUp(int x, int y)
         {
-            Model.Factory.selController.Release();
+            Model.Factory.selController.SelClear();
             bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
             if (isHit) // Попал
             {

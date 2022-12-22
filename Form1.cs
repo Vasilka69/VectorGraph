@@ -85,9 +85,16 @@ namespace VectorGraph
 
             controller.EventHandler.CurrStateUpdated += EventHandler_CurrStateUpdated;
             controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
+
+            controller.Model.Factory.selController.OnStatusUp += SelController_OnStatusUp;
             PropInit();
         }
-        
+
+        private void SelController_OnStatusUp(string text)
+        {
+            toolStripStatusLabel4.Text = text;
+        }
+
         private void PropInit()
         {
             controller.Model.GrProperties.Contour.Type = (LineType)comboBox2.SelectedValue;
