@@ -176,7 +176,7 @@ namespace VectorGraph
                     EH.SetState(EH.DS);
                     //MessageBox.Show("marker");
                 }
-                else if (selController.TryGrabSelected(x, y))
+                else if (selController.TryGrabSelected(x, y, false))
                 {
                     EH.SetState(EH.DS);
                     //MessageBox.Show("telo");
@@ -252,7 +252,7 @@ namespace VectorGraph
             EH.SetState(EH.DS);
             */
             ISelections selController = Model.Factory.selController;
-
+            bool toDragState = false;
             if (EH.isCtrl)
             {
                 if (selController.TryGrab(x, y, EH.isCtrl))
@@ -260,21 +260,34 @@ namespace VectorGraph
             }
             else
             {
-                if (selController.TryDragGrabbed(x, y))
+                foreach (Selection sel in selController.selStore.Selected)
                 {
-                    EH.SetState(EH.DS);
-                    //MessageBox.Show("marker");
+                    if (selController.TryDragGrabbed(x, y))
+                    {
+                        toDragState = true;
+                        //EH.SetState(EH.DS);
+                        //MessageBox.Show("marker");
+                    }
+                    else if (selController.TryGrabSelected(x, y, true))
+                    {
+                        toDragState = true;
+                        //EH.SetState(EH.DS);
+                        //MessageBox.Show("telo");
+                    }
+                    else
+                    {
+                        //EH.SetState(EH.ES);
+                        //Model.Factory.selController.SelClear();
+                        //MessageBox.Show("mimo");
+                    }
+
                 }
-                else if (selController.TryGrabSelected(x, y))
-                {
+                if (toDragState)
                     EH.SetState(EH.DS);
-                    //MessageBox.Show("telo");
-                }
                 else
                 {
                     EH.SetState(EH.ES);
                     Model.Factory.selController.SelClear();
-                    //MessageBox.Show("mimo");
                 }
             }
             Model.GrController.Repaint();

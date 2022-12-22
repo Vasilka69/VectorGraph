@@ -68,7 +68,7 @@ namespace VectorGraph
             item.frame.coords[coordY] = y;
             DragPoint = new Point(x, y);
         }
-        public abstract bool TryGrab(int x, int y);
+        public abstract bool TryGrab(int x, int y, bool multi);
         public virtual void ReleaseGrab(int x, int y)
         {
 
@@ -129,7 +129,7 @@ namespace VectorGraph
             item = line;
             ActualPoints();
         }
-        public override bool TryGrab(int x, int y)
+        public override bool TryGrab(int x, int y, bool multi)
         {
             ActualPoints();
             BeforeGrabPoints.Clear();
@@ -147,7 +147,7 @@ namespace VectorGraph
                 x >= Math.Min(points[0].X, points[1].X) &&
                 x <= Math.Max(points[0].X, points[1].X) &&
                 y >= Math.Min(points[0].Y, points[1].Y) &&
-                y <= Math.Max(points[0].Y, points[1].Y))
+                y <= Math.Max(points[0].Y, points[1].Y) || multi)
             {
                 isGrab = true;
                 GrabPoint = new Point(x, y);
@@ -210,7 +210,7 @@ namespace VectorGraph
             ActualPoints();
         }
 
-        public override bool TryGrab(int x, int y)
+        public override bool TryGrab(int x, int y, bool multi)
         {
             ActualPoints();
             BeforeGrabPoints.Clear();
@@ -223,7 +223,7 @@ namespace VectorGraph
             if (x >= minX - delta &&
                 x <= maxX + delta &&
                 y >= minY - delta &&
-                y <= maxY + delta)
+                y <= maxY + delta || multi)
             {
                 isGrab = true;
                 GrabPoint = new Point(x, y);
@@ -251,7 +251,7 @@ namespace VectorGraph
             ActualPoints();
         }
 
-        public override bool TryGrab(int x, int y)
+        public override bool TryGrab(int x, int y, bool multi)
         {
             ActualPoints();
             BeforeGrabPoints.Clear();
@@ -262,7 +262,7 @@ namespace VectorGraph
             int x0 = (frame.coords[0] + frame.coords[2]) / 2;
             int y0 = (frame.coords[1] + frame.coords[3]) / 2;
             double ellipseEq = (Math.Pow((x - x0), 2)) / (Math.Pow(a, 2)) + (Math.Pow((y - y0), 2)) / (Math.Pow(b, 2));
-            if (ellipseEq <= 1)
+            if (ellipseEq <= 1 || multi)
             {
                 isGrab = true;
                 GrabPoint = new Point(x, y);
@@ -289,14 +289,14 @@ namespace VectorGraph
             ActualPoints();
         }
 
-        public override bool TryGrab(int x, int y)
+        public override bool TryGrab(int x, int y, bool multi)
         {
             ActualPoints();
             BeforeGrabPoints.Clear();
 
             foreach (GraphItem item in (item as Group).items)
             {
-                if (item.selection.TryGrab(x, y))
+                if (item.selection.TryGrab(x, y, multi)) ///////// multi
                 {
                     isGrab = true;
                     GrabPoint = new Point(x, y);
@@ -416,7 +416,7 @@ namespace VectorGraph
         {
             foreach (Selection sel in this)
             {
-                if (sel.TryGrab(x, y))
+                if (sel.TryGrab(x, y, false))
                 {
                     return sel;
                 }
@@ -515,14 +515,14 @@ namespace VectorGraph
             return false;
         }
 
-        public bool TryGrabSelected(int x, int y)
+        public bool TryGrabSelected(int x, int y, bool multi)
         {
             List<Selection> selections = selStore.Selected;
             if (selections.Count == 0)
                 return false;
             bool check = false;
             foreach (Selection selection in selections)
-                if (selection.TryGrab(x, y))
+                if (selection.TryGrab(x, y, multi))
                     check = true;
             if (check)
                 return true;
@@ -538,7 +538,9 @@ namespace VectorGraph
             string txt = "";
             foreach (Selection sel in selections)
             {
-                txt += sel.isDrag.ToString(); //
+                //sel.TryGrab(x, y);
+                //sel.isGrab = true;
+                txt += sel.isGrab.ToString(); //
                 if (sel.isDrag)
                     sel.ReleaseDrag(x, y);
                 else if(sel.isGrab)
@@ -612,7 +614,7 @@ namespace VectorGraph
         bool TryDragGrabbed(int x, int y);
         bool Release(int x, int y);
         bool TryGrab(int x, int y, bool isCtrl);
-        bool TryGrabSelected(int x, int y);
+        bool TryGrabSelected(int x, int y, bool multi);
         void CancellDragAndGrab();
         void SelClear();
         int Count();
