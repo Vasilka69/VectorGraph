@@ -119,10 +119,20 @@ namespace VectorGraph
             Model.GrController.Repaint();
             */
 
-            Model.Factory.selController.ReleaseDrag(x, y);
+            //Model.Factory.selController.ReleaseDrag(x, y);
+
+            ISelections selController = Model.Factory.selController;
+
+            bool dragHit = selController.TryDragSelected(x, y);
+            bool grabHit = selController.TryGrab(x, y, EH.isCtrl);
+
             Model.GrController.Repaint();
 
-            EH.SetState(EH.SSS);
+            if (selController.selStore.Selected.Count == 1)
+                EH.SetState(EH.SSS);
+            /*
+            else
+                EH.SetState(EH.MSS);*/
         }
 
         public override void Delete() { }
@@ -147,17 +157,41 @@ namespace VectorGraph
 
         public override void LeftMouseDown(int x, int y)
         {
-            bool hitSel = Model.Factory.selController.DragSelTo(x, y);
-            if (hitSel)
+            ISelections selController = Model.Factory.selController;
+
+
+            //bool tryGrab = selController.TryGrab(x, y, EH.isCtrl);
+            //bool tryDrag = selController.TryDragSelected(x, y);
+            //bool tryGrab;
+            if (EH.isCtrl)
             {
-                //EH.sel = hitSel;
-                EH.SetState(EH.DS);
+                if (selController.TryGrab(x, y, EH.isCtrl))
+                    EH.SetState(EH.MSS);
+            }
+            else
+            {
+                if (selController.TryDragSelected(x, y))
+                {
+                    EH.SetState(EH.DS);
+                    //MessageBox.Show("marker");
+                }
+                else if (selController.TryGrabSelected(x, y))
+                {
+                    EH.SetState(EH.DS);
+                    //MessageBox.Show("telo");
+                }
+                else
+                {
+                    EH.SetState(EH.ES);
+                    Model.Factory.selController.Release();
+                    //MessageBox.Show("mimo");
+                }
             }
             Model.GrController.Repaint();
         }
 
         public override void LeftMouseUp(int x, int y)
-        {
+        {/*
             bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
             if (EH.isCtrl)
             { 
@@ -170,54 +204,11 @@ namespace VectorGraph
                     Model.Factory.selController.Release();
                     EH.SetState(EH.ES);
                 }
-            Model.GrController.Repaint();
-            /*
-            SelectionStore selStore = Model.Factory.selController.selStore;
-            Selection sel = selStore.TryGrab(x, y, EH.isCtrl);
-            if (sel == null) // Не попал
-            {
-                if (!EH.isCtrl)
-                {
-                    selStore.Release();
-                    EH.SetState(EH.ES);
-                }
-            }
-            else if (EH.isCtrl)
-            {
-                EH.SetState(EH.MSS);
-
-            }
-            Model.GrController.Repaint();
-            */
-            /*
-            SelectionStore selStore = Model.Factory.selController.selStore;
-            if (!EH.isCtrl)
-                selStore.Release();
-            Selection sel = selStore.TryGrab(x, y, EH.isCtrl);
-            if (sel == null) // Не попал
-            {
-                if (!EH.isCtrl)
-                {
-                    selStore.Release();
-                    EH.SetState(EH.ES);
-                }
-            }
-            else if (EH.isCtrl)
-            {
-                EH.SetState(EH.MSS);
-
-            }
-            Model.GrController.Repaint();
-            */
+            Model.GrController.Repaint();*/
         }
 
         public override void Delete()
         {
-            /*
-            SelectionStore selStore = Model.Factory.selController.selStore;
-            selStore.Release();
-            Model.GrController.Repaint();
-            */
             Model.Factory.selController.DelSelectedItems();
             Model.GrController.Repaint();
             EH.SetState(EH.ES);
@@ -259,6 +250,33 @@ namespace VectorGraph
             Model.Factory.selController.selStore.SelectionRect.frame.coords = new List<int> { x, y, x, y };
             EH.SetState(EH.DS);
             */
+            ISelections selController = Model.Factory.selController;
+
+            if (EH.isCtrl)
+            {
+                if (selController.TryGrab(x, y, EH.isCtrl))
+                    EH.SetState(EH.MSS);
+            }
+            else
+            {
+                if (selController.TryDragSelected(x, y))
+                {
+                    EH.SetState(EH.DS);
+                    //MessageBox.Show("marker");
+                }
+                else if (selController.TryGrabSelected(x, y))
+                {
+                    EH.SetState(EH.DS);
+                    //MessageBox.Show("telo");
+                }
+                else
+                {
+                    EH.SetState(EH.ES);
+                    Model.Factory.selController.Release();
+                    //MessageBox.Show("mimo");
+                }
+            }
+            Model.GrController.Repaint();
         }
 
         public override void LeftMouseUp(int x, int y)

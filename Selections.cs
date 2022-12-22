@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace VectorGraph
 {
@@ -15,14 +16,17 @@ namespace VectorGraph
         private protected int delta = 5;
         private protected GraphItem item;
         private protected List<Point> points;
-        public Point DragPoint { get; set; }
-        public Point GrabPoint { get; set; }
-        private protected bool isNullDrag { get; set; }
-        private protected bool isNullGrab { get; set; }
+        private protected Point DragPoint { get; set; }
 
-        public virtual bool TryDragTo(int x, int y)
+        private protected List<Point> BeforeGrabPoints;
+        private protected Point GrabPoint { get; set; }
+        public bool isNullDrag { get; set; }
+        public bool isNullGrab { get; set; }
+
+        public virtual bool TryDrag(int x, int y)
         {
             int delta = this.delta;
+            ActualPoints();
             foreach (Point p in points)
             {
                 if (x >= p.X - delta && x <= p.X + delta &&
@@ -66,6 +70,21 @@ namespace VectorGraph
         public virtual void ReleaseGrab(int x, int y)
         {
 
+            if (isNullGrab)
+                return;
+            int diffX = x - GrabPoint.X;
+            int diffY = y - GrabPoint.Y;
+            //MessageBox.Show(diffX.ToString());
+            /*
+            MessageBox.Show(GrabPoint.ToString());
+            MessageBox.Show(x.ToString() + " " + y.ToString());
+            */
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+            {
+                item.frame.coords[coord] = BeforeGrabPoints[coord / 2].X + diffX;
+                item.frame.coords[coord + 1] = BeforeGrabPoints[coord / 2].Y + diffY;
+            }
+
         }
 
         public virtual void Draw(GraphSystem gs)
@@ -102,6 +121,7 @@ namespace VectorGraph
 
         public LineSelection(Line line)
         {
+            BeforeGrabPoints = new List<Point>();
             isNullDrag = true;
             isNullGrab = true;
             item = line;
@@ -110,6 +130,7 @@ namespace VectorGraph
         public override bool TryGrab(int x, int y)
         {
             ActualPoints();
+            BeforeGrabPoints.Clear();
 
             int x0 = x;
             int y0 = y;
@@ -127,9 +148,13 @@ namespace VectorGraph
                 y <= Math.Max(points[0].Y, points[1].Y))
             {
                 isNullGrab = false;
+                GrabPoint = new Point(x, y);
+                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                    BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
                 return true;
             }
             isNullGrab = true;
+            //MessageBox.Show("ne popal2");
             return false;
             /*
             foreach (Point p in points)
@@ -156,7 +181,6 @@ namespace VectorGraph
                 {
                     item.frame.coords[coord] = x;
                     item.frame.coords[coord + 1] = y;
-                    DragPoint = new Point(x, y);
                     break;
                 }
             }
@@ -177,6 +201,7 @@ namespace VectorGraph
     {
         public RectSelection(Rect rect)
         {
+            BeforeGrabPoints = new List<Point>();
             isNullDrag = true;
             isNullGrab = true;
             item = rect;
@@ -186,6 +211,7 @@ namespace VectorGraph
         public override bool TryGrab(int x, int y)
         {
             ActualPoints();
+            BeforeGrabPoints.Clear();
 
             int delta = (item as Figure).pl.ContourProps.LineWidth / 2;
             int minX = Math.Min(item.frame.coords[0], item.frame.coords[2]);
@@ -196,7 +222,17 @@ namespace VectorGraph
                 x <= maxX + delta &&
                 y >= minY - delta &&
                 y <= maxY + delta)
+            {
+                isNullGrab = false;
+                GrabPoint = new Point(x, y);
+                //MessageBox.Show(DragPoint.ToString());
+                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                    BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
                 return true;
+            }
+            //MessageBox.Show("ne popal 3");
+            isNullGrab = true;
+            BeforeGrabPoints.Clear();
             return false;
         }
 
@@ -206,6 +242,7 @@ namespace VectorGraph
 
         public EllipseSelection(Ellipse ellipse)
         {
+            BeforeGrabPoints = new List<Point>();
             isNullDrag = true;
             isNullGrab = true;
             this.item = ellipse;
@@ -214,6 +251,8 @@ namespace VectorGraph
 
         public override bool TryGrab(int x, int y)
         {
+            ActualPoints();
+            BeforeGrabPoints.Clear();
             int delta = (item as Figure).pl.ContourProps.LineWidth / 2;
             Frame frame = item.frame;
             double a = Math.Abs(frame.coords[0] - frame.coords[2]) / 2 + delta;
@@ -222,7 +261,15 @@ namespace VectorGraph
             int y0 = (frame.coords[1] + frame.coords[3]) / 2;
             double ellipseEq = (Math.Pow((x - x0), 2)) / (Math.Pow(a, 2)) + (Math.Pow((y - y0), 2)) / (Math.Pow(b, 2));
             if (ellipseEq <= 1)
+            {
+                isNullGrab = false;
+                GrabPoint = new Point(x, y);
+                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                    BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
                 return true;
+            }
+            isNullGrab = true;
+            BeforeGrabPoints.Clear();
             return false;
         }
 
@@ -233,6 +280,7 @@ namespace VectorGraph
 
         public GroupSelection(Group group)
         {
+            BeforeGrabPoints = new List<Point>();
             isNullDrag = true;
             isNullGrab = true;
             this.item = group;
@@ -242,20 +290,25 @@ namespace VectorGraph
         public override bool TryGrab(int x, int y)
         {
             ActualPoints();
+            BeforeGrabPoints.Clear();
 
             foreach (GraphItem item in (item as Group).items)
             {
                 if (item.selection.TryGrab(x, y))
                 {
                     isNullGrab = false;
+                    GrabPoint = new Point(x, y);
+                    for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                        BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
                     return true;
                 }
             }
             isNullGrab = true;
+            BeforeGrabPoints.Clear();
             return false;
         }
 
-        public override bool TryDragTo(int x, int y) // Пофиксить
+        public override bool TryDrag(int x, int y) // Пофиксить
         {
             int delta = 5;
             foreach (Point p in points)
@@ -275,11 +328,6 @@ namespace VectorGraph
                             if (coord % 2 == 1) // Y
                                 item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)height);
                         }
-                    //
-                    string res = "";
-                    foreach (double mult in (item as Group).items[0].Multipliers)
-                        res += mult + " ";
-                    //MessageBox.Show(res);
                     isNullDrag = false;
                     return true;
                 }
@@ -318,7 +366,6 @@ namespace VectorGraph
                 {
                     coordY = coord;
                 }
-            DragPoint = new Point(x, y);
 
             item.frame.coords[coordX] = x;
             item.frame.coords[coordY] = y;
@@ -438,14 +485,14 @@ namespace VectorGraph
             Selection sel = item.CreateSelection();
             selStore.Add(sel);
             if (TryGrab(x, y, false))
-                DragSelTo(x, y);
+                TryDragSelected(x, y);
         }
 
-        public bool DragSelTo(int x, int y)
+        public bool TryDragSelected(int x, int y)
         {
             Selection selection = null;
             foreach (Selection sel in selStore.Selected)
-                if (sel.TryDragTo(x, y))
+                if (sel.TryDrag(x, y))
                 {
                     selection = sel;
                     selStore.GrabbedSelection = sel;
@@ -456,13 +503,45 @@ namespace VectorGraph
             return true;
         }
 
-        public bool ReleaseDrag(int x, int y)
+        public bool ReleaseDrag(int x, int y) // модифицирован
         {
+            
+            List<Selection> selection = selStore.Selected;
+
+            //selection.TryDrag(x, y);
+            //selection.TryGrab(x, y);
+            if (selection == null)
+                return false;
+            foreach (Selection sel in selection)
+            {
+                if (sel.isNullDrag == false)
+                    sel.ReleaseDrag(x, y);
+                else if (sel.isNullGrab == false)
+                {
+                    //MessageBox.Show(selection.GetItem().frame.coords.ToString());
+                    sel.ReleaseGrab(x, y);
+                    //MessageBox.Show("pitals9");
+
+                }
+                /*
+                else
+                {
+                    //MessageBox.Show("ne popal");
+                    return false;
+
+                }
+                */
+            }
+            return true;
+            
+            /*
             Selection selection = selStore.GrabbedSelection;
             if (selection == null)
                 return false;
             selStore.GrabbedSelection.ReleaseDrag(x, y);
             return true;
+            */
+            //return false;
         }
 
         public bool TryGrab(int x, int y, bool isCtrl)
@@ -477,8 +556,20 @@ namespace VectorGraph
             }
             return false;
         }
-
-        public bool ReleaseGrab(int x, int y)
+        public bool TryGrabSelected(int x, int y)
+        {
+            List<Selection> selections = selStore.Selected;
+            Selection sel = null;
+            foreach (Selection selection in selections)
+                if (selection.TryGrab(x, y))
+                {
+                    sel = selection;
+                    return true;
+                }
+            return false;
+        }
+        
+        public bool ReleaseGrab(int x, int y) // мб удалить
         {
             Selection selection = selStore.GrabbedSelection;
             if (selection == null)
@@ -486,7 +577,7 @@ namespace VectorGraph
             selStore.GrabbedSelection.ReleaseGrab(x, y);
             return true;
         }
-
+        
         public void Release()
         {
             selStore.Release();
@@ -509,7 +600,7 @@ namespace VectorGraph
             Store.Delete(Items);
         }
 
-        public bool Grouping() // Вроде работает
+        public bool Grouping()
         {
             Group group = factory.CreateGroup(selStore.SelItems());
             Selection sel = group.CreateSelection();
@@ -520,7 +611,7 @@ namespace VectorGraph
             return false;
         }
 
-        public bool Ungrouping() // Вроде работает
+        public bool Ungrouping()
         {
             if (selStore.Selected.Count == 1 && selStore.Selected[0] is GroupSelection) {
                 GroupSelection groupSel = selStore.Selected[0] as GroupSelection;
@@ -538,9 +629,10 @@ namespace VectorGraph
     {
         SelectionStore selStore { get; }
         void SelectAndDrag(GraphItem item, int x, int y);
-        bool DragSelTo(int x, int y);
+        bool TryDragSelected(int x, int y);
         bool ReleaseDrag(int x, int y);
         bool TryGrab(int x, int y, bool isCtrl);
+        bool TryGrabSelected(int x, int y);
         bool ReleaseGrab(int x, int y);
         void Release();
         int Count();
