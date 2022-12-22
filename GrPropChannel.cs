@@ -9,45 +9,36 @@ namespace VectorGraph
 {
     interface IContourProps
     {
-        
-        int LineWidth { set; get; }
-        Color Color { set; get; }
-        LineType Type { set; get; }
-
-        //ContourProps ContourProps { get; set; }
+        /*
+        int width { set; get; }
+        Color color { set; get; }
+        */
+        ContourProps ContourProps { get; set; }
     }
 
     interface IFillProps
     {
-        Color Color { set; get; }
-        FillType Type { set; get; }
+        //Color color { set; get; }
 
-        //FillProps FillProps { get; set; }
+        FillProps FillProps { get; set; }
     }
 
     interface IGrProperties
     {
         IContourProps Contour { get; }
         IFillProps Fill { get; }
-        //IFactory Factory { get; set; }
     }
 
     internal class GrPropChannel : IGrProperties
     {
-        public IContourProps Contour { get; set; }
-        public IFillProps Fill { get; set; }
+        public IContourProps Contour { get; }
+        public IFillProps Fill { get; }
 
-        public IFactory Factory { get; set; }
-
-        public GrPropChannel(IFactory Factory)//, PropList pl)
+        public GrPropChannel(PropList pl)
         {
-            Contour = Factory.pl.ContourProps;
-            Fill = Factory.pl.FillProps;
-            /*
-            this.Factory = Factory;
-            Contour = new ContourProps(pl.ContourProps.Color, pl.ContourProps.LineWidth, LineType.SolidColor);
-            Fill = new FillProps(pl.FillProps.Color, FillType.SolidColor);
-            */
+            Contour = pl.ContourProps as IContourProps;
+            Fill = pl.FillProps as IFillProps;
         }
+        //IGrController iGPC; /// ?
     }
 }

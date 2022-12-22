@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace VectorGraph
 {
     internal abstract class GraphItem
     {
-        public List<double> Multipliers { set; get; }
-        public Selection selection;
-        public Frame frame { set;  get; }
+        public Frame frame { get; }
 
         public GraphItem(Frame fr)
         {
             frame = fr;
-            Multipliers = new List<double> { -1, -1, -1, -1};
         }
 
         public abstract void Draw(GraphSystem gs);
-        public abstract Selection CreateSelection();
     }
+<<<<<<< Updated upstream
+=======
 
     internal class Group : GraphItem
     {
@@ -79,7 +74,6 @@ namespace VectorGraph
         {
             foreach (GraphItem item in items)
             {
-
                 item.selection.isGrab = true;
                 for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
                     item.selection.BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
@@ -114,11 +108,11 @@ namespace VectorGraph
         }
     }
 
+>>>>>>> Stashed changes
     enum FigureType 
     { 
         Line = 0, 
-        Rect = 1,
-        Ellipse = 2
+        Rect = 1
     }
 
     internal abstract class Figure : GraphItem
@@ -131,13 +125,13 @@ namespace VectorGraph
             this.pl = pl;
         }
 
-        public override void Draw(GraphSystem gs)
+        public override void Draw(GraphSystem gs) /// уже не пустышка
         {
-            ApplyProps(gs);
+            ApplyProps(pl);
             DrawGeometry(gs);
         }
 
-        public abstract void ApplyProps(GraphSystem gs);
+        public abstract void ApplyProps(PropList pl);
         public abstract void DrawGeometry(GraphSystem gs);
     }
 
@@ -149,24 +143,17 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(GraphSystem gs)
+        public override void ApplyProps(PropList pl)
         {
-            //this.pl = pl;
-            pl.ContourProps.Apply(gs);
-            pl.FillProps.Apply(gs);
+            this.pl = pl;
         }
 
         public override void DrawGeometry(GraphSystem gs)
         {
             gs.DrawFigure(this);
         }
-        public override Selection CreateSelection()
-        {
-            selection = new LineSelection(this);
-            return selection;
-        }
     }
-
+    
     internal class Rect : Figure
     {
         public Rect(Frame fr, PropList pl) : base(fr, pl)
@@ -175,47 +162,14 @@ namespace VectorGraph
 
         }
 
-        public override void ApplyProps(GraphSystem gs)
+        public override void ApplyProps(PropList pl)
         {
-            //this.pl = pl;
-            pl.ContourProps.Apply(gs);
-            pl.FillProps.Apply(gs);
+            this.pl = pl;
         }
 
         public override void DrawGeometry(GraphSystem gs)
         {
             gs.DrawFigure(this);
-        }
-        public override Selection CreateSelection()
-        {
-            selection = new RectSelection(this);
-            return selection;
-        }
-    }
-
-    internal class Ellipse : Figure
-    {
-        public Ellipse(Frame fr, PropList pl) : base(fr, pl)
-        {
-            type = FigureType.Ellipse;
-
-        }
-
-        public override void ApplyProps(GraphSystem gs)
-        {
-            //this.pl = pl;
-            pl.ContourProps.Apply(gs);
-            pl.FillProps.Apply(gs);
-        }
-
-        public override void DrawGeometry(GraphSystem gs)
-        {
-            gs.DrawFigure(this);
-        }
-        public override Selection CreateSelection()
-        {
-            selection = new EllipseSelection(this);
-            return selection;
         }
     }
 }

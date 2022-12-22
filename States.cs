@@ -255,6 +255,7 @@ namespace VectorGraph
                 }
             }
             Model.GrController.Repaint();
+
         }
 
         public override void LeftMouseUp(int x, int y)
