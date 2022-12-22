@@ -11,39 +11,56 @@ namespace VectorGraph
     interface IController
     {
         IModel Model { set;  get; }
-        //IEventHandler EventHandler { get; }
+
+        IEventHandler EventHandler { set; get; }
+
         string f5();
     }
     internal class Controller : IController
     {
         public IModel Model { set; get; }
+        public IEventHandler EventHandler { set; get; }
 
-        //public IEventHandler EventHandler { get; }
-
-        public Controller(IModel model)//, IEventHandler eventHandler)
+        public Controller(IModel model)
         {
-            this.Model = model;
-            //this.EventHandler = eventHandler;
+            Model = model;
+            EventHandler = new EventHandler(Model);
         }
-        public string f5()
+
+        public string f5() // Проверка FrameSum (уже работает)
         {
-            if (Model.st.Count <= 0)
-                return "";
-            //MessageBox.Show("sadfasd");
-            Random random = new Random();
-            PropList fpl = (Model.st[random.Next(Model.st.Count)] as Figure).pl;
+            
+            int delta = 5;
+            ///////
+            List<Point> points = new List<Point>();
+            List<Frame> frames = new List<Frame>();
+            foreach (Selection sel in Model.Factory.selController.selStore.Selected)
+                frames.Add(sel.GetItem().frame);
+            Frame sumFr = Frame.FrameSum(frames);
+
+            points.Add(new Point(sumFr.coords[0], sumFr.coords[1]));
+            points.Add(new Point(sumFr.coords[2], sumFr.coords[3]));
+
+
+            ContourProps cp = new ContourProps(Color.Gray, 1, LineType.SolidColor);
+            FillProps fp = new FillProps(Color.Gray, FillType.SolidColor);
+            PropList pl = new PropList(cp, fp);
+            foreach (Point p in points)
+            {
+                Frame frame = new Frame(p.X - delta, p.Y - delta, p.X + delta, p.Y + delta);
+                Figure marker = new Rect(frame, pl);
+                marker.Draw(Model.GrController.gs);
+            }
+            //////
+            
             /*
-            int col2 = Color.Black.ToArgb();
-            MessageBox.Show(col2.ToString());
-            int col = fpl.ContourProps.Color.ToArgb();
-            MessageBox.Show(col.ToString());
-            fpl.ContourProps.Color = Color.FromArgb(col2 - col);
+            List<Selection> sels = Model.Factory.selController.selStore;
+            foreach (Selection s in sels)
+                s.Draw(Model.GrController.gs);
             */
-            fpl.ContourProps.Color = Color.FromArgb(-random.Next(16777216));
-            fpl.FillProps.Color = Color.FromArgb(-random.Next(16777216));
-            //(Model.st[random.Next(Model.st.Count)] as Figure).pl.ContourProps.Color = Color.Black;
-            Model.GrController.Repaint();
-            return "AAAAA";
+
+            return "123";
         }
+
     }
 }
