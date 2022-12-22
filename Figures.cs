@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace VectorGraph
 {
@@ -12,7 +13,7 @@ namespace VectorGraph
     {
         public List<double> Multipliers { set; get; }
         public Selection selection;
-        public Frame frame { get; }
+        public Frame frame { set;  get; }
 
         public GraphItem(Frame fr)
         {
@@ -45,13 +46,11 @@ namespace VectorGraph
 
         public void SetMultipliers()
         {
-            
             int width = Math.Abs(this.frame.coords[0] - this.frame.coords[2]);
             int height = Math.Abs(this.frame.coords[1] - this.frame.coords[3]);
             foreach (GraphItem item in this.items)
                 for (int coord = 0; coord < item.frame.coords.Count; coord++)
                 {
-                    //item.Multipliers[coord] = item.frame.coords[coord] / group.frame.coords[coord];
                     if (coord % 2 == 0) // X
                         item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.frame.coords[coord])) / (double)width);
                     if (coord % 2 == 1) // Y
@@ -74,6 +73,44 @@ namespace VectorGraph
                 if (item is Group)
                     (item as Group).ApplyMultipliers();
             }
+        }
+
+        public void SetBeforeGrabPoints()
+        {
+            foreach (GraphItem item in items)
+            {
+
+                item.selection.isGrab = true;
+                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                    item.selection.BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
+                if (item is Group)
+                    (item as Group).SetBeforeGrabPoints();
+            }
+        }
+
+        public void ApplyBeforeGrabPoints(int x, int y, int diffX, int diffY)
+        {
+            foreach (GraphItem item in items)
+            {
+                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                {
+                    item.frame.coords[coord] = item.selection.BeforeGrabPoints[coord / 2].X + diffX;
+                    item.frame.coords[coord + 1] = item.selection.BeforeGrabPoints[coord / 2].Y + diffY;
+                    
+                    if (item is Group)
+                        (item as Group).ApplyBeforeGrabPoints(x, y, diffX, diffY);
+                }
+            }
+        }
+
+        public Frame GetFrame()
+        {
+            List<Frame> frames = new List<Frame>();
+            foreach (GraphItem item in this.items)
+                frames.Add(item.frame);
+            Frame frame = Frame.FrameSum(frames);
+            this.frame = frame;
+            return frame;
         }
     }
 
