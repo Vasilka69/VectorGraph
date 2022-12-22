@@ -160,10 +160,6 @@ namespace VectorGraph
         {
             ISelections selController = Model.Factory.selController;
 
-
-            //bool tryGrab = selController.TryGrab(x, y, EH.isCtrl);
-            //bool tryDrag = selController.TryDragSelected(x, y);
-            //bool tryGrab;
             if (EH.isCtrl)
             {
                 if (selController.TryGrab(x, y, EH.isCtrl))
@@ -174,39 +170,21 @@ namespace VectorGraph
                 if (selController.TryDragGrabbed(x, y))
                 {
                     EH.SetState(EH.DS);
-                    //MessageBox.Show("marker");
                 }
                 else if (selController.TryGrabSelected(x, y, false))
                 {
                     EH.SetState(EH.DS);
-                    //MessageBox.Show("telo");
                 }
                 else
                 {
                     EH.SetState(EH.ES);
                     Model.Factory.selController.SelClear();
-                    //MessageBox.Show("mimo");
                 }
             }
             Model.GrController.Repaint();
         }
 
-        public override void LeftMouseUp(int x, int y)
-        {/*
-            bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
-            if (EH.isCtrl)
-            { 
-                if (isHit)
-                    EH.SetState(EH.MSS);
-            }
-            else
-                if (!isHit)
-                {
-                    Model.Factory.selController.Release();
-                    EH.SetState(EH.ES);
-                }
-            Model.GrController.Repaint();*/
-        }
+        public override void LeftMouseUp(int x, int y) { }
 
         public override void Delete()
         {
@@ -232,7 +210,7 @@ namespace VectorGraph
         }
     }
 
-    internal class MultiSelectState : State // Grouping
+    internal class MultiSelectState : State
     {
         public override IModel Model { set; get; }
         public override EventHandler EH { set; get; }
@@ -247,10 +225,6 @@ namespace VectorGraph
 
         public override void LeftMouseDown(int x, int y)
         {
-            /*
-            Model.Factory.selController.selStore.SelectionRect.frame.coords = new List<int> { x, y, x, y };
-            EH.SetState(EH.DS);
-            */
             ISelections selController = Model.Factory.selController;
             bool toDragState = false;
             if (EH.isCtrl)
@@ -265,20 +239,10 @@ namespace VectorGraph
                     if (selController.TryDragGrabbed(x, y))
                     {
                         toDragState = true;
-                        //EH.SetState(EH.DS);
-                        //MessageBox.Show("marker");
                     }
                     else if (selController.TryGrabSelected(x, y, true))
                     {
                         toDragState = true;
-                        //EH.SetState(EH.DS);
-                        //MessageBox.Show("telo");
-                    }
-                    else
-                    {
-                        //EH.SetState(EH.ES);
-                        //Model.Factory.selController.SelClear();
-                        //MessageBox.Show("mimo");
                     }
 
                 }
@@ -304,11 +268,6 @@ namespace VectorGraph
 
         public override void Delete()
         {
-            /*
-            SelectionStore selStore = Model.Factory.selController.selStore;
-            selStore.Release();
-            Model.GrController.Repaint();
-            */
             Model.Factory.selController.DelSelectedItems();
             Model.GrController.Repaint();
 
@@ -323,7 +282,7 @@ namespace VectorGraph
 
             EH.SetState(EH.ES);
         }
-        public override void Group() // Допилить
+        public override void Group()
         {
             if (Model.Factory.selController.Grouping())
                 EH.SetState(EH.SSS);
@@ -332,7 +291,7 @@ namespace VectorGraph
         public override void Ungroup() { }
     }
 
-    internal class EmptyState : State // Готов
+    internal class EmptyState : State
     {
         public override IModel Model { set; get; }
         public override EventHandler EH { set; get; }
@@ -348,10 +307,6 @@ namespace VectorGraph
         public override void LeftMouseDown(int x, int y)
         {
             //EH.SetState(EH.DS);
-        }
-
-        public override void LeftMouseUp(int x, int y)
-        {
             Model.Factory.selController.SelClear();
             bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
             if (isHit) // Попал
@@ -360,6 +315,8 @@ namespace VectorGraph
                 EH.SetState(EH.SSS);
             }
         }
+
+        public override void LeftMouseUp(int x, int y) { }
 
         public override void Delete() { }
 

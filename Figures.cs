@@ -42,6 +42,39 @@ namespace VectorGraph
             selection =  new GroupSelection(this);
             return selection;
         }
+
+        public void SetMultipliers()
+        {
+            
+            int width = Math.Abs(this.frame.coords[0] - this.frame.coords[2]);
+            int height = Math.Abs(this.frame.coords[1] - this.frame.coords[3]);
+            foreach (GraphItem item in this.items)
+                for (int coord = 0; coord < item.frame.coords.Count; coord++)
+                {
+                    //item.Multipliers[coord] = item.frame.coords[coord] / group.frame.coords[coord];
+                    if (coord % 2 == 0) // X
+                        item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.frame.coords[coord])) / (double)width);
+                    if (coord % 2 == 1) // Y
+                        item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.frame.coords[coord])) / (double)height);
+                    if (item is Group)
+                        (item as Group).SetMultipliers();
+                }
+        }
+
+        public void ApplyMultipliers()
+        {
+            int width = Math.Abs(this.frame.coords[0] - this.frame.coords[2]);
+            int height = Math.Abs(this.frame.coords[1] - this.frame.coords[3]);
+            foreach (GraphItem item in this.items)
+            {
+                item.frame.coords[0] = Math.Min(this.frame.coords[0], this.frame.coords[2]) + (int)(item.Multipliers[0] * width);
+                item.frame.coords[1] = Math.Min(this.frame.coords[1], this.frame.coords[3]) + (int)(item.Multipliers[1] * height);
+                item.frame.coords[2] = Math.Max(this.frame.coords[0], this.frame.coords[2]) + (int)(item.Multipliers[2] * width);
+                item.frame.coords[3] = Math.Max(this.frame.coords[1], this.frame.coords[3]) + (int)(item.Multipliers[3] * height);
+                if (item is Group)
+                    (item as Group).ApplyMultipliers();
+            }
+        }
     }
 
     enum FigureType 

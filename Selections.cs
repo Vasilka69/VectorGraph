@@ -45,11 +45,6 @@ namespace VectorGraph
 
         public virtual void ReleaseDrag(int x, int y)
         {
-            /*
-            if ( (x < item.frame.coords[0] || y < item.frame.coords[1]) &&
-                (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[1]) )
-                return;
-            */
             if (!isDrag)
                 return;
             int coordX = 0;
@@ -166,7 +161,7 @@ namespace VectorGraph
             */
 
         }
-
+        
         public override void ReleaseDrag(int x, int y)
         {
             /*
@@ -174,6 +169,7 @@ namespace VectorGraph
                 (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[1]))
                 return;
             */
+            
             if (!isDrag)
                 return;
             for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
@@ -186,9 +182,10 @@ namespace VectorGraph
                     break;
                 }
             }
+            DragPoint = new Point(x, y);
 
         }
-
+        
         protected override void ActualPoints()
         {
             List<Point> points = new List<Point>();
@@ -319,6 +316,8 @@ namespace VectorGraph
                     y >= p.Y - delta && y <= p.Y + delta)
                 {
                     DragPoint = p;
+                    //(item as Group).SetMultipliers();
+                    
                     int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
                     int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
                     foreach (GraphItem item in (item as Group).items)
@@ -330,6 +329,7 @@ namespace VectorGraph
                             if (coord % 2 == 1) // Y
                                 item.Multipliers[coord] = (double)(((item.frame.coords[coord] - this.item.frame.coords[coord])) / (double)height);
                         }
+                    
                     isDrag = true;
                     return true;
                 }
@@ -338,7 +338,7 @@ namespace VectorGraph
             return false;
         }
 
-        public override void ReleaseDrag(int x, int y) // Пофиксить // Довести до ума, мб оно ваще не надо
+        public override void ReleaseDrag(int x, int y) // Пофиксить
         {
             int delta = 15;
             if ((x < item.frame.coords[0] + delta || y < item.frame.coords[1] + delta) &&
@@ -373,7 +373,9 @@ namespace VectorGraph
             item.frame.coords[coordY] = y;
             int width = Math.Abs(item.frame.coords[0] - item.frame.coords[2]);
             int height = Math.Abs(item.frame.coords[1] - item.frame.coords[3]);
-            /*
+
+            //(this.item as Group).ApplyMultipliers();
+            
             foreach (GraphItem item in (item as Group).items)
                 for (int coord = 0; coord < item.frame.coords.Count; coord++)
                 {
@@ -383,15 +385,18 @@ namespace VectorGraph
                     if (coord % 2 == 1) // Y
                         item.frame.coords[coord] = item.frame.coords[coord] + (int)(item.Multipliers[coord] * height);
                 }
-            */
+            
 
+            /*
             foreach (GraphItem item in (item as Group).items)
             {
                 item.frame.coords[0] = Math.Min(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[0] * width);
                 item.frame.coords[1] = Math.Min(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[1] * height);
                 item.frame.coords[2] = Math.Max(this.item.frame.coords[0], this.item.frame.coords[2]) + (int)(item.Multipliers[2] * width);
                 item.frame.coords[3] = Math.Max(this.item.frame.coords[1], this.item.frame.coords[3]) + (int)(item.Multipliers[3] * height);
+                if (item is Group)
             }
+            */
 
             //ActualPoints();
         }
@@ -429,17 +434,11 @@ namespace VectorGraph
             Selected.Clear();
         }
 
-        public void Draw(GraphSystem gs) // как оно должно быть
+        public void Draw(GraphSystem gs)
         {
             if (Selected != null)
                 foreach (Selection sel in Selected)
                     sel.Draw(gs);
-            /*
-            foreach (Selection sel in this)
-            {
-                sel.Draw(gs);
-            }
-            */
         }
 
         public void DeleteSelections(Group group) // Удалить селекшены элементов группы
@@ -464,10 +463,10 @@ namespace VectorGraph
         }
     }
 
-    public delegate void StatusUp(string text);
+    public delegate void StatusUp(string text); /////
     internal class SelectionController : ISelections
     {
-        public event StatusUp OnStatusUp;
+        public event StatusUp OnStatusUp;/////
         public Factory factory;
         public SelectionStore selStore { get; }
         public Store Store { get; }
@@ -489,7 +488,6 @@ namespace VectorGraph
 
         public bool TryGrab(int x, int y, bool isCtrl)
         {
-            //OnStatusUp(selStore.Selected.Count.ToString());////
             Selection sel = selStore.TryGrab(x, y);
             if (sel != null)
             {
@@ -532,21 +530,16 @@ namespace VectorGraph
         public bool Release(int x, int y)
         {
             List<Selection> selections = selStore.Selected;
-            //OnStatusUp(selections.Count.ToString()); ////
             if (selections == null)
                 return false;
             string txt = "";
             foreach (Selection sel in selections)
             {
-                //sel.TryGrab(x, y);
-                //sel.isGrab = true;
-                txt += sel.isGrab.ToString(); //
                 if (sel.isDrag)
                     sel.ReleaseDrag(x, y);
                 else if(sel.isGrab)
                     sel.ReleaseGrab(x, y);
             }
-            OnStatusUp(txt); ///
             return true;
         }
 
