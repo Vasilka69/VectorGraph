@@ -123,7 +123,7 @@ namespace VectorGraph
 
             ISelections selController = Model.Factory.selController;
 
-            bool dragHit = selController.TryDragSelected(x, y);
+            bool dragHit = selController.TryDragGrabbed(x, y);
             bool grabHit = selController.TryGrab(x, y, EH.isCtrl);
 
             Model.GrController.Repaint();
@@ -170,7 +170,7 @@ namespace VectorGraph
             }
             else
             {
-                if (selController.TryDragSelected(x, y))
+                if (selController.TryDragGrabbed(x, y))
                 {
                     EH.SetState(EH.DS);
                     //MessageBox.Show("marker");
@@ -259,7 +259,7 @@ namespace VectorGraph
             }
             else
             {
-                if (selController.TryDragSelected(x, y))
+                if (selController.TryDragGrabbed(x, y))
                 {
                     EH.SetState(EH.DS);
                     //MessageBox.Show("marker");

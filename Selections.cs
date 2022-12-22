@@ -484,64 +484,34 @@ namespace VectorGraph
         {
             Selection sel = item.CreateSelection();
             selStore.Add(sel);
-            if (TryGrab(x, y, false))
-                TryDragSelected(x, y);
+            TryGrab(x, y, false);
+            TryDragGrabbed(x, y);
         }
 
-        public bool TryDragSelected(int x, int y)
+        public bool TryDragGrabbed(int x, int y)
         {
-            Selection selection = null;
-            foreach (Selection sel in selStore.Selected)
-                if (sel.TryDrag(x, y))
-                {
-                    selection = sel;
-                    selStore.GrabbedSelection = sel;
-                    break;
-                }
+            Selection selection = selStore.GrabbedSelection;
             if (selection == null)
                 return false;
-            return true;
+            if (selection.TryDrag(x, y))
+                return true;
+            return false;
         }
 
         public bool ReleaseDrag(int x, int y) // модифицирован
         {
-            
             List<Selection> selection = selStore.Selected;
 
-            //selection.TryDrag(x, y);
-            //selection.TryGrab(x, y);
             if (selection == null)
                 return false;
             foreach (Selection sel in selection)
             {
-                if (sel.isNullDrag == false)
+                if (!sel.isNullDrag)
                     sel.ReleaseDrag(x, y);
-                else if (sel.isNullGrab == false)
-                {
-                    //MessageBox.Show(selection.GetItem().frame.coords.ToString());
+                else if (!sel.isNullGrab)
                     sel.ReleaseGrab(x, y);
-                    //MessageBox.Show("pitals9");
-
-                }
-                /*
-                else
-                {
-                    //MessageBox.Show("ne popal");
-                    return false;
-
-                }
-                */
             }
             return true;
-            
-            /*
-            Selection selection = selStore.GrabbedSelection;
-            if (selection == null)
-                return false;
-            selStore.GrabbedSelection.ReleaseDrag(x, y);
-            return true;
-            */
-            //return false;
         }
 
         public bool TryGrab(int x, int y, bool isCtrl)
@@ -550,7 +520,10 @@ namespace VectorGraph
             if (sel != null)
             {
                 if (!isCtrl)
+                {
                     selStore.Release();
+                    selStore.GrabbedSelection = sel;
+                }
                 selStore.Selected.Add(sel);
                 return true;
             }
@@ -568,7 +541,7 @@ namespace VectorGraph
                 }
             return false;
         }
-        
+        /*
         public bool ReleaseGrab(int x, int y) // мб удалить
         {
             Selection selection = selStore.GrabbedSelection;
@@ -577,7 +550,7 @@ namespace VectorGraph
             selStore.GrabbedSelection.ReleaseGrab(x, y);
             return true;
         }
-        
+        */
         public void Release()
         {
             selStore.Release();
@@ -629,11 +602,11 @@ namespace VectorGraph
     {
         SelectionStore selStore { get; }
         void SelectAndDrag(GraphItem item, int x, int y);
-        bool TryDragSelected(int x, int y);
+        bool TryDragGrabbed(int x, int y);
         bool ReleaseDrag(int x, int y);
         bool TryGrab(int x, int y, bool isCtrl);
         bool TryGrabSelected(int x, int y);
-        bool ReleaseGrab(int x, int y);
+        //bool ReleaseGrab(int x, int y);
         void Release();
         int Count();
         void DelSelectedItems();
