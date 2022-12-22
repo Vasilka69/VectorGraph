@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -290,6 +289,8 @@ namespace VectorGraph
         public override bool TryGrab(int x, int y, bool multi)
         {
             bool check = false;
+            (item as Group).GetFrame();
+            ActualPoints();
             foreach (GraphItem item in (item as Group).items)
             {
                 if (item.selection.TryGrab(x, y, multi))
@@ -305,14 +306,12 @@ namespace VectorGraph
                 return false;
             }
 
+            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
+                BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
+
             foreach (GraphItem item in (item as Group).items)
-            {
-                BeforeGrabPoints.Clear();
-                if (item is Group)
-                    (item as Group).SetBeforeGrabPoints();
-                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
-                    BeforeGrabPoints.Add(new Point(this.item.frame.coords[coord], this.item.frame.coords[coord + 1]));
-            }
+                item.selection.TryGrab(x, y, true);
+
             return true;
         }
 
@@ -320,44 +319,20 @@ namespace VectorGraph
         {
             if (!isGrab)
                 return;
-            //(this.item as Group).GetFrame();
-            ActualPoints();
+            
+            
             int diffX = x - GrabPoint.X;
             int diffY = y - GrabPoint.Y;
-            //MessageBox.Show(diffX.ToString());
-            /*
-            MessageBox.Show(GrabPoint.ToString());
-            MessageBox.Show(x.ToString() + " " + y.ToString());
-            */
-            for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
-            {
-                item.frame.coords[coord] = BeforeGrabPoints[coord / 2].X + diffX;
-                item.frame.coords[coord + 1] = BeforeGrabPoints[coord / 2].Y + diffY;
-            }
 
-            foreach (GraphItem item in (this.item as Group).items)
-            {
-                for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
-                {
-                    item.frame.coords[coord] = item.selection.BeforeGrabPoints[coord / 2].X + diffX;
-                    item.frame.coords[coord + 1] = item.selection.BeforeGrabPoints[coord / 2].Y + diffY;
-                    
-                    if (item is Group)
-                        (item as Group).ApplyBeforeGrabPoints(x, y, diffX, diffY);
-                    
-                    
-                }
-            }
-            //(this.item as Group).GetFrame();
-            //ActualPoints();
-
-
+            (item as Group).ApplyBeforeGrabPoints(x, y, diffX, diffY);
+            //(item as Group).GetFrame();
+            ActualPoints();
         }
 
         public override bool TryDrag(int x, int y)
         {
             int delta = this.delta;
-            //(item as Group).GetFrame(); // фикс
+            //(item as Group).GetFrame();
             ActualPoints();
             foreach (Point p in points)
             {
@@ -456,11 +431,7 @@ namespace VectorGraph
         public void DeleteSelections(Group group) // Удалить селекшены элементов группы
         {
             foreach (GraphItem item in group.items)
-            {
-                if (item is Group)
-                    DeleteSelections(item as Group);
                 DeleteSelection(item.selection);
-            }
             Selected.Add(group.selection);
         }
 
@@ -479,7 +450,7 @@ namespace VectorGraph
         }
     }
 
-    public delegate void StatusUp(string text); /////
+    //public delegate void StatusUp(string text); /////
     internal class SelectionController : ISelections
     {
         //public event StatusUp OnStatusUp; /////
@@ -511,7 +482,7 @@ namespace VectorGraph
                 if (!isCtrl)
                 {
                     selStore.Release();
-                        selStore.GrabbedSelection = sel;
+                    selStore.GrabbedSelection = sel;
                 }
                 if (selStore.Selected.Find(selection => selection == sel) == null)
                     selStore.Selected.Add(sel);
@@ -522,12 +493,23 @@ namespace VectorGraph
 
         public bool TryDragGrabbed(int x, int y)
         {
+            List<Selection> selection = selStore.Selected;
+            foreach (Selection sel in selection)
+            {
+                if (sel == null)
+                    return false;
+                if (sel.TryDrag(x, y))
+                    return true;
+            }
+            return false;
+            /*
             Selection selection = selStore.GrabbedSelection;
             if (selection == null)
                 return false;
             if (selection.TryDrag(x, y))
                 return true;
             return false;
+            */
         }
 
         public bool TryGrabSelected(int x, int y, bool multi)
@@ -586,13 +568,13 @@ namespace VectorGraph
         public void DelSelectedItems()
         {
             List<GraphItem> Items = new List<GraphItem>();
-            foreach (Selection sel in selStore.Selected)
-            {
+            foreach (Selection sel in selStore.Selected) {
                 Items.Add(sel.GetItem());
+                Store.Remove(sel.GetItem());
+                selStore.Remove(sel);
             }
             while (selStore.Selected.Count != 0)
                 selStore.DeleteSelection(selStore.Selected[0]);
-            Store.Delete(Items);
         }
 
         public bool Grouping()
@@ -600,13 +582,13 @@ namespace VectorGraph
             Group group = factory.CreateGroup(selStore.GetSelItems());
             Selection sel = group.CreateSelection();
 
+            selStore.Add(sel);
             selStore.Selected.Clear();
             selStore.Selected.Add(sel);
 
             selStore.GrabbedSelection = sel;
 
             selStore.DeleteSelections(group);
-            selStore.Add(sel);
             if (group != null)
                 return true;
             return false;
@@ -614,19 +596,19 @@ namespace VectorGraph
 
         public bool Ungrouping()
         {
+            
             if (selStore.GrabbedSelection is GroupSelection)
             {
                 GroupSelection groupSel = selStore.GrabbedSelection as GroupSelection;
                 List<GraphItem> items = factory.Ungroup(groupSel.GetItem() as Group);
-                selStore.DeleteSelection(groupSel);
                 selStore.Selected.Clear();
-                selStore.GrabbedSelection = null;
                 foreach (GraphItem item in items)
                 {
                     Selection sel = item.CreateSelection();
                     selStore.Add(sel);
                     selStore.Selected.Add(sel);
                 }
+                selStore.Remove(groupSel);
                 return true;
             }
             return false;

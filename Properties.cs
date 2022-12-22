@@ -5,48 +5,73 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VectorGraph
 {
+    enum LineType
+    {
+        SolidColor = 0,
+        HatchFill = 1
+    }
+    enum FillType
+    {
+        SolidColor = 0,
+        HatchBrushHor = 1,
+        HatchBrushDiagCross = 2,
+        HatchBrushBackDiag = 3
+    }
     internal abstract class Property
     {
-        //private protected int Color;
-        //private protected Color Color;
-        public Color Color;
-
-        //public abstract void Apply(GraphSystem gs);
+        public abstract void Apply(GraphSystem gs);
     }
 
-    internal class ContourProps : Property
+    internal class ContourProps : Property, IContourProps
     {
-        // Условно
-        public int LineWidth;
+        public Color Color { set; get; }
+        public LineType Type { set; get; }
 
-        public ContourProps(Color Color, int lineWidth)
+
+        public int LineWidth { set; get; }
+
+        public ContourProps(Color Color, int lineWidth, LineType type)
         {
-            this.Color = System.Drawing.Color.FromArgb(Color.ToArgb());
-            //this.Color = Color;
+            //this.Color = System.Drawing.Color.FromArgb(Color.ToArgb());
+            this.Color = Color;
             LineWidth = lineWidth;
+            this.Type = type;
         }
-        /*
+        
         public override void Apply(GraphSystem gs)
         {
-            gs.ApplyProps();
-        }*/
+            gs.pl.ContourProps = this;
+            /*
+            gs.GrProperties.Contour.Color = Color;
+            gs.GrProperties.Contour.LineWidth = LineWidth;
+            gs.GrProperties.Contour.Type = Type;
+            */
+        }
     }
 
-    internal class FillProps : Property
+    internal class FillProps : Property, IFillProps
     {
+        public Color Color { set; get; }
+        public FillType Type { set; get; }
 
-        public FillProps(Color Color)
+        public FillProps(Color Color, FillType type)
         {
             this.Color = Color;
+            this.Type = type;
         }
-        /*
+        
         public override void Apply(GraphSystem gs)
         {
-            gs.Update();
-        }*/
+            gs.pl.FillProps = this;
+            /*
+            gs.GrProperties.Fill.Color = Color;
+            gs.GrProperties.Fill.Type = Type;
+            */
+        }
     }
     
 }

@@ -19,8 +19,8 @@ namespace VectorGraph
 
         public PropList Clone() ///////
         {
-            return new PropList(new ContourProps(ContourProps.Color, ContourProps.LineWidth),
-                new FillProps(FillProps.Color));
+            return new PropList(new ContourProps(ContourProps.Color, ContourProps.LineWidth, ContourProps.Type),
+                new FillProps(FillProps.Color, FillProps.Type));
             /*
             return new PropList(new ContourProps(((ContourProps)this[0]).Color, ((ContourProps)this[0]).LineWidth),
                 (new FillProps(((FillProps)this[1]).Color)));

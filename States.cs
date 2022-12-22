@@ -130,10 +130,13 @@ namespace VectorGraph
             Model.GrController.Repaint();
 
 
-            if (selController.selStore.Selected.Count == 1)
+            EH.SetState(EH.SSS);
+            /*
+            if (selController.selStore.Selected.Count <= 1)
                 EH.SetState(EH.SSS);
             else
                 EH.SetState(EH.MSS);
+            */
         }
 
         public override void Delete() { }
@@ -225,13 +228,11 @@ namespace VectorGraph
 
         public override void LeftMouseDown(int x, int y)
         {
+            /*
             ISelections selController = Model.Factory.selController;
             bool toDragState = false;
             if (EH.isCtrl)
-            {
-                if (selController.TryGrab(x, y, EH.isCtrl))
-                    EH.SetState(EH.MSS);
-            }
+                selController.TryGrab(x, y, EH.isCtrl);
             else
             {
                 foreach (Selection sel in selController.selStore.Selected)
@@ -254,18 +255,11 @@ namespace VectorGraph
                     Model.Factory.selController.SelClear();
                 }
             }
+            */
             Model.GrController.Repaint();
-
         }
 
-        public override void LeftMouseUp(int x, int y)
-        {
-            bool isHit = Model.Factory.selController.TryGrab(x, y, EH.isCtrl);
-            if (isHit && EH.isCtrl)
-                EH.SetState(EH.MSS);
-            Model.GrController.Repaint();
-
-        }
+        public override void LeftMouseUp(int x, int y) { }
 
         public override void Delete()
         {
