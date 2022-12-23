@@ -86,13 +86,7 @@ namespace VectorGraph
             controller.EventHandler.CurrStateUpdated += EventHandler_CurrStateUpdated;
             controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
 
-            //controller.Model.Factory.selController.OnStatusUp += SelController_OnStatusUp;
             PropInit();
-        }
-
-        private void SelController_OnStatusUp(string text)
-        {
-            toolStripStatusLabel4.Text = text;
         }
 
         private void PropInit()
@@ -116,9 +110,12 @@ namespace VectorGraph
             this.toolStripStatusLabel2.Text = state;
         }
 
-        private void EventHandler_CtrlUpdated(string info)
+        private void EventHandler_CtrlUpdated(string isCtrl)
         {
-            this.toolStripStatusLabel3.Text = info;
+            if (bool.Parse(isCtrl))
+                this.toolStripStatusLabel3.Text = "Ctrl";
+            else
+                this.toolStripStatusLabel3.Text = "";
         }
 
         /*
