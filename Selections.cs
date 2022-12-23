@@ -71,11 +71,6 @@ namespace VectorGraph
                 return;
             int diffX = x - GrabPoint.X;
             int diffY = y - GrabPoint.Y;
-            //MessageBox.Show(diffX.ToString());
-            /*
-            MessageBox.Show(GrabPoint.ToString());
-            MessageBox.Show(x.ToString() + " " + y.ToString());
-            */
             for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
             {
                 item.frame.coords[coord] = BeforeGrabPoints[coord / 2].X + diffX;
@@ -151,25 +146,12 @@ namespace VectorGraph
                 return true;
             }
             isGrab = false;
-            //MessageBox.Show("ne popal2");
             return false;
-            /*
-            foreach (Point p in points)
-                if (x > p.X - delta && x < p.X + delta &&
-                    y > p.Y - delta && y < p.Y + delta)
-                    return true;
-            */
 
         }
         
         public override void ReleaseDrag(int x, int y)
         {
-            /*
-            if ((x < item.frame.coords[0] || y < item.frame.coords[1]) &&
-                (GrabbedPoint.X != item.frame.coords[0] && GrabbedPoint.Y != item.frame.coords[1]))
-                return;
-            */
-            
             if (!isDrag)
                 return;
             for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
@@ -223,15 +205,12 @@ namespace VectorGraph
             {
                 isGrab = true;
                 GrabPoint = new Point(x, y);
-                //MessageBox.Show(DragPoint.ToString());
                 BeforeGrabPoints.Clear();
                 for (int coord = 0; coord < item.frame.coords.Count; coord += 2)
                     BeforeGrabPoints.Add(new Point(item.frame.coords[coord], item.frame.coords[coord + 1]));
                 return true;
             }
-            //MessageBox.Show("ne popal 3");
             isGrab = false;
-            //BeforeGrabPoints.Clear();
             return false;
         }
 
@@ -268,7 +247,6 @@ namespace VectorGraph
                 return true;
             }
             isGrab = false;
-            //BeforeGrabPoints.Clear();
             return false;
         }
 
@@ -325,7 +303,6 @@ namespace VectorGraph
             int diffY = y - GrabPoint.Y;
 
             (item as Group).ApplyBeforeGrabPoints(x, y, diffX, diffY);
-            //(item as Group).GetFrame();
             ActualPoints();
         }
 
@@ -406,7 +383,9 @@ namespace VectorGraph
 
         public Selection TryGrab(int x, int y)
         {
-            foreach (Selection sel in this)
+            List<Selection> rev = this;
+            rev.Reverse();
+            foreach (Selection sel in rev)
             {
                 if (sel.TryGrab(x, y, false))
                 {
@@ -450,10 +429,8 @@ namespace VectorGraph
         }
     }
 
-    //public delegate void StatusUp(string text); /////
     internal class SelectionController : ISelections
     {
-        //public event StatusUp OnStatusUp; /////
         public Factory factory;
         public SelectionStore selStore { get; }
         public Store Store { get; }
@@ -478,7 +455,6 @@ namespace VectorGraph
             Selection sel = selStore.TryGrab(x, y);
             if (sel != null)
             {
-            //OnStatusUp(sel.ToString());
                 if (!isCtrl)
                 {
                     selStore.Release();
@@ -517,10 +493,6 @@ namespace VectorGraph
             List<Selection> selections = selStore.Selected;
             if (selections.Count == 0)
                 return false;
-            /*
-            string txt = selections.Count.ToString() + ")) " + selections[0].ToString();
-            OnStatusUp(txt);
-            */
             bool check = false;
             foreach (Selection selection in selections)
                 if (selection.TryGrab(x, y, multi))
@@ -535,7 +507,6 @@ namespace VectorGraph
             List<Selection> selections = selStore.Selected;
             if (selections == null)
                 return false;
-            //string txt = "";
             foreach (Selection sel in selections)
             {
                 if (sel.isDrag)
@@ -617,7 +588,6 @@ namespace VectorGraph
 
     internal interface ISelections
     {
-        //event StatusUp OnStatusUp; //// Временно
         SelectionStore selStore { get; }
         void SelectAndDrag(GraphItem item, int x, int y);
         bool TryDragGrabbed(int x, int y);
