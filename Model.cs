@@ -14,6 +14,7 @@ namespace VectorGraph
         IGrController GrController { get; }
         IFactory Factory { get; }
         void StoreClear();
+        ActionList ActionList{ get; }
     }
 
     internal class Model : IModel
@@ -23,6 +24,7 @@ namespace VectorGraph
         public IFactory Factory { get; }
 
         public Store st { get; }
+        public ActionList ActionList { get; }
 
         public Model(Graphics gr)//, PropList pl)
         {

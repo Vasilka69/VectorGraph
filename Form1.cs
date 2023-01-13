@@ -85,6 +85,7 @@ namespace VectorGraph
 
             controller.EventHandler.CurrStateUpdated += EventHandler_CurrStateUpdated;
             controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
+            controller.EventHandler.AltUpdated += EventHandler_AltUpdated;
 
             PropInit();
         }
@@ -113,7 +114,15 @@ namespace VectorGraph
         private void EventHandler_CtrlUpdated(string isCtrl)
         {
             if (bool.Parse(isCtrl))
-                this.toolStripStatusLabel3.Text = "Ctrl";
+                this.toolStripStatusLabel4.Text = "Ctrl";
+            else
+                this.toolStripStatusLabel4.Text = "";
+        }
+
+        private void EventHandler_AltUpdated(string isAlt)
+        {
+            if (bool.Parse(isAlt))
+                this.toolStripStatusLabel3.Text = "Alt";
             else
                 this.toolStripStatusLabel3.Text = "";
         }

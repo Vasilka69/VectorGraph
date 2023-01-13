@@ -23,11 +23,13 @@ namespace VectorGraph
 
         event curstate CurrStateUpdated;
         event curstate CtrlUpdated;
+        event curstate AltUpdated;
     }
     internal class EventHandler : IEventHandler
     {
         public event curstate CurrStateUpdated;
         public event curstate CtrlUpdated;
+        public event curstate AltUpdated;
 
         public State currState;
 
@@ -41,11 +43,13 @@ namespace VectorGraph
         //private StateStore states;
 
         public bool isCtrl;
+        public bool isAlt;
         public Selection sel; // не было
 
         public EventHandler(IModel Model)
         {
             isCtrl = false;
+            isAlt = false;
             this.Model = Model;
             CS = new CreateState(Model, this);
             DS = new DragState(Model, this);
@@ -74,7 +78,7 @@ namespace VectorGraph
         public void KeyDown(object sender, KeyEventArgs e)
         {
             isCtrl = e.Control;
-
+            isAlt = e.Alt;
 
             switch (e.KeyCode)
             {
@@ -90,13 +94,28 @@ namespace VectorGraph
                     currState.Esc();
                     //MessageBox.Show("Escape");
                     break;
+                case Keys.Z:
+                    if (isCtrl && isAlt)
+                    {
+                        if (Model.ActionList.Redo()) // Redo ctrl alt z
+                            SetState(ES);
+                    }
+                    else if (isCtrl)
+                    {
+                        if (Model.ActionList.Undo()) // Undo ctrl z
+                            SetState(ES);
+                    }
+                    //MessageBox.Show("Escape");
+                    break;
             }
             CtrlUpdated.Invoke(isCtrl.ToString());
+            AltUpdated.Invoke(isAlt.ToString());
 
         }
         public void KeyUp(object sender, KeyEventArgs e)
         {
             isCtrl = e.Control;
+            isAlt = e.Alt;
 
             switch (e.KeyCode)
             {
@@ -105,6 +124,7 @@ namespace VectorGraph
                     break;
             }
             CtrlUpdated.Invoke(isCtrl.ToString());
+            AltUpdated.Invoke(isAlt.ToString());
         }
         public void Group(object sender, EventArgs e)
         {

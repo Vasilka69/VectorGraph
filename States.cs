@@ -19,15 +19,16 @@ namespace VectorGraph
         public abstract void Esc();
         public abstract void Group();
         public abstract void Ungroup();
+        public virtual void Undo()
+        {
+            Model.ActionList.Undo();
+        }
+        public virtual void Redo()
+        {
+            Model.ActionList.Redo();
+        }
 
     }
-
-    /*
-    internal class StateStore : List<State>
-    {
-
-    }
-    */
 
     internal class CreateState : State
     {
