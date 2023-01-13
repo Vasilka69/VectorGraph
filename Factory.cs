@@ -15,7 +15,7 @@ namespace VectorGraph
         event Repaint RepaintEvent;
         PropList pl { set; get; }
         FigureType ChoosenFigure { get; set; }
-        GraphItem AddFigure(int x, int y);
+        GraphItem AddFigure(int x1, int y1, int x2, int y2);
         void CreateAndGrabItem(int x, int y);
         ISelections selController { get; set; } // Потом убрать
     }
@@ -43,10 +43,10 @@ namespace VectorGraph
             selController = new SelectionController(st, this);
         }
 
-        public GraphItem AddFigure(int x, int y)
+        public GraphItem AddFigure(int x1, int y1, int x2, int y2)
         {
             Figure f;
-            Frame frame = new Frame(x, y, x, y);
+            Frame frame = new Frame(x1, y1, x2, y2);
             //PropList pl = new PropList(pl.ContourProps, pl.FillProps);
             switch (ChoosenFigure)
             {
@@ -69,7 +69,7 @@ namespace VectorGraph
 
         public void CreateAndGrabItem(int x, int y)
         {
-            GraphItem item = AddFigure(x, y);
+            GraphItem item = AddFigure(x, y, x, y);
             st.Add(item);
             selController.SelectAndDrag(item, x, y);
         }

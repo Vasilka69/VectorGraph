@@ -13,6 +13,7 @@ namespace VectorGraph
         IGrProperties GrProperties { get; }
         IGrController GrController { get; }
         IFactory Factory { get; }
+        Store st { get; }
         void StoreClear();
         ActionList ActionList{ get; }
     }
