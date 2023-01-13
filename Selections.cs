@@ -517,7 +517,7 @@ namespace VectorGraph
             return true;
         }
 
-        public void CancellDragAndGrab()
+        public void CancelDragAndGrab()
         {
             foreach (Selection sel in selStore)
             {
@@ -594,7 +594,7 @@ namespace VectorGraph
         bool Release(int x, int y);
         bool TryGrab(int x, int y, bool isCtrl);
         bool TryGrabSelected(int x, int y, bool multi);
-        void CancellDragAndGrab();
+        void CancelDragAndGrab();
         void SelClear();
         int Count();
         void DelSelectedItems();

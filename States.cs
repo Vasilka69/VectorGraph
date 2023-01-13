@@ -122,7 +122,7 @@ namespace VectorGraph
             //Model.Factory.selController.ReleaseDrag(x, y);
 
             ISelections selController = Model.Factory.selController;
-            selController.CancellDragAndGrab();
+            selController.CancelDragAndGrab();
             /*
             bool dragHit = selController.TryDragGrabbed(x, y);
             bool grabHit = selController.TryGrab(x, y, EH.isCtrl);

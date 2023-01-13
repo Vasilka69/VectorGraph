@@ -73,10 +73,9 @@ namespace VectorGraph
         }
         public void KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control)
-                isCtrl = true;
+            isCtrl = e.Control;
 
-            
+
             switch (e.KeyCode)
             {
                 case Keys.Control:
@@ -97,8 +96,7 @@ namespace VectorGraph
         }
         public void KeyUp(object sender, KeyEventArgs e)
         {
-            if (!e.Control)
-                isCtrl = false;
+            isCtrl = e.Control;
 
             switch (e.KeyCode)
             {
