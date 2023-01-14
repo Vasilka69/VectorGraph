@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace VectorGraph
 {
@@ -35,9 +36,11 @@ namespace VectorGraph
         {
             if (CurrIndex - 1 >= 0)
             {
+                //MessageBox.Show("Undo");
                 CurrAction.isEnabled = false;
                 CurrIndex--;
                 CurrAction = this[CurrIndex];
+                CurrAction.Apply(model);
                 return true;
             }
             return false;
@@ -47,17 +50,23 @@ namespace VectorGraph
         {
             if (CurrIndex + 1 < this.Count)
             {
+                //MessageBox.Show("Redo");
                 CurrIndex++;
                 CurrAction = this[CurrIndex];
                 CurrAction.isEnabled = true;
+                CurrAction.Apply(model);
                 return true;
             }
             return false;
         }
 
-        public void ApplyCurrAction()
+        public void AddAction(Action action)
         {
-            CurrAction.Apply(model);
+            if (CurrIndex < this.Count - 1)
+                this.RemoveRange(CurrIndex + 1, this.Count - CurrIndex - 1);
+            this.Add(action);
+            CurrAction = action;
+            CurrIndex++;
         }
     }
 
@@ -76,14 +85,39 @@ namespace VectorGraph
         public AddItemAction(SelectionStore selStore, /*Store Store, */GraphItem Item)
         {
             this.selStore = selStore;
+            isEnabled = true;
             //this.Store = Store; Есть в model
-            this.Item = Item;
+
+            // DeepCopy Item:
+            // Пока без групп, тока фигуры
+            //Figure figure = Item as Figure;
+            //figure
+            //this.Item = new GraphItem(Item.frame, (Item as Figure).pl.Clone());
+            Frame frame = Item.frame;
+            PropList pl = (Item as Figure).pl;
+            switch ((Item as Figure).type)
+            {
+                case FigureType.Line:
+                    this.Item = new Line(frame, pl.Clone());
+                    break;
+                case FigureType.Rect:
+                    this.Item = new Rect(frame, pl.Clone());
+                    break;
+                case FigureType.Ellipse:
+                    this.Item = new Ellipse(frame, pl.Clone());
+                    break;
+                default:
+                    this.Item = null;
+                    break;
+            }
         }
 
         public override void Apply(IModel model) // Пока без групп
         {
             if (isEnabled) // Undo (Удаляем фигуру)
             {
+                MessageBox.Show(Item.ToString());
+                //MessageBox.Show("");
                 // Не оч хорошо
                 List<GraphItem> Items = new List<GraphItem>();
                 foreach (Selection sel in selStore.Selected)
@@ -102,7 +136,7 @@ namespace VectorGraph
 
                 model.GrProperties.Fill.Color = (Item as Figure).pl.FillProps.Color;
 
-                model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[2], Item.frame.coords[3], Item.frame.coords[4]);
+                model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[1], Item.frame.coords[2], Item.frame.coords[3]);
             }
         }
     }

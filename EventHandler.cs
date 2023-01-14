@@ -97,11 +97,13 @@ namespace VectorGraph
                 case Keys.Z:
                     if (isCtrl && isAlt)
                     {
+                        //MessageBox.Show("Redo");
                         if (Model.ActionList.Redo()) // Redo ctrl alt z
                             SetState(ES);
                     }
                     else if (isCtrl)
                     {
+                        //MessageBox.Show("Undo");
                         if (Model.ActionList.Undo()) // Undo ctrl z
                             SetState(ES);
                     }
@@ -110,6 +112,7 @@ namespace VectorGraph
             }
             CtrlUpdated.Invoke(isCtrl.ToString());
             AltUpdated.Invoke(isAlt.ToString());
+            Model.GrController.Repaint();
 
         }
         public void KeyUp(object sender, KeyEventArgs e)
