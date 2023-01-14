@@ -29,7 +29,6 @@ namespace VectorGraph
 
         public Model(Graphics gr)//, PropList pl)
         {
-            this.ActionList = new ActionList(this);
             st = new Store();
 
             Factory = new Factory(st);//, pl);
@@ -40,6 +39,8 @@ namespace VectorGraph
             GrController.SelStore = Factory.selController.selStore;
 
             Factory.RepaintEvent += GrController.Repaint;
+
+            ActionList = new ActionList(this);
         }
 
         public void StoreClear()

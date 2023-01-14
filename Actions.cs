@@ -12,7 +12,7 @@ namespace VectorGraph
     internal class ActionList : List<Action>
     {
         /*
-         * Добаляет действия, когда они происходят CurrAction = *Текущее действие (мб через DoAction)* ;CurrIndex++;
+         * Добаляет действия, когда они происходят CurrAction = *Текущее действие (мб через DoAction)* ; CurrIndex++;
          * Undo приравнивает CurrAction = this[CurrIndex - 1]; CurrIndex--;
          * Redo приравнивает CurrAction = this[CurrIndex + 1]; CurrIndex++;
          * При совершении действия, обрубает то, что > CurrIndex
@@ -28,7 +28,9 @@ namespace VectorGraph
         public ActionList(IModel model)
         {
             this.model = model;
-            CurrIndex = 0;
+
+            CurrIndex = -1;
+            this.AddAction(new Action());
         }
 
         public void DoAction()
@@ -42,8 +44,8 @@ namespace VectorGraph
             {
                 //MessageBox.Show("Undo");
 
-                CurrAction.Apply(model);
-                CurrAction.isEnabled = false;
+                CurrAction.Undo(model);
+                //CurrAction.isEnabled = false;
 
                 CurrIndex--;
                 CurrAction = this[CurrIndex];
@@ -59,11 +61,12 @@ namespace VectorGraph
             if (CurrIndex + 1 < this.Count)
             {
                 //MessageBox.Show("Redo");
-                CurrAction.Apply(model);
-                CurrAction.isEnabled = true;
+                //CurrAction.isEnabled = true;
 
                 CurrIndex++;
                 CurrAction = this[CurrIndex];
+
+                CurrAction.Redo(model);
 
                 ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
                 return true;
@@ -79,26 +82,32 @@ namespace VectorGraph
             CurrAction = action;
             CurrIndex++;
 
-            ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
+            ActionListUpdated?.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
         }
     }
 
-    internal abstract class Action
+    internal class Action
     {
         // Единица действия
-        public bool isEnabled;
-        public abstract void Apply(IModel model);
+        //public bool isEnabled;
+        //public abstract void Apply(IModel model);
+        public virtual void Undo(IModel model) { }
+        public virtual void Redo(IModel model) { }
     }
+
     internal class AddItemAction : Action
     {
         SelectionStore selStore;
         //Store Store;
         GraphItem Item;
 
+
         public AddItemAction(SelectionStore selStore, /*Store Store, */GraphItem Item)
         {
+
             this.selStore = selStore;
-            isEnabled = true;
+            this.Item = (Item as Figure).Clone();
+            //isEnabled = true;
             //this.Store = Store; Есть в model
 
             // DeepCopy Item:
@@ -106,6 +115,7 @@ namespace VectorGraph
             //Figure figure = Item as Figure;
             //figure
             //this.Item = new GraphItem(Item.frame, (Item as Figure).pl.Clone());
+            /*
             Frame frame = Item.frame;
             PropList pl = (Item as Figure).pl;
             switch ((Item as Figure).type)
@@ -123,13 +133,55 @@ namespace VectorGraph
                     this.Item = null;
                     break;
             }
+            */
         }
 
+        public override void Undo(IModel model)
+        {
+            // Удалить фигуру
+            if (model.st.Count != 0)
+                model.st.RemoveAt(model.st.Count - 1);
+            /*
+            List<GraphItem> Items = new List<GraphItem>();
+            foreach (Selection sel in selStore.Selected)
+            {
+                Items.Add(sel.GetItem());
+                model.st.Remove(sel.GetItem());
+                selStore.Remove(sel);
+            }
+            while (selStore.Selected.Count != 0)
+                selStore.DeleteSelection(selStore.Selected[0]);
+            */
+            model.GrController.Repaint(); // Потом убрать
+        }
+
+        public override void Redo(IModel model)
+        {
+            // Добавить фигуру
+            MessageBox.Show(this.Item.ToString());
+            /*
+            model.GrProperties.Contour.Color = (Item as Figure).pl.ContourProps.Color;
+            model.GrProperties.Contour.LineWidth = (Item as Figure).pl.ContourProps.LineWidth;
+
+            model.GrProperties.Fill.Color = (Item as Figure).pl.FillProps.Color;
+
+            model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[1], Item.frame.coords[2], Item.frame.coords[3]);
+            */
+
+            model.Factory.AddFromItem(this.Item);
+            model.GrController.Repaint();
+        }
+
+
+        /*
         public override void Apply(IModel model) // Пока без групп
         {
             if (isEnabled) // Undo (Удаляем фигуру)
             {
-                MessageBox.Show(Item.ToString());
+                //MessageBox.Show(Item.ToString());
+
+
+                /*
                 //MessageBox.Show("");
                 // Не оч хорошо
                 List<GraphItem> Items = new List<GraphItem>();
@@ -141,17 +193,24 @@ namespace VectorGraph
                 }
                 while (selStore.Selected.Count != 0)
                     selStore.DeleteSelection(selStore.Selected[0]);
+                */
+            /*
             }
             else // Redo (Возвращаем фигуру)
             {
+
+                /*
                 model.GrProperties.Contour.Color = (Item as Figure).pl.ContourProps.Color;
                 model.GrProperties.Contour.LineWidth = (Item as Figure).pl.ContourProps.LineWidth;
 
                 model.GrProperties.Fill.Color = (Item as Figure).pl.FillProps.Color;
 
                 model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[1], Item.frame.coords[2], Item.frame.coords[3]);
+                */
+                /*
             }
         }
+        */
     }
 
     /*

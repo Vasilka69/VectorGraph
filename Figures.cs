@@ -140,6 +140,27 @@ namespace VectorGraph
 
         public abstract void ApplyProps(GraphSystem gs);
         public abstract void DrawGeometry(GraphSystem gs);
+
+        public GraphItem Clone()
+        {
+            GraphItem clone;
+            switch (type)
+            {
+                case FigureType.Line:
+                    clone = new Line(frame.Clone(), pl.Clone());
+                break;
+                case FigureType.Rect:
+                    clone = new Rect(frame.Clone(), pl.Clone());
+                break;
+                case FigureType.Ellipse:
+                    clone = new Ellipse(frame.Clone(), pl.Clone());
+                break;
+                default:
+                    clone = null;
+                break;
+            }
+            return clone;
+        }
     }
 
     internal class Line : Figure

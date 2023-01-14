@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ namespace VectorGraph
         PropList pl { set; get; }
         FigureType ChoosenFigure { get; set; }
         GraphItem AddFigure(int x1, int y1, int x2, int y2);
+        void AddFromItem(GraphItem item);
         void CreateAndGrabItem(int x, int y);
         ISelections selController { get; set; } // Потом убрать
     }
@@ -67,6 +69,16 @@ namespace VectorGraph
             return f;
         }
 
+        public void AddFromItem(GraphItem item)
+        {
+
+            pl.ContourProps.Color = (item as Figure).pl.ContourProps.Color;
+            pl.ContourProps.LineWidth = (item as Figure).pl.ContourProps.LineWidth;
+
+            pl.FillProps.Color = (item as Figure).pl.FillProps.Color;
+
+            st.Add(AddFigure(item.frame.coords[0], item.frame.coords[1], item.frame.coords[2], item.frame.coords[3]));
+        }
         public void CreateAndGrabItem(int x, int y)
         {
             GraphItem item = AddFigure(x, y, x, y);
