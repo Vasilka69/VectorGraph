@@ -486,7 +486,6 @@ namespace VectorGraph
                 if (sel.TryDrag(x, y))
                 {
                     OldSelection = (sel.GetItem() as Figure).Clone();
-                    //MessageBox.Show(OldSelection.ToString());
                     return true;
                 }
             }
@@ -511,7 +510,6 @@ namespace VectorGraph
                 if (selection.TryGrab(x, y, multi))
                 {
                     OldSelection = (selection.GetItem() as Figure).Clone();
-                    //MessageBox.Show(OldSelection.ToString());
                     check = true;
                 }
             if (check)

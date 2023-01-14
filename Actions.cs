@@ -82,7 +82,6 @@ namespace VectorGraph
 
         public void DoEditItemAction(GraphItem OldItem, GraphItem NewItem)
         {
-            //MessageBox.Show(NewItem.ToString());
             AddAction(new EditItemAction(OldItem, NewItem));
         }
 
@@ -121,7 +120,6 @@ namespace VectorGraph
             model.Factory.selController.selStore.Remove(RefItem.selection);
             model.Factory.selController.selStore.Selected.Clear();
             model.Factory.selController.selStore.GrabbedSelection = null;
-
             
         }
 
@@ -180,7 +178,6 @@ namespace VectorGraph
         {
             // Вернуть исходную трансформацию фигуры
             RefItem.frame = OldItem.frame.Clone();
-            //RefItem.frame = new Frame(1,1,100,100);
 
             (RefItem as Figure).pl = (OldItem as Figure).pl.Clone();
 
@@ -195,6 +192,28 @@ namespace VectorGraph
             (RefItem as Figure).pl = (NewItem as Figure).pl.Clone();
 
             model.GrController.Repaint();
+        }
+    }
+
+    internal class GroupItemAction : Action
+    {
+        GraphItem RefItem;
+
+        public GroupItemAction(GraphItem Item)
+        {
+            this.RefItem = Item;
+        }
+
+        public override void Undo(IModel model)
+        {
+            // Разгруппировать объекты
+
+        }
+
+        public override void Redo(IModel model)
+        {
+            // Сгруппировать объекты
+
         }
     }
 
