@@ -78,6 +78,8 @@ namespace VectorGraph
             pl.FillProps.Color = (item as Figure).pl.FillProps.Color;
 
             st.Add(AddFigure(item.frame.coords[0], item.frame.coords[1], item.frame.coords[2], item.frame.coords[3]));
+            //selController.SelectAndDrag(item, -1, -1);
+            selController.AddSelection(item);
         }
         public void CreateAndGrabItem(int x, int y)
         {

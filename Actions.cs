@@ -97,16 +97,18 @@ namespace VectorGraph
 
     internal class AddItemAction : Action
     {
-        SelectionStore selStore;
+        //SelectionStore selStore;
         //Store Store;
-        GraphItem Item;
+        GraphItem RefItem;
+        GraphItem CloneItem;
 
 
         public AddItemAction(SelectionStore selStore, /*Store Store, */GraphItem Item)
         {
 
-            this.selStore = selStore;
-            this.Item = (Item as Figure).Clone();
+            //this.selStore = selStore;
+            this.RefItem = Item;
+            this.CloneItem = (Item as Figure).Clone();
             //isEnabled = true;
             //this.Store = Store; Есть в model
 
@@ -139,20 +141,16 @@ namespace VectorGraph
         public override void Undo(IModel model)
         {
             // Удалить фигуру
+            /*
             if (model.st.Count != 0)
                 model.st.RemoveAt(model.st.Count - 1);
-            /*
-            List<GraphItem> Items = new List<GraphItem>();
-            foreach (Selection sel in selStore.Selected)
-            {
-                Items.Add(sel.GetItem());
-                model.st.Remove(sel.GetItem());
-                selStore.Remove(sel);
-            }
-            while (selStore.Selected.Count != 0)
-                selStore.DeleteSelection(selStore.Selected[0]);
             */
-            model.GrController.Repaint(); // Потом убрать
+            model.st.Remove(RefItem);
+            model.Factory.selController.selStore.Remove(RefItem.selection);
+            model.Factory.selController.selStore.Selected.Clear();
+            model.Factory.selController.selStore.GrabbedSelection = null;
+
+            
         }
 
         public override void Redo(IModel model)
@@ -167,8 +165,9 @@ namespace VectorGraph
 
             model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[1], Item.frame.coords[2], Item.frame.coords[3]);
             */
-
-            model.Factory.AddFromItem(this.Item);
+            model.Factory.AddFromItem(this.CloneItem);
+            RefItem = model.st[model.st.Count - 1];
+            model.Factory.selController.AddSelection(RefItem);
             model.GrController.Repaint();
         }
 

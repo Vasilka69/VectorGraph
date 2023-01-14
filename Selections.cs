@@ -441,6 +441,12 @@ namespace VectorGraph
             this.factory = factory;
         }
 
+        public void AddSelection(GraphItem item)
+        {
+            Selection sel = item.CreateSelection();
+            selStore.Add(sel);
+        }
+
         public void SelectAndDrag(GraphItem item, int x, int y)
         {
             Selection sel = item.CreateSelection();
@@ -537,7 +543,7 @@ namespace VectorGraph
 
         public void DelSelectedItems()
         {
-            List<GraphItem> Items = new List<GraphItem>();
+            List<GraphItem> Items = new List<GraphItem>(); // мусор?
             foreach (Selection sel in selStore.Selected) {
                 Items.Add(sel.GetItem());
                 Store.Remove(sel.GetItem());
@@ -588,6 +594,7 @@ namespace VectorGraph
     internal interface ISelections
     {
         SelectionStore selStore { get; }
+        void AddSelection(GraphItem item);
         void SelectAndDrag(GraphItem item, int x, int y);
         bool TryDragGrabbed(int x, int y);
         bool Release(int x, int y);
