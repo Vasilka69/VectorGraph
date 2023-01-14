@@ -106,12 +106,12 @@ namespace VectorGraph
     internal class AddItemAction : Action
     {
         GraphItem RefItem;
-        GraphItem CloneItem;
+        //GraphItem CloneItem;
 
         public AddItemAction(GraphItem Item)
         {
             this.RefItem = Item;
-            this.CloneItem = (Item as Figure).Clone();
+            //this.CloneItem = (Item as Figure).Clone();
         }
 
         public override void Undo(IModel model)
@@ -128,31 +128,46 @@ namespace VectorGraph
         public override void Redo(IModel model)
         {
             // Добавить фигуру
+            model.st.Add(this.RefItem);
+            //RefItem = model.st[model.st.Count - 1];
+            model.Factory.selController.AddSelection(RefItem);
+            model.GrController.Repaint();
+
+            /*
             model.Factory.AddFromItem(this.CloneItem);
             RefItem = model.st[model.st.Count - 1];
             model.Factory.selController.AddSelection(RefItem);
             model.GrController.Repaint();
+            */
         }
     }
 
     internal class DelItemAction : Action
     {
         GraphItem RefItem;
-        GraphItem CloneItem;
+        //GraphItem CloneItem;
 
         public DelItemAction(GraphItem Item)
         {
             this.RefItem = Item;
-            this.CloneItem = (Item as Figure).Clone();
+            //this.CloneItem = (Item as Figure).Clone();
         }
 
         public override void Undo(IModel model)
         {
             // Вернуть фигуру
+            model.st.Add(this.RefItem);
+
+            model.Factory.selController.AddSelection(RefItem);
+            model.GrController.Repaint();
+
+            /*
             model.Factory.AddFromItem(this.CloneItem);
+
             RefItem = model.st[model.st.Count - 1];
             model.Factory.selController.AddSelection(RefItem);
             model.GrController.Repaint();
+            */
         }
 
         public override void Redo(IModel model)
