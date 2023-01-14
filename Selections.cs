@@ -436,6 +436,8 @@ namespace VectorGraph
 
         public event DeleteDelegate DeleteEvent;
 
+        public GraphItem OldSelection { set; get; }
+
         public SelectionController(Store store, Factory factory)
         {
             selStore = new SelectionStore();
@@ -482,7 +484,11 @@ namespace VectorGraph
                 if (sel == null)
                     return false;
                 if (sel.TryDrag(x, y))
+                {
+                    OldSelection = (sel.GetItem() as Figure).Clone();
+                    //MessageBox.Show(OldSelection.ToString());
                     return true;
+                }
             }
             return false;
             /*
@@ -503,7 +509,11 @@ namespace VectorGraph
             bool check = false;
             foreach (Selection selection in selections)
                 if (selection.TryGrab(x, y, multi))
+                {
+                    OldSelection = (selection.GetItem() as Figure).Clone();
+                    //MessageBox.Show(OldSelection.ToString());
                     check = true;
+                }
             if (check)
                 return true;
             return false;
@@ -600,6 +610,7 @@ namespace VectorGraph
         SelectionStore selStore { get; }
 
         event DeleteDelegate DeleteEvent;
+        GraphItem OldSelection { get; }
         void AddSelection(GraphItem item);
         void SelectAndDrag(GraphItem item, int x, int y);
         bool TryDragGrabbed(int x, int y);

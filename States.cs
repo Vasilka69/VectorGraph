@@ -127,6 +127,10 @@ namespace VectorGraph
 
             if (EH.prevState == EH.CS)
                 Model.ActionList.DoAddItemAction(Model.st[Model.st.Count - 1]);
+            else if (EH.prevState == EH.SSS)
+                Model.ActionList.DoEditItemAction(
+                    Model.Factory.selController.OldSelection,
+                    Model.Factory.selController.selStore.GrabbedSelection.GetItem());
             //Model.ActionList.AddAction(new AddItemAction(Model.st[Model.st.Count - 1]));
             /*
             bool dragHit = selController.TryDragGrabbed(x, y);

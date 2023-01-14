@@ -19,7 +19,7 @@ namespace VectorGraph
         */
 
         Action CurrAction;
-        int CurrIndex; // Мб не нужно, но так удобнее, мб мастхев
+        int CurrIndex;
         IModel model;
 
         public delegate void count(string count);
@@ -42,10 +42,8 @@ namespace VectorGraph
         {
             if (CurrIndex - 1 >= 0)
             {
-                //MessageBox.Show("Undo");
 
                 CurrAction.Undo(model);
-                //CurrAction.isEnabled = false;
 
                 CurrIndex--;
                 CurrAction = this[CurrIndex];
@@ -82,6 +80,12 @@ namespace VectorGraph
             AddAction(new DelItemAction(Item));
         }
 
+        public void DoEditItemAction(GraphItem OldItem, GraphItem NewItem)
+        {
+            //MessageBox.Show(NewItem.ToString());
+            AddAction(new EditItemAction(OldItem, NewItem));
+        }
+
         public void AddAction(Action action)
         {
             if (CurrIndex < this.Count - 1)
@@ -97,8 +101,6 @@ namespace VectorGraph
     internal class Action
     {
         // Единица действия
-        //public bool isEnabled;
-        //public abstract void Apply(IModel model);
         public virtual void Undo(IModel model) { }
         public virtual void Redo(IModel model) { }
     }
@@ -106,12 +108,10 @@ namespace VectorGraph
     internal class AddItemAction : Action
     {
         GraphItem RefItem;
-        //GraphItem CloneItem;
 
         public AddItemAction(GraphItem Item)
         {
             this.RefItem = Item;
-            //this.CloneItem = (Item as Figure).Clone();
         }
 
         public override void Undo(IModel model)
@@ -129,28 +129,19 @@ namespace VectorGraph
         {
             // Добавить фигуру
             model.st.Add(this.RefItem);
-            //RefItem = model.st[model.st.Count - 1];
-            model.Factory.selController.AddSelection(RefItem);
-            model.GrController.Repaint();
 
-            /*
-            model.Factory.AddFromItem(this.CloneItem);
-            RefItem = model.st[model.st.Count - 1];
             model.Factory.selController.AddSelection(RefItem);
             model.GrController.Repaint();
-            */
         }
     }
 
     internal class DelItemAction : Action
     {
         GraphItem RefItem;
-        //GraphItem CloneItem;
 
         public DelItemAction(GraphItem Item)
         {
             this.RefItem = Item;
-            //this.CloneItem = (Item as Figure).Clone();
         }
 
         public override void Undo(IModel model)
@@ -160,14 +151,6 @@ namespace VectorGraph
 
             model.Factory.selController.AddSelection(RefItem);
             model.GrController.Repaint();
-
-            /*
-            model.Factory.AddFromItem(this.CloneItem);
-
-            RefItem = model.st[model.st.Count - 1];
-            model.Factory.selController.AddSelection(RefItem);
-            model.GrController.Repaint();
-            */
         }
 
         public override void Redo(IModel model)
@@ -177,6 +160,41 @@ namespace VectorGraph
             model.Factory.selController.selStore.Remove(RefItem.selection);
             model.Factory.selController.selStore.Selected.Clear();
             model.Factory.selController.selStore.GrabbedSelection = null;
+        }
+    }
+
+    internal class EditItemAction : Action
+    {
+        GraphItem RefItem;
+        GraphItem OldItem;
+        GraphItem NewItem;
+
+        public EditItemAction(GraphItem OldItem, GraphItem NewItem)
+        {
+            this.RefItem = NewItem;
+            this.OldItem = (OldItem as Figure).Clone();
+            this.NewItem = (NewItem as Figure).Clone();
+        }
+
+        public override void Undo(IModel model)
+        {
+            // Вернуть исходную трансформацию фигуры
+            RefItem.frame = OldItem.frame.Clone();
+            //RefItem.frame = new Frame(1,1,100,100);
+
+            (RefItem as Figure).pl = (OldItem as Figure).pl.Clone();
+
+            model.GrController.Repaint();
+        }
+
+        public override void Redo(IModel model)
+        {
+            // Применить новую трансформацию фигуры
+            RefItem.frame = NewItem.frame.Clone();
+
+            (RefItem as Figure).pl = (NewItem as Figure).pl.Clone();
+
+            model.GrController.Repaint();
         }
     }
 
