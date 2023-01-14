@@ -87,6 +87,8 @@ namespace VectorGraph
             controller.EventHandler.CtrlUpdated += EventHandler_CtrlUpdated;
             controller.EventHandler.AltUpdated += EventHandler_AltUpdated;
 
+            controller.Model.ActionList.ActionListUpdated += EventHandler_ActionListUpdated;
+
             PropInit();
         }
 
@@ -125,6 +127,13 @@ namespace VectorGraph
                 this.toolStripStatusLabel3.Text = "Alt";
             else
                 this.toolStripStatusLabel3.Text = "";
+        }
+
+        private void EventHandler_ActionListUpdated(string count)
+        {
+            string[] temp = count.Split(' ');
+            this.toolStripStatusLabel6.Text = temp[0];
+            this.toolStripStatusLabel5.Text = temp[1];
         }
 
         /*

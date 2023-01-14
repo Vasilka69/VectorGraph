@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +21,9 @@ namespace VectorGraph
         Action CurrAction;
         int CurrIndex; // Мб не нужно, но так удобнее, мб мастхев
         IModel model;
+
+        public delegate void count(string count);
+        public event count ActionListUpdated;
 
         public ActionList(IModel model)
         {
@@ -41,6 +45,8 @@ namespace VectorGraph
                 CurrIndex--;
                 CurrAction = this[CurrIndex];
                 CurrAction.Apply(model);
+
+                ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
                 return true;
             }
             return false;
@@ -55,6 +61,8 @@ namespace VectorGraph
                 CurrAction = this[CurrIndex];
                 CurrAction.isEnabled = true;
                 CurrAction.Apply(model);
+
+                ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
                 return true;
             }
             return false;
@@ -67,6 +75,8 @@ namespace VectorGraph
             this.Add(action);
             CurrAction = action;
             CurrIndex++;
+
+            ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
         }
     }
 
