@@ -124,9 +124,10 @@ namespace VectorGraph
 
             ISelections selController = Model.Factory.selController;
             selController.CancelDragAndGrab();
-            /// Пофиксить
-            //Model.ActionList.AddAction(new AddItemAction(Model.Factory.selController.selStore, Model.st[Model.st.Count - 1]));
-            Model.ActionList.AddAction(new AddItemAction(Model.Factory.selController.selStore, Model.st[Model.st.Count - 1]));
+
+            if (EH.prevState == EH.CS)
+                Model.ActionList.DoAddItemAction(Model.st[Model.st.Count - 1]);
+            //Model.ActionList.AddAction(new AddItemAction(Model.st[Model.st.Count - 1]));
             /*
             bool dragHit = selController.TryDragGrabbed(x, y);
             bool grabHit = selController.TryGrab(x, y, EH.isCtrl);

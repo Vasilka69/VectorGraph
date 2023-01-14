@@ -60,8 +60,6 @@ namespace VectorGraph
         {
             if (CurrIndex + 1 < this.Count)
             {
-                //MessageBox.Show("Redo");
-                //CurrAction.isEnabled = true;
 
                 CurrIndex++;
                 CurrAction = this[CurrIndex];
@@ -72,6 +70,16 @@ namespace VectorGraph
                 return true;
             }
             return false;
+        }
+
+        public void DoAddItemAction(GraphItem Item)
+        {
+            AddAction(new AddItemAction(Item));
+        }
+
+        public void DoDelItemAction(GraphItem Item)
+        {
+            AddAction(new DelItemAction(Item));
         }
 
         public void AddAction(Action action)
@@ -97,54 +105,18 @@ namespace VectorGraph
 
     internal class AddItemAction : Action
     {
-        //SelectionStore selStore;
-        //Store Store;
         GraphItem RefItem;
         GraphItem CloneItem;
 
-
-        public AddItemAction(SelectionStore selStore, /*Store Store, */GraphItem Item)
+        public AddItemAction(GraphItem Item)
         {
-
-            //this.selStore = selStore;
             this.RefItem = Item;
             this.CloneItem = (Item as Figure).Clone();
-            //isEnabled = true;
-            //this.Store = Store; Есть в model
-
-            // DeepCopy Item:
-            // Пока без групп, тока фигуры
-            //Figure figure = Item as Figure;
-            //figure
-            //this.Item = new GraphItem(Item.frame, (Item as Figure).pl.Clone());
-            /*
-            Frame frame = Item.frame;
-            PropList pl = (Item as Figure).pl;
-            switch ((Item as Figure).type)
-            {
-                case FigureType.Line:
-                    this.Item = new Line(frame, pl.Clone());
-                    break;
-                case FigureType.Rect:
-                    this.Item = new Rect(frame, pl.Clone());
-                    break;
-                case FigureType.Ellipse:
-                    this.Item = new Ellipse(frame, pl.Clone());
-                    break;
-                default:
-                    this.Item = null;
-                    break;
-            }
-            */
         }
 
         public override void Undo(IModel model)
         {
             // Удалить фигуру
-            /*
-            if (model.st.Count != 0)
-                model.st.RemoveAt(model.st.Count - 1);
-            */
             model.st.Remove(RefItem);
             model.Factory.selController.selStore.Remove(RefItem.selection);
             model.Factory.selController.selStore.Selected.Clear();
@@ -156,79 +128,41 @@ namespace VectorGraph
         public override void Redo(IModel model)
         {
             // Добавить фигуру
-            //MessageBox.Show(this.Item.ToString());
-            /*
-            model.GrProperties.Contour.Color = (Item as Figure).pl.ContourProps.Color;
-            model.GrProperties.Contour.LineWidth = (Item as Figure).pl.ContourProps.LineWidth;
+            model.Factory.AddFromItem(this.CloneItem);
+            RefItem = model.st[model.st.Count - 1];
+            model.Factory.selController.AddSelection(RefItem);
+            model.GrController.Repaint();
+        }
+    }
 
-            model.GrProperties.Fill.Color = (Item as Figure).pl.FillProps.Color;
+    internal class DelItemAction : Action
+    {
+        GraphItem RefItem;
+        GraphItem CloneItem;
 
-            model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[1], Item.frame.coords[2], Item.frame.coords[3]);
-            */
+        public DelItemAction(GraphItem Item)
+        {
+            this.RefItem = Item;
+            this.CloneItem = (Item as Figure).Clone();
+        }
+
+        public override void Undo(IModel model)
+        {
+            // Вернуть фигуру
             model.Factory.AddFromItem(this.CloneItem);
             RefItem = model.st[model.st.Count - 1];
             model.Factory.selController.AddSelection(RefItem);
             model.GrController.Repaint();
         }
 
-
-        /*
-        public override void Apply(IModel model) // Пока без групп
+        public override void Redo(IModel model)
         {
-            if (isEnabled) // Undo (Удаляем фигуру)
-            {
-                //MessageBox.Show(Item.ToString());
-
-
-                /*
-                //MessageBox.Show("");
-                // Не оч хорошо
-                List<GraphItem> Items = new List<GraphItem>();
-                foreach (Selection sel in selStore.Selected)
-                {
-                    Items.Add(sel.GetItem());
-                    model.st.Remove(sel.GetItem());
-                    selStore.Remove(sel);
-                }
-                while (selStore.Selected.Count != 0)
-                    selStore.DeleteSelection(selStore.Selected[0]);
-                */
-            /*
-            }
-            else // Redo (Возвращаем фигуру)
-            {
-
-                /*
-                model.GrProperties.Contour.Color = (Item as Figure).pl.ContourProps.Color;
-                model.GrProperties.Contour.LineWidth = (Item as Figure).pl.ContourProps.LineWidth;
-
-                model.GrProperties.Fill.Color = (Item as Figure).pl.FillProps.Color;
-
-                model.Factory.AddFigure(Item.frame.coords[0], Item.frame.coords[1], Item.frame.coords[2], Item.frame.coords[3]);
-                */
-                /*
-            }
-        }
-        */
-    }
-
-    /*
-    internal class PropAction : Action
-    {
-        PropList pl;
-
-        public PropAction(PropList pl)
-        {
-            this.pl = pl;
-        }
-
-        public override void Apply(IModel model)
-        {
-            model.GrProperties.Contour.Color = pl.ContourProps.Color;
-            model.GrProperties.Contour.LineWidth = pl.ContourProps.LineWidth;
-
-            model.GrProperties.Fill.Color = pl.FillProps.Color;
+            // Удалить фигуру
+            model.st.Remove(RefItem);
+            model.Factory.selController.selStore.Remove(RefItem.selection);
+            model.Factory.selController.selStore.Selected.Clear();
+            model.Factory.selController.selStore.GrabbedSelection = null;
         }
     }
-    */
+
 }

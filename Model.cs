@@ -41,6 +41,8 @@ namespace VectorGraph
             Factory.RepaintEvent += GrController.Repaint;
 
             ActionList = new ActionList(this);
+            Factory.selController.DeleteEvent += ActionList.DoDelItemAction;
+
         }
 
         public void StoreClear()

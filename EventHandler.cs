@@ -31,6 +31,7 @@ namespace VectorGraph
         public event curstate CtrlUpdated;
         public event curstate AltUpdated;
 
+        public State prevState;
         public State currState;
 
         IModel Model;
@@ -56,6 +57,7 @@ namespace VectorGraph
             SSS = new SingleSelectState(Model, this);
             MSS = new MultiSelectState(Model, this);
             ES = new EmptyState(Model, this);
+            prevState = ES;
             currState = ES;
         }
 
@@ -149,6 +151,7 @@ namespace VectorGraph
 
         public void SetState(State state)
         {
+            prevState = currState;
             currState = state;
             CurrStateUpdated.Invoke(state.ToString().Split('.')[1]);
         }

@@ -434,6 +434,8 @@ namespace VectorGraph
         public SelectionStore selStore { get; }
         public Store Store { get; }
 
+        public event DeleteDelegate DeleteEvent;
+
         public SelectionController(Store store, Factory factory)
         {
             selStore = new SelectionStore();
@@ -545,7 +547,8 @@ namespace VectorGraph
         {
             List<GraphItem> Items = new List<GraphItem>(); // мусор?
             foreach (Selection sel in selStore.Selected) {
-                Items.Add(sel.GetItem());
+                Items.Add(sel.GetItem()); //
+                DeleteEvent?.Invoke(sel.GetItem());
                 Store.Remove(sel.GetItem());
                 selStore.Remove(sel);
             }
@@ -591,9 +594,12 @@ namespace VectorGraph
         }
     }
 
+    delegate void DeleteDelegate(GraphItem item);
     internal interface ISelections
     {
         SelectionStore selStore { get; }
+
+        event DeleteDelegate DeleteEvent;
         void AddSelection(GraphItem item);
         void SelectAndDrag(GraphItem item, int x, int y);
         bool TryDragGrabbed(int x, int y);
