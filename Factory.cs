@@ -71,7 +71,7 @@ namespace VectorGraph
 
         public void AddFromItem(GraphItem item)
         {
-
+            ChoosenFigure = (item as Figure).type;
             pl.ContourProps.Color = (item as Figure).pl.ContourProps.Color;
             pl.ContourProps.LineWidth = (item as Figure).pl.ContourProps.LineWidth;
 

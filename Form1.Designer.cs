@@ -607,4 +607,3 @@ namespace VectorGraph
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel6;
     }
 }
-

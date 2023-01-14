@@ -158,7 +158,7 @@ namespace VectorGraph
         public override void Redo(IModel model)
         {
             // Добавить фигуру
-            MessageBox.Show(this.Item.ToString());
+            //MessageBox.Show(this.Item.ToString());
             /*
             model.GrProperties.Contour.Color = (Item as Figure).pl.ContourProps.Color;
             model.GrProperties.Contour.LineWidth = (Item as Figure).pl.ContourProps.LineWidth;
