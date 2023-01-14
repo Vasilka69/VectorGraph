@@ -41,10 +41,12 @@ namespace VectorGraph
             if (CurrIndex - 1 >= 0)
             {
                 //MessageBox.Show("Undo");
+
+                CurrAction.Apply(model);
                 CurrAction.isEnabled = false;
+
                 CurrIndex--;
                 CurrAction = this[CurrIndex];
-                CurrAction.Apply(model);
 
                 ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
                 return true;
@@ -57,10 +59,11 @@ namespace VectorGraph
             if (CurrIndex + 1 < this.Count)
             {
                 //MessageBox.Show("Redo");
+                CurrAction.Apply(model);
+                CurrAction.isEnabled = true;
+
                 CurrIndex++;
                 CurrAction = this[CurrIndex];
-                CurrAction.isEnabled = true;
-                CurrAction.Apply(model);
 
                 ActionListUpdated.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
                 return true;
