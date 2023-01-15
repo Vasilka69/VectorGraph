@@ -194,27 +194,4 @@ namespace VectorGraph
             model.GrController.Repaint();
         }
     }
-
-    internal class GroupItemAction : Action
-    {
-        GraphItem RefItem;
-
-        public GroupItemAction(GraphItem Item)
-        {
-            this.RefItem = Item;
-        }
-
-        public override void Undo(IModel model)
-        {
-            // Разгруппировать объекты
-
-        }
-
-        public override void Redo(IModel model)
-        {
-            // Сгруппировать объекты
-
-        }
-    }
-
 }
