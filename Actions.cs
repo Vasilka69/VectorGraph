@@ -11,16 +11,10 @@ namespace VectorGraph
 
     internal class ActionList : List<Action>
     {
-        /*
-         * Добаляет действия, когда они происходят CurrAction = *Текущее действие (мб через DoAction)* ; CurrIndex++;
-         * Undo приравнивает CurrAction = this[CurrIndex - 1]; CurrIndex--;
-         * Redo приравнивает CurrAction = this[CurrIndex + 1]; CurrIndex++;
-         * При совершении действия, обрубает то, что > CurrIndex
-        */
+        IModel model;
 
         Action CurrAction;
         int CurrIndex;
-        IModel model;
 
         public delegate void count(string count);
         public event count ActionListUpdated;
@@ -31,11 +25,6 @@ namespace VectorGraph
 
             CurrIndex = -1;
             this.AddAction(new Action());
-        }
-
-        public void DoAction()
-        {
-
         }
 
         public bool Undo()
@@ -85,14 +74,13 @@ namespace VectorGraph
             AddAction(new EditItemAction(OldItem, NewItem));
         }
 
-        public void AddAction(Action action)
+        private void AddAction(Action action)
         {
             if (CurrIndex < this.Count - 1)
                 this.RemoveRange(CurrIndex + 1, this.Count - CurrIndex - 1);
             this.Add(action);
             CurrAction = action;
             CurrIndex++;
-
             ActionListUpdated?.Invoke(this.Count.ToString() + " " + CurrIndex.ToString());
         }
     }
